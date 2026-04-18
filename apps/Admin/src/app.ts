@@ -39,6 +39,9 @@ app.use(express.static(path.resolve(__dirname, 'public')))
 app.get('/', (_req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'login.html'))
 })
+app.get('/dashboard', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public', 'dashboard.html'))
+})
 
 app.use('/auth', authRoutes)
 app.use('/admin', adminRoutes)

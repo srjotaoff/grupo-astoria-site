@@ -1,4 +1,4 @@
-import { Request } from 'express'
+export {}
 
 declare global {
   namespace Express {
@@ -7,16 +7,8 @@ declare global {
         sub: string
         cpf: string
         role: 'admin'
+        sid: string
       }
     }
   }
 }
-
-declare global {
-    namespace Express {
-        interface Request {
-            admin?: JwtPayload | string
-        }
-    }
-}
-

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": "../..",
     "outDir": "./dist",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "server.ts",
