@@ -1,0 +1,114 @@
+@font-face {
+    font-family: 'Poppins-Bold';
+    src: url(Poppins-Bold.ttf) format('truetype');
+
+}
+
+@font-face {
+    font-family: 'Poppins-Regular';
+    src: url(Poppins-Regular.ttf) format('truetype');
+
+}
+
+@font-face {
+    font-family: 'Poppins-SemiBold';
+    src: url(Poppins-SemiBold.ttf) format('truetype');
+
+}
+
+:root{
+    --branca:rgb(251, 249, 249);
+    --texto:rgb(76,66,67);
+    --principal: rgb(245,62,78);
+    --cor_primaria:rgb(8, 0, 16);
+    --cor_caixa:rgb(246, 241, 241);
+}
+
+a{
+    text-decoration: none;
+}
+
+#header{
+    padding-top: 5svh;
+    width: 100svw;
+    display: flex;
+}
+
+#header_esquerdo{
+    border-radius: 0 1svw 1svw 0;
+    width: 10svw;
+    height: 5svh;
+    background-color: var(--principal);
+}
+
+#header_direito_canto{
+    display: flex;
+}
+
+#header_meio_img{
+    padding-left: 1svw;
+    padding-right: 1svw;
+    width: 13svw;
+}
+
+#header_direito{
+    
+    background-color: var(--principal);
+    border-radius: 1svw;
+    display: flex;
+    justify-content: space-between;
+    width: 55svw;
+}
+
+#header_direito_botao1{
+    padding-left: 5svw;
+    display: flex;
+    justify-content: center;
+    
+}
+
+#header_direito_botao6{
+    padding-right: 5svw;
+    
+}
+
+#header_direito button{
+    color: var(--branca);
+    font-family: "Poppins-Regular";
+    line-height: 40px;
+    font-size: 0.75svw;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: none;
+}
+
+#header_direito_canto button{
+    margin-left: 1svw;
+    margin-right: 1.7svw;
+    padding-left: 2svw;
+    font-size: 0.75svw;
+    color: var(--principal);
+    padding-right: 2svw;
+    height: 5svh;
+    border: solid var(--principal);
+    border-radius: 1svw;
+}
+
+#header_direito_canto_icones{
+    display: flex;
+    gap: 1.2svw;
+    justify-content: center;
+    align-items: center;
+}
+
+#header_direito_canto_icones img{
+    width: 1svw;
+    transition: transform 0.3s ease;
+}
+
+#header_direito_canto_icones img:hover{
+    transform: scale(1.3);
+}
