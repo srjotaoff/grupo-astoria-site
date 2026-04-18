@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <h1>Area Administrativa</h1>
+      <p class="subtitle">Login para testar o fluxo JWT com cookie httpOnly.</p>
+
+      <form id="login-form">
+        <label for="cpf">CPF</label>
+        <input id="cpf" name="cpf" type="text" placeholder="000.000.000-00" autocomplete="username" required />
+
+        <label for="senha">Senha</label>
+        <input id="senha" name="senha" type="password" placeholder="Sua senha" autocomplete="current-password" required />
+
+        <button type="submit">Entrar</button>
+      </form>
+
+      <section class="actions">
+        <button id="me-btn" type="button">Ver /auth/me</button>
+        <button id="logout-btn" type="button">Sair</button>
+      </section>
+
+      <pre id="result" aria-live="polite"></pre>
+    </main>
+
+    <script src="/login.js" defer></script>
+  </body>
+</html>
+
