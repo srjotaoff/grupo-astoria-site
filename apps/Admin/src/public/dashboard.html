@@ -6,101 +6,74 @@
     <title>Painel Administrativo</title>
     <link rel="stylesheet" href="/styles.css" />
     <style>
-      .dashboard-card {
-        max-width: 560px;
-        text-align: center;
-      }
-      .badge {
-        display: inline-block;
-        background: #f0f4ff;
-        color: #3b5bdb;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        padding: 4px 12px;
-        border-radius: 999px;
-        margin-bottom: 1.25rem;
-      }
-      .welcome {
-        font-size: 1.6rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-      }
-      .desc {
-        color: #555;
-        margin-bottom: 2rem;
-        line-height: 1.6;
-      }
-      .construction {
-        background: #fffbe6;
-        border: 1px solid #ffe066;
-        border-radius: 10px;
-        padding: 1.25rem 1.5rem;
-        color: #7a5900;
-        font-size: 0.95rem;
-        margin-bottom: 2rem;
-        text-align: left;
-      }
-      .construction strong {
-        display: block;
-        margin-bottom: 0.35rem;
-        font-size: 1rem;
-      }
-      .user-info {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 10px;
-        padding: 0.9rem 1.25rem;
-        font-size: 0.88rem;
-        color: #444;
-        text-align: left;
-        margin-bottom: 1.75rem;
-      }
-      .user-info span {
-        font-weight: 600;
-        color: #222;
-      }
-      .logout-btn {
-        width: 100%;
-        padding: 0.75rem;
-        background: #e03131;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      .logout-btn:hover {
-        background: #c92a2a;
-      }
-      #status-msg {
-        margin-top: 1rem;
-        font-size: 0.85rem;
-        color: #888;
-        min-height: 1.2em;
-      }
+      .dashboard-card { max-width: 760px; text-align: center; }
+      .badge { display: inline-block; background: #f0f4ff; color: #3b5bdb; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; margin-bottom: 1.25rem; }
+      .welcome { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem; }
+      .desc { color: #555; margin-bottom: 1rem; line-height: 1.6; }
+      .user-info { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.9rem 1.25rem; font-size: 0.88rem; color: #444; text-align: left; margin-bottom: 1.25rem; }
+      .user-info span { font-weight: 600; color: #222; }
+      #status-msg { margin-top: 1rem; font-size: 0.85rem; min-height: 1.2em; text-align: left; }
+      .top-actions { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+      .primary-btn { padding: 0.6rem 1rem; border: none; border-radius: 8px; background: #3b5bdb; color: #fff; font-weight: 600; cursor: pointer; }
+      .primary-btn:hover { background: #2a4f8f; }
+      .empresa-list { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; }
+      .empresa-row { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid #edf2f7; text-align: left; }
+      .empresa-row:last-child { border-bottom: none; }
+      .empresa-actions { display: flex; gap: 0.4rem; }
+      .icon-btn { border: 1px solid #d0d7e2; background: #fff; border-radius: 8px; width: 34px; height: 34px; cursor: pointer; }
+      .icon-btn:hover { background: #f8fafc; }
+      .danger:hover { background: #fff5f5; border-color: #ffc9c9; }
+      #empresa-form { text-align: left; width: 100%; border-top: 1px solid #edf2f7; padding-top: 1rem; display: none; }
+      #empresa-form.visible { display: block; }
+      #empresa-form label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+      #empresa-form input, #empresa-form select, #empresa-form textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; }
+      #empresa-form textarea { resize: vertical; min-height: 100px; }
+      .form-actions { display: flex; justify-content: space-between; gap: 0.75rem; }
+      .logout-btn { padding: 0.75rem; background: #e03131; color: #fff; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+      .secondary-btn { padding: 0.75rem 1rem; border: 1px solid #d0d7e2; background: #fff; border-radius: 8px; cursor: pointer; }
     </style>
   </head>
   <body>
     <main class="card dashboard-card">
       <span class="badge">Painel Administrativo</span>
-      <p class="welcome">Bem-vindo ao Grupo Astória 👋</p>
-      <p class="desc">Você está autenticado com sucesso.</p>
+      <p class="welcome">Cadastro de Empresas</p>
+      <p class="desc">Veja empresas cadastradas, edite, exclua ou adicione uma nova.</p>
 
-      <div class="construction">
-        <strong>🚧 Em Desenvolvimento</strong>
-        Esta é a área administrativa do Grupo Astória. As funcionalidades do painel
-        serão implementadas em breve. Fique ligado!
+      <div class="user-info" id="user-info">Carregando informacoes do usuario...</div>
+
+      <div class="top-actions">
+        <strong>Empresas cadastradas</strong>
+        <button id="add-new-btn" class="primary-btn" type="button">Adicionar nova empresa</button>
       </div>
 
-      <div class="user-info" id="user-info">
-        Carregando informações do usuário...
-      </div>
+      <div id="empresa-list" class="empresa-list"></div>
 
-      <button class="logout-btn" id="logout-btn" type="button">Encerrar Sessão</button>
+      <form id="empresa-form" novalidate>
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" type="text" maxlength="200" />
+
+        <label for="descricao">Descricao</label>
+        <textarea id="descricao" name="descricao" maxlength="1000"></textarea>
+
+        <label for="parceiro">Parceiro</label>
+        <select id="parceiro" name="parceiro">
+          <option value="">Selecione...</option>
+          <option value="Chocosul">Chocosul</option>
+          <option value="Mastter">Mastter</option>
+        </select>
+
+        <label for="imagem">Imagem (maximo 15MB)</label>
+        <input id="imagem" name="imagem" type="file" accept="image/*" />
+
+        <div class="form-actions">
+          <div>
+            <button id="save-btn" class="primary-btn" type="submit">Salvar empresa</button>
+            <button id="cancel-btn" class="secondary-btn" type="button">Cancelar</button>
+          </div>
+          <button class="logout-btn" id="logout-btn" type="button">Encerrar Sessao</button>
+        </div>
+      </form>
+
       <p id="status-msg"></p>
     </main>
 
