@@ -1,5 +1,5 @@
 window.addEventListener('load', () => { // Usamos 'load' para garantir que as imagens carregaram e têm tamanho
-    const scroller = document.querySelector('#main_primeiro_inferior_imagens');
+    const scroller = document.querySelector('#main_segundo_inferio_imgs');
     if (!scroller) return;
 
     // 1. Clonar as logos (Set A + Set B)
