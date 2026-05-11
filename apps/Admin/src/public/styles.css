@@ -54,9 +54,13 @@ button {
   border-radius: 10px;
   padding: 11px 12px;
   background: linear-gradient(90deg, #3b82f6, #2563eb);
-  color: #fa3333;
+  color: #ffffff;
   font-weight: 600;
   cursor: pointer;
+}
+
+button.p-cancel-btn {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
 }
 
 .actions {

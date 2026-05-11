@@ -1,29 +1,29 @@
 import { db } from '../../../../packages/core/database/knex'
 import { AppError } from '../../../../packages/core/errors/AppError'
 
-export const ALLOWED_PARTNERS = ['Chocosul', 'Mastter'] as const
-export type AllowedPartner = (typeof ALLOWED_PARTNERS)[number]
+export const ALLOWED_ENTERPRISES = ['Chocosul', 'Mastter'] as const
+export type AllowedEnterprise = (typeof ALLOWED_ENTERPRISES)[number]
 
-type CreateEmpresaInput = {
+type CreateParceiroInput = {
   nome: unknown
   descricao: unknown
-  parceiro: unknown
+  empresa: unknown
   imagemBuffer: Buffer | undefined
 }
 
-export type CreateEmpresaPayload = {
+export type CreateParceiroPayload = {
   nome: string
   descricao: string
-  parceiro: AllowedPartner
+  empresa: AllowedEnterprise
   imagem: Buffer
 }
 
-export function validateEmpresaInput(input: CreateEmpresaInput): CreateEmpresaPayload {
+export function validateParceiroInput(input: CreateParceiroInput): CreateParceiroPayload {
   const nome = typeof input.nome === 'string' ? input.nome.trim() : ''
   const descricao = typeof input.descricao === 'string' ? input.descricao.trim() : ''
-  const parceiro = typeof input.parceiro === 'string' ? input.parceiro.trim() : ''
+  const empresa = typeof input.empresa === 'string' ? input.empresa.trim() : ''
 
-  if (!nome || !descricao || !parceiro || !input.imagemBuffer) {
+  if (!nome || !descricao || !empresa || !input.imagemBuffer) {
     throw new AppError('Todos os campos sao obrigatorios.', 400)
   }
 
@@ -35,24 +35,24 @@ export function validateEmpresaInput(input: CreateEmpresaInput): CreateEmpresaPa
     throw new AppError('Descricao deve ter no maximo 1000 caracteres.', 400)
   }
 
-  if (!ALLOWED_PARTNERS.includes(parceiro as AllowedPartner)) {
-    throw new AppError('Parceiro invalido. Use Chocosul ou Mastter.', 400)
+  if (!ALLOWED_ENTERPRISES.includes(empresa as AllowedEnterprise)) {
+    throw new AppError('Empresa invalida. Use Chocosul ou Mastter.', 400)
   }
 
   return {
     nome,
     descricao,
-    parceiro: parceiro as AllowedPartner,
+    empresa: empresa as AllowedEnterprise,
     imagem: input.imagemBuffer,
   }
 }
 
-export async function createEmpresa(payload: CreateEmpresaPayload): Promise<{ id: number }> {
-  const insertResult = await db('empresas').insert({
+export async function createEmpresa(payload: CreateParceiroPayload): Promise<{ id: number }> {
+  const insertResult = await db('parceiros').insert({
     nome: payload.nome,
     descricao: payload.descricao,
     imagem: payload.imagem,
-    parceiro: payload.parceiro,
+    empresa: payload.empresa,
   })
 
   const rawId = Array.isArray(insertResult) ? insertResult[0] : insertResult
@@ -70,14 +70,14 @@ export type EmpresaDetails = {
   id: number
   nome: string
   descricao: string
-  parceiro: AllowedPartner
+  empresa: AllowedEnterprise
 }
 
 type UpdateEmpresaInput = {
   id: unknown
   nome: unknown
   descricao: unknown
-  parceiro: unknown
+  empresa: unknown
   imagemBuffer: Buffer | undefined
 }
 
@@ -85,7 +85,7 @@ export type UpdateEmpresaPayload = {
   id: number
   nome?: string
   descricao?: string
-  parceiro?: AllowedPartner
+  empresa?: AllowedEnterprise
   imagem?: Buffer
 }
 
@@ -113,13 +113,13 @@ export function validateUpdateEmpresaInput(input: UpdateEmpresaInput): UpdateEmp
     if (descricao) payload.descricao = descricao
   }
 
-  if (typeof input.parceiro === 'string') {
-    const parceiro = input.parceiro.trim()
-    if (parceiro) {
-      if (!ALLOWED_PARTNERS.includes(parceiro as AllowedPartner)) {
-        throw new AppError('Parceiro invalido. Use Chocosul ou Mastter.', 400)
+  if (typeof input.empresa === 'string') {
+    const empresa = input.empresa.trim()
+    if (empresa) {
+      if (!ALLOWED_ENTERPRISES.includes(empresa as AllowedEnterprise)) {
+        throw new AppError('Empresa invalida. Use Chocosul ou Mastter.', 400)
       }
-      payload.parceiro = parceiro as AllowedPartner
+      payload.empresa = empresa as AllowedEnterprise
     }
   }
 
@@ -130,7 +130,7 @@ export function validateUpdateEmpresaInput(input: UpdateEmpresaInput): UpdateEmp
   if (
     payload.nome === undefined &&
     payload.descricao === undefined &&
-    payload.parceiro === undefined &&
+    payload.empresa === undefined &&
     payload.imagem === undefined
   ) {
     throw new AppError('Informe ao menos um campo para atualizar.', 400)
@@ -140,12 +140,12 @@ export function validateUpdateEmpresaInput(input: UpdateEmpresaInput): UpdateEmp
 }
 
 export async function listEmpresas(): Promise<EmpresaListItem[]> {
-  const rows = await db('empresas').select('id', 'nome').orderBy('id', 'desc')
+  const rows = await db('parceiros').select('id', 'nome').orderBy('id', 'desc')
   return rows.map((row: any) => ({ id: Number(row.id), nome: String(row.nome || '') }))
 }
 
 export async function getEmpresaById(id: number): Promise<EmpresaDetails> {
-  const row = await db('empresas').where({ id }).first()
+  const row = await db('parceiros').where({ id }).first()
   if (!row) {
     throw new AppError('Empresa nao encontrada.', 404)
   }
@@ -154,7 +154,7 @@ export async function getEmpresaById(id: number): Promise<EmpresaDetails> {
     id: Number(row.id),
     nome: String(row.nome || ''),
     descricao: String(row.descricao || ''),
-    parceiro: row.parceiro as AllowedPartner,
+    empresa: row.empresa as AllowedEnterprise,
   }
 }
 
@@ -162,17 +162,17 @@ export async function updateEmpresa(payload: UpdateEmpresaPayload): Promise<void
   const updateData: Record<string, unknown> = {}
   if (payload.nome !== undefined) updateData.nome = payload.nome
   if (payload.descricao !== undefined) updateData.descricao = payload.descricao
-  if (payload.parceiro !== undefined) updateData.parceiro = payload.parceiro
+  if (payload.empresa !== undefined) updateData.empresa = payload.empresa
   if (payload.imagem !== undefined) updateData.imagem = payload.imagem
 
-  const updated = await db('empresas').where({ id: payload.id }).update(updateData)
+  const updated = await db('parceiros').where({ id: payload.id }).update(updateData)
   if (!updated) {
     throw new AppError('Empresa nao encontrada.', 404)
   }
 }
 
 export async function deleteEmpresa(id: number): Promise<void> {
-  const deleted = await db('empresas').where({ id }).del()
+  const deleted = await db('parceiros').where({ id }).del()
   if (!deleted) {
     throw new AppError('Empresa nao encontrada.', 404)
   }

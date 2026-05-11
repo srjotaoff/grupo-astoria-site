@@ -13,68 +13,148 @@
       .user-info { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.9rem 1.25rem; font-size: 0.88rem; color: #444; text-align: left; margin-bottom: 1.25rem; }
       .user-info span { font-weight: 600; color: #222; }
       #status-msg { margin-top: 1rem; font-size: 0.85rem; min-height: 1.2em; text-align: left; }
+
+      /* ── Home screen ── */
+      .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+      .home-card { border: 2px solid #e2e8f0; border-radius: 14px; padding: 2rem 1.5rem; cursor: pointer; background: #fff; transition: border-color 0.15s, box-shadow 0.15s; }
+      .home-card:hover { border-color: #3b5bdb; box-shadow: 0 4px 16px rgba(59,91,219,0.10); }
+      .home-card-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+      .home-card-title { font-size: 1.15rem; font-weight: 700; color: #222; margin-bottom: 0.3rem; }
+      .home-card-desc { font-size: 0.85rem; color: #777; }
+      .logout-row { display: flex; justify-content: flex-end; margin-top: 0.5rem; }
+
+      /* ── Section screens ── */
       .top-actions { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
-      .primary-btn { padding: 0.6rem 1rem; border: none; border-radius: 8px; background: #3b5bdb; color: #fff; font-weight: 600; cursor: pointer; }
+      .primary-btn { padding: 0.6rem 1rem; border: none; border-radius: 8px; background: #3b5bdb; color: #fff; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
       .primary-btn:hover { background: #2a4f8f; }
-      .empresa-list { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; }
-      .empresa-row { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid #edf2f7; text-align: left; }
-      .empresa-row:last-child { border-bottom: none; }
-      .empresa-actions { display: flex; gap: 0.4rem; }
-      .icon-btn { border: 1px solid #d0d7e2; background: #fff; border-radius: 8px; width: 34px; height: 34px; cursor: pointer; }
+      .secondary-btn { padding: 0.6rem 1rem; border: 1px solid #dfce04; background: #cfb502; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+      .back-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.9rem; border: 1px solid #dfce04; background: #cfb502; border-radius: 8px; cursor: pointer; font-size: 0.85rem; margin-bottom: 1.1rem; }
+      .back-btn:hover { background: #ac9602; }
+      .item-list { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; }
+      .item-row { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid #edf2f7; text-align: left; }
+      .item-row:last-child { border-bottom: none; }
+      .item-actions { display: flex; gap: 0.4rem; }
+      .icon-btn { border: 1px solid #d0d7e2; background: #fff; border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 1rem; }
       .icon-btn:hover { background: #f8fafc; }
       .danger:hover { background: #fff5f5; border-color: #ffc9c9; }
-      #empresa-form { text-align: left; width: 100%; border-top: 1px solid #edf2f7; padding-top: 1rem; display: none; }
-      #empresa-form.visible { display: block; }
-      #empresa-form label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-      #empresa-form input, #empresa-form select, #empresa-form textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; }
-      #empresa-form textarea { resize: vertical; min-height: 100px; }
-      .form-actions { display: flex; justify-content: space-between; gap: 0.75rem; }
-      .logout-btn { padding: 0.75rem; background: #e03131; color: #fff; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
-      .secondary-btn { padding: 0.75rem 1rem; border: 1px solid #d0d7e2; background: #fff; border-radius: 8px; cursor: pointer; }
+
+      /* ── Form ── */
+      .item-form { text-align: left; width: 100%; border-top: 1px solid #edf2f7; padding-top: 1rem; display: none; }
+      .item-form.visible { display: block; }
+      .item-form label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+      .item-form input, .item-form select, .item-form textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; box-sizing: border-box; }
+      .item-form textarea { resize: vertical; min-height: 100px; }
+      .form-actions { display: flex; justify-content: space-between; gap: 0.75rem; align-items: center; }
+      .logout-btn { padding: 0.6rem 1rem; background: #e03131; color: #fff; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+
+      /* ── Visibility ── */
+      .screen { display: none; }
+      .screen.active { display: block; }
     </style>
   </head>
   <body>
     <main class="card dashboard-card">
       <span class="badge">Painel Administrativo</span>
-      <p class="welcome">Cadastro de Empresas</p>
-      <p class="desc">Veja empresas cadastradas, edite, exclua ou adicione uma nova.</p>
-
       <div class="user-info" id="user-info">Carregando informacoes do usuario...</div>
 
-      <div class="top-actions">
-        <strong>Empresas cadastradas</strong>
-        <button id="add-new-btn" class="primary-btn" type="button">Adicionar nova empresa</button>
+      <!-- ══ HOME SCREEN ══════════════════════════════════════════════════ -->
+      <div id="screen-home" class="screen active">
+        <p class="welcome">O que deseja gerenciar?</p>
+        <div class="home-grid">
+          <div class="home-card" id="home-parceiros-btn">
+            <div class="home-card-icon">🤝</div>
+            <div class="home-card-title">Parceiros</div>
+            <div class="home-card-desc">Gerencie as empresas parceiras cadastradas</div>
+          </div>
+          <div class="home-card" id="home-banners-btn">
+            <div class="home-card-icon">🖼️</div>
+            <div class="home-card-title">Banners</div>
+            <div class="home-card-desc">Gerencie os banners exibidos nos sites</div>
+          </div>
+        </div>
+        <div class="logout-row">
+          <button class="logout-btn" id="logout-btn-home" type="button">Encerrar Sessao</button>
+        </div>
       </div>
 
-      <div id="empresa-list" class="empresa-list"></div>
+      <!-- ══ PARCEIROS SCREEN ════════════════════════════════════════════ -->
+      <div id="screen-parceiros" class="screen">
+        <button class="back-btn" id="back-from-parceiros">← Voltar</button>
+        <p class="welcome">Parceiros</p>
 
-      <form id="empresa-form" novalidate>
-        <label for="nome">Nome</label>
-        <input id="nome" name="nome" type="text" maxlength="200" />
-
-        <label for="descricao">Descricao</label>
-        <textarea id="descricao" name="descricao" maxlength="1000"></textarea>
-
-        <label for="parceiro">Parceiro</label>
-        <select id="parceiro" name="parceiro">
-          <option value="">Selecione...</option>
-          <option value="Chocosul">Chocosul</option>
-          <option value="Mastter">Mastter</option>
-        </select>
-
-        <label for="imagem">Imagem (maximo 15MB)</label>
-        <input id="imagem" name="imagem" type="file" accept="image/*" />
-
-        <div class="form-actions">
-          <div>
-            <button id="save-btn" class="primary-btn" type="submit">Salvar empresa</button>
-            <button id="cancel-btn" class="secondary-btn" type="button">Cancelar</button>
-          </div>
-          <button class="logout-btn" id="logout-btn" type="button">Encerrar Sessao</button>
+        <div class="top-actions">
+          <strong>Parceiros cadastrados</strong>
+          <button id="parceiro-add-btn" class="primary-btn" type="button">Adicionar novo parceiro</button>
         </div>
-      </form>
 
-      <p id="status-msg"></p>
+        <div id="parceiro-list" class="item-list"></div>
+
+        <form id="parceiro-form" class="item-form" novalidate>
+          <label for="p-nome">Nome</label>
+          <input id="p-nome" name="nome" type="text" maxlength="200" />
+
+          <label for="p-descricao">Descricao</label>
+          <textarea id="p-descricao" name="descricao" maxlength="1000"></textarea>
+
+          <label for="p-empresa">Empresa</label>
+          <select id="p-empresa" name="empresa">
+            <option value="">Selecione...</option>
+            <option value="Chocosul">Chocosul</option>
+            <option value="Mastter">Mastter</option>
+          </select>
+
+          <label for="p-imagem">Imagem (maximo 15MB)</label>
+          <input id="p-imagem" name="imagem" type="file" accept="image/*" />
+
+          <div class="form-actions">
+            <div style="display:flex;gap:0.5rem;">
+              <button id="p-save-btn" class="primary-btn" type="submit">Salvar</button>
+              <button id="p-cancel-btn" class="secondary-btn" type="button">Cancelar</button>
+            </div>
+            <button class="logout-btn" id="logout-btn-parceiros" type="button">Encerrar Sessao</button>
+          </div>
+        </form>
+
+        <p id="parceiro-status" class="status-msg"></p>
+      </div>
+
+      <!-- ══ BANNERS SCREEN ══════════════════════════════════════════════ -->
+      <div id="screen-banners" class="screen">
+        <button class="back-btn" id="back-from-banners">← Voltar</button>
+        <p class="welcome">Banners</p>
+
+        <div class="top-actions">
+          <strong>Banners cadastrados</strong>
+          <button id="banner-add-btn" class="primary-btn" type="button">Adicionar novo banner</button>
+        </div>
+
+        <div id="banner-list" class="item-list"></div>
+
+        <form id="banner-form" class="item-form" novalidate>
+          <label for="b-nome">Nome</label>
+          <input id="b-nome" name="nome" type="text" maxlength="200" />
+
+          <label for="b-empresa">Empresa</label>
+          <select id="b-empresa" name="empresa">
+            <option value="">Selecione...</option>
+            <option value="Chocosul">Chocosul</option>
+            <option value="Mastter">Mastter</option>
+          </select>
+
+          <label for="b-imagem">Imagem (maximo 15MB)</label>
+          <input id="b-imagem" name="imagem" type="file" accept="image/*" />
+
+          <div class="form-actions">
+            <div style="display:flex;gap:0.5rem;">
+              <button id="b-save-btn" class="primary-btn" type="submit">Salvar</button>
+              <button id="b-cancel-btn" class="secondary-btn" type="button">Cancelar</button>
+            </div>
+            <button class="logout-btn" id="logout-btn-banners" type="button">Encerrar Sessao</button>
+          </div>
+        </form>
+
+        <p id="banner-status" class="status-msg"></p>
+      </div>
     </main>
 
     <script src="/dashboard.js" defer></script>
