@@ -1,0 +1,54 @@
+{
+  "name": "grupo-astoria-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/index.ts",
+    "dev:admin": "cross-env APP_NAME=admin tsx watch src/index.ts",
+    "dev:chocosul": "cross-env APP_NAME=chocosul tsx watch src/index.ts",
+    "dev:mastter": "cross-env APP_NAME=chocosul PORT_CHOCOSUL=3003 tsx watch src/index.ts",
+    "dev:all": "concurrently -n admin,chocosul,mastter -c blue,green,magenta \"npm:dev:admin\" \"npm:dev:chocosul\" \"npm:dev:mastter\"",
+    "optimize:chocosul-images": "node apps/Chocosul/scripts/convert-images-to-webp.mjs",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srjotaoff/grupo-astoria-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/srjotaoff/grupo-astoria-site/issues"
+  },
+  "homepage": "https://github.com/srjotaoff/grupo-astoria-site#readme",
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.1.0",
+    "@types/node": "^25.6.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
+    "sharp": "^0.34.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@types/knex": "^0.15.2",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "knex": "^3.2.9",
+    "multer": "^2.1.1",
+    "mysql2": "^3.22.1"
+  }
+}
