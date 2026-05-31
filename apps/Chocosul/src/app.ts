@@ -6,8 +6,16 @@ import { db } from '../../../packages/core/database/knex'
 
 const app = express()
 
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3002'
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'http://localhost:3002')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
 const ALLOWED_ENTERPRISES = new Set(['Chocosul', 'Mastter'])
+
+function isOriginAllowed(origin?: string): boolean {
+  if (!origin) return true
+  return ALLOWED_ORIGINS.includes(origin)
+}
 
 function resolveEnterprise(queryValue: unknown): string {
   const enterprise = typeof queryValue === 'string' ? queryValue.trim() : 'Chocosul'
@@ -67,7 +75,12 @@ function detectImageMimeType(imageBuffer: Buffer): string {
 app.use(helmet())
 app.use(
   cors({
-    origin: ALLOWED_ORIGIN,
+    origin: (origin, callback) => {
+      if (isOriginAllowed(origin)) {
+        return callback(null, true)
+      }
+      return callback(new Error('Not allowed by CORS'))
+    },
     credentials: true
   })
 )

@@ -8,12 +8,25 @@ import { AppError } from '../../../packages/core/errors/AppError'
 
 const app = express()
 
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3001'
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'http://localhost:3001')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+
+function isOriginAllowed(origin?: string): boolean {
+  if (!origin) return true
+  return ALLOWED_ORIGINS.includes(origin)
+}
 
 app.use(helmet({ contentSecurityPolicy: false }))
 app.use(
   cors({
-    origin: ALLOWED_ORIGIN,
+    origin: (origin, callback) => {
+      if (isOriginAllowed(origin)) {
+        return callback(null, true)
+      }
+      return callback(new Error('Not allowed by CORS'))
+    },
     credentials: true
   })
 )
