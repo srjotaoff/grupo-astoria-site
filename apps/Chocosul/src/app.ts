@@ -72,7 +72,7 @@ function detectImageMimeType(imageBuffer: Buffer): string {
   return 'application/octet-stream'
 }
 
-app.use(helmet({ hsts: false }))
+app.use(helmet({ contentSecurityPolicy: false }))
 app.use(
   cors({
     origin: (origin, callback) => {
