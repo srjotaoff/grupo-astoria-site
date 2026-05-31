@@ -6,6 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/index.ts",
+    "dev:admin": "cross-env APP_NAME=admin tsx watch src/index.ts",
+    "dev:chocosul": "cross-env APP_NAME=chocosul tsx watch src/index.ts",
+    "dev:mastter": "cross-env APP_NAME=chocosul PORT_CHOCOSUL=3003 tsx watch src/index.ts",
+    "dev:all": "concurrently -n admin,chocosul,mastter -c blue,green,magenta \"npm:dev:admin\" \"npm:dev:chocosul\" \"npm:dev:mastter\"",
+    "optimize:chocosul-images": "node apps/Chocosul/scripts/convert-images-to-webp.mjs",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -27,6 +32,9 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.6.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
+    "sharp": "^0.34.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"

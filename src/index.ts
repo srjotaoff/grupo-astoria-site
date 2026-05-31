@@ -1,0 +1,50 @@
+/**
+ * Main entry point for Grupo Astoria Site
+ * Default (npm run dev): starts BOTH Chocosul (3002) and Admin (3001)
+ * To run only one: APP_NAME=admin npm run dev  |  APP_NAME=chocosul npm run dev
+ */
+
+import dotenv from 'dotenv'
+import path from 'path'
+
+// Read APP_NAME BEFORE dotenv so we can tell if it was explicitly passed
+// via CLI/environment (not just sitting in .env).
+// dotenv.config() does NOT override pre-existing env vars, so if APP_NAME
+// already exists here it was set by the caller, not the .env file.
+const explicitApp = process.env.APP_NAME
+
+// Load root .env (may set APP_NAME, DB creds, ports, etc.)
+dotenv.config({ path: path.resolve(__dirname, '../.env') })
+
+// Only honour APP_NAME when explicitly provided – otherwise start everything.
+const APP = (explicitApp || 'all').toLowerCase()
+
+async function startAdmin() {
+  try {
+    console.log('\n🚀 Starting ADMIN application...\n')
+    await import('../apps/Admin/server')
+  } catch (err) {
+    console.error('Failed to start Admin app:', err)
+    process.exit(1)
+  }
+}
+
+async function startChocosul() {
+  try {
+    console.log('\n🚀 Starting CHOCOSUL application...\n')
+    await import('../apps/Chocosul/server')
+  } catch (err) {
+    console.error('Failed to start Chocosul app:', err)
+    process.exit(1)
+  }
+}
+
+if (APP === 'admin') {
+  startAdmin()
+} else if (APP === 'chocosul') {
+  startChocosul()
+} else {
+  // Default: start both
+  startAdmin()
+  startChocosul()
+}
