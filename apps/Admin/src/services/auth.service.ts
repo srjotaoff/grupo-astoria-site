@@ -30,7 +30,7 @@ export function assertValidCredentialsInput(cpf: unknown, senha: unknown): { cpf
 }
 
 export async function validateDatabaseAdminCredentials(cpf: string, senha: string): Promise<AdminIdentity> {
-  const usuario = await db('PC_USUARI')
+  const usuario = await db('usuarios')
     .where({ cpf })
     .select('id', 'cpf', 'password')
     .first()
