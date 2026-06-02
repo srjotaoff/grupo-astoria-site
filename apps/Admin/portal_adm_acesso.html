@@ -24,18 +24,20 @@
 
             <div>
                 <label>Usuário:</label>
-                <input type="text">
+                <input id="cpf" type="text" placeholder="CPF">
             </div>
 
             <div>
                 <label>Senha:</label>
-                <input type="password">
+                <input id="senha" type="password" placeholder="Senha">
             </div>
-            <button><p>ACESSAR </p><img src="images/icones/icone_seta_direita_branco.svg" alt=""></button>
+            <button id="acessar-btn"><p>ACESSAR </p><img src="images/icones/icone_seta_direita_branco.svg" alt=""></button>
+            <p id="error-msg" style="color:red;font-size:0.85rem;min-height:1.2em;"></p>
         </div>
         <p id="main_unico_informacao">Acesso ao portal de administração do site</p>
 
     </div>
 </main>
+<script src="javascripts/login_adm.js"></script>
 </body>
 </html>

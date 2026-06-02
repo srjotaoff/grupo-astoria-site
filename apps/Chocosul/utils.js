@@ -6,7 +6,7 @@ async function injectHeader() {
     }
 
     try {
-        const res = await fetch("header.html");
+        const res = await fetch("/header");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         header.innerHTML = await res.text();
         initMenuLateral();

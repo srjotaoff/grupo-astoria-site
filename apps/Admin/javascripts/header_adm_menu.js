@@ -8,6 +8,7 @@
     { href: '/cartaz-rotativo', label: '🖼️  Cartaz Rotativo' },
     { href: '/marcas',          label: '🤝  Marcas do Portifólio' },
     { href: '/opcoes-menu',     label: '☰  Opções do Menu' },
+    { href: '/solicitacao',     label: '📋  Gestão de Solicitação' },
   ]
 
   var nav = document.createElement('nav')

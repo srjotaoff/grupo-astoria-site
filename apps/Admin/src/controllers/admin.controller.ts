@@ -27,6 +27,15 @@ import {
   validateOpcaoInput,
   validateUpdateOpcaoInput,
 } from '../services/opcoes.service'
+import {
+  createSolicitacao,
+  deleteSolicitacao,
+  getSolicitacaoById,
+  listSolicitacoes,
+  updateSolicitacao,
+  validateSolicitacaoInput,
+  validateUpdateSolicitacaoInput,
+} from '../services/solicitacao.service'
 import { AppError } from '../../../../packages/core/errors/AppError'
 
 // ── Shared MIME helper ────────────────────────────────────────────────────────
@@ -169,3 +178,37 @@ export async function deleteOpcaoHandler(req: Request, res: Response) {
   await deleteOpcao(id)
   return res.status(200).json({ ok: true })
 }
+
+// ── Solicitacao handlers ──────────────────────────────────────────────────────
+
+export async function createSolicitacaoHandler(req: Request, res: Response) {
+  const payload = validateSolicitacaoInput(req.body)
+  const solicitacao = await createSolicitacao(payload)
+  return res.status(201).json({ ok: true, id: solicitacao.id })
+}
+
+export async function listSolicitacoesHandler(_req: Request, res: Response) {
+  const solicitacoes = await listSolicitacoes()
+  return res.status(200).json({ ok: true, solicitacoes })
+}
+
+export async function getSolicitacaoHandler(req: Request, res: Response) {
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) throw new AppError('ID de solicitação invalido.', 400)
+  const solicitacao = await getSolicitacaoById(id)
+  return res.status(200).json({ ok: true, solicitacao })
+}
+
+export async function updateSolicitacaoHandler(req: Request, res: Response) {
+  const payload = validateUpdateSolicitacaoInput({ id: req.params.id, ...req.body })
+  await updateSolicitacao(payload)
+  return res.status(200).json({ ok: true })
+}
+
+export async function deleteSolicitacaoHandler(req: Request, res: Response) {
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) throw new AppError('ID de solicitação invalido.', 400)
+  await deleteSolicitacao(id)
+  return res.status(200).json({ ok: true })
+}
+

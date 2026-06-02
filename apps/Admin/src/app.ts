@@ -74,6 +74,9 @@ app.get('/marcas', (_req, res) => {
 app.get('/opcoes-menu', (_req, res) => {
   res.sendFile(path.resolve(__dirname, '../portal_adm_opcoes_menu_vendedor.html'))
 })
+app.get('/solicitacao', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../portal_adm_solicitacao.html'))
+})
 
 // ── API routes ────────────────────────────────────────────────────────────────
 app.use('/auth', authRoutes)
