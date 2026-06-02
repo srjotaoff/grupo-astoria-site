@@ -57,7 +57,7 @@ a, button {
 #header_meio_img {
     padding-left: 1svw;
     padding-right: 1svw;
-    width: 13svw;
+    height: 5svh;
 }
 
 #header_direito {
@@ -147,7 +147,7 @@ a, button {
 
 /* ── Mobile (≤ 1024 px) ──────────────────────────────────────── */
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 904px) {
 
     /* Hamburguer */
     #header_esquerdo {
@@ -173,7 +173,7 @@ a, button {
 
     /* Logo */
     #header_meio_img {
-        width: 36svw;
+        height: 5svh;
         margin-left: 2svw;
         margin-right: 2svw;
     }

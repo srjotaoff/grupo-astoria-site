@@ -3,29 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marcas do Portifólio — Admin</title>
+    <title>Document</title>
     <link rel="stylesheet" href="stylesheets/reset.css">
     <link rel="stylesheet" href="stylesheets/portal_adm_marcas.css">
-    <link rel="stylesheet" href="stylesheets/portal_adm_header.css">
+
     <link rel="icon" type="image/svg+xml" href="images/imagens_icones/icone_chocosul.svg">
 </head>
 <body>
 <header>
-    <img src="images/imagens_grandes/logo_chocosul.svg" alt="Logo Chocosul">
+    <img src="images/imagens_grandes/logo_chocosul.svg" alt="">
 </header>
 <main>
     <div id="main_tudo">
-        <div id="menu_lateral"></div>
+
+        <div id="menu_lateral">
+
+        </div>
 
         <div id="main_tudo_caixas">
-            <!-- cards rendered by marcas.js -->
+            <div class="main_tudo_caixas_caixa">
+                <div class="main_tudo_caixas_caixa_img">
+                    <p>+</p>
+                </div>
+
+                <div class="main_tudo_caixas_caixa_conjunto">
+                    <label for="">Nome da marca</label>
+                    <input class="main_tudo_caixas_caixa_texto"type="text">
+                </div>
+
+                <div class="main_tudo_caixas_caixa_conjunto">
+                    <label for="">Descrição da marca</label>
+                    <input class="main_tudo_caixas_caixa_texto" type="text">
+                </div>
+                <img class="main_tudo_caixas_caixa_lixeira" src="images/imagens_icones/lixeira.svg" alt="">
+            </div>
+
+            <div class="main_tudo_caixas_caixa">
+                <div class="main_tudo_caixas_caixa_img">
+                    <p>+</p>
+                </div>
+                <div class="main_tudo_caixas_caixa_conjunto">
+                    <label for="">Nome da marca</label>
+                    <input class="main_tudo_caixas_caixa_texto"type="text">
+                </div>
+
+                <div class="main_tudo_caixas_caixa_conjunto">
+                    <label for="">Descrição da marca</label>
+                    <input class="main_tudo_caixas_caixa_texto" type="text">
+                </div>
+                <img class="main_tudo_caixas_caixa_lixeira" src="images/imagens_icones/lixeira.svg" alt="">
+            </div>
+
             <div id="main_tudo_caixas_adcionar">
                 <p>+</p>
             </div>
         </div>
     </div>
 </main>
-<script src="javascripts/header_adm_menu.js"></script>
-<script defer src="javascripts/marcas.js"></script>
+
 </body>
 </html>
