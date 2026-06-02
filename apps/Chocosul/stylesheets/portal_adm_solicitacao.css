@@ -66,34 +66,15 @@ header img{
 
 .main_tudo_caixas_caixa{
     width: 20svw;
-    height: 40svh;
+    height: 43svh;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;
     display: flex;
     flex-direction: column;
     gap: 2svh;
-    
-    align-items: center;
-}
-
-.main_tudo_caixas_caixa_img{
-    margin-top: 3svh;
-    width: 16svw;
-    height: 19svh;
-    background-color: var(--branca);
-    border: none;
-    display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 2svh;
-    cursor: pointer;
-}
-
-.main_tudo_caixas_caixa_img p{
-    font-size: 7.84316svw;
-    font-family:"Poppins-Regular" ;
-    color: var(--texto);
 }
 
 .main_tudo_caixas_caixa_texto{
@@ -106,6 +87,7 @@ header img{
 
 .main_tudo_caixas_caixa_conjunto{
     width: 16svw;
+    height: auto;
     display: flex;
     flex-direction: column;
     gap: 0.5svh;
@@ -127,7 +109,7 @@ header img{
 
 #main_tudo_caixas_adcionar{
     width: 20svw;
-    height: 40svh;
+    height: 43svh;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;

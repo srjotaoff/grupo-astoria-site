@@ -32,7 +32,8 @@ if (acessarBtn) {
         return
       }
 
-      window.location.replace('/cartaz-rotativo')
+      // Send admin to the menu hub first, where they can choose the section to manage.
+      window.location.replace('/opcoes-menu')
     } catch (_e) {
       showError('Sem conexão com o servidor.')
     } finally {
@@ -47,4 +48,3 @@ if (senhaInput) {
     if (e.key === 'Enter' && acessarBtn) acessarBtn.click()
   })
 }
-
