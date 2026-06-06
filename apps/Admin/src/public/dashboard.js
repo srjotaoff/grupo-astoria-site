@@ -13,9 +13,9 @@ async function checkSession() {
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     if (!res.ok) return
     var data = await res.json()
-    var cpf = data.admin && data.admin.cpf ? data.admin.cpf : '-'
+    var username = data.admin && data.admin.username ? data.admin.username : '-'
     var role = data.admin && data.admin.role ? data.admin.role : '-'
-    userInfoEl.innerHTML = 'CPF: <span>' + cpf + '</span> &nbsp;|&nbsp; Perfil: <span>' + role + '</span>'
+    userInfoEl.innerHTML = 'Username: <span>' + username + '</span> &nbsp;|&nbsp; Perfil: <span>' + role + '</span>'
   } catch (_e) { /* silent */ }
 }
 

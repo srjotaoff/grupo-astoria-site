@@ -3,35 +3,31 @@ import { AppError } from '../../../../packages/core/errors/AppError'
 
 export type AdminIdentity = {
   id: number
-  cpf: string
+  username: string
   role: 'admin'
 }
 
-function onlyDigits(value: string): string {
-  return value.replace(/\D/g, '')
+export function sanitizeUsername(username: string): string {
+  return (username || '').trim()
 }
 
-export function sanitizeCPF(cpf: string): string {
-  return onlyDigits(cpf || '')
-}
-
-export function assertValidCredentialsInput(cpf: unknown, senha: unknown): { cpf: string; senha: string } {
-  if (typeof cpf !== 'string' || typeof senha !== 'string') {
+export function assertValidCredentialsInput(username: unknown, senha: unknown): { username: string; senha: string } {
+  if (typeof username !== 'string' || typeof senha !== 'string') {
     throw new AppError('Credenciais invalidas', 400)
   }
 
-  const normalizedCPF = sanitizeCPF(cpf)
+  const normalizedUsername = sanitizeUsername(username)
 
-  if (normalizedCPF.length !== 11 || senha.length < 1 || senha.length > 128) {
+  if (!normalizedUsername || normalizedUsername.length > 128 || senha.length < 1 || senha.length > 128) {
     throw new AppError('Credenciais invalidas', 400)
   }
 
-  return { cpf: normalizedCPF, senha }
+  return { username: normalizedUsername, senha }
 }
 
-export async function validateDatabaseAdminCredentials(cpf: string, senha: string): Promise<AdminIdentity> {
+export async function validateDatabaseAdminCredentials(username: string, senha: string): Promise<AdminIdentity> {
   const usuario = await db('usuarios')
-    .where({ cpf })
+    .where({ cpf: username })
     .select('id', 'cpf', 'password')
     .first()
 
@@ -47,7 +43,7 @@ export async function validateDatabaseAdminCredentials(cpf: string, senha: strin
 
   return {
     id: usuario.id,
-    cpf: usuario.cpf,
+    username: usuario.cpf,
     role: 'admin'
   }
 }

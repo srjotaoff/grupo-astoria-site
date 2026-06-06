@@ -5,7 +5,7 @@ declare global {
     interface Request {
       admin?: {
         sub: string
-        cpf: string
+        username: string
         role: 'admin'
         sid: string
       }

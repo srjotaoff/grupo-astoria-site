@@ -22,12 +22,12 @@ async function request(url, options) {
 
 form.addEventListener('submit', async function (event) {
   event.preventDefault()
-  var cpf = document.getElementById('cpf').value
+  var username = document.getElementById('username').value
   var senha = document.getElementById('senha').value
   try {
     await request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ cpf: cpf, senha: senha })
+      body: JSON.stringify({ username: username, senha: senha })
     })
     window.location.replace('/dashboard')
   } catch (error) {

@@ -19,8 +19,8 @@ function getCookieOptions() {
 }
 
 export async function login(req: Request, res: Response) {
-  const { cpf, senha } = assertValidCredentialsInput(req.body?.cpf, req.body?.senha)
-  const admin = await validateDatabaseAdminCredentials(cpf, senha)
+  const { username, senha } = assertValidCredentialsInput(req.body?.username, req.body?.senha)
+  const admin = await validateDatabaseAdminCredentials(username, senha)
 
   // Block login if there is already an active session for this user
   const existing = await getActiveSession(admin.id)
@@ -32,7 +32,7 @@ export async function login(req: Request, res: Response) {
   const userAgent = req.headers['user-agent']
   const { token: sessionToken } = await createSession(admin.id, ip, userAgent)
 
-  const jwtToken = gerarToken({ sub: String(admin.id), cpf: admin.cpf, role: admin.role, sid: sessionToken })
+  const jwtToken = gerarToken({ sub: String(admin.id), username: admin.username, role: admin.role, sid: sessionToken })
 
   res.cookie('admin_token', jwtToken, getCookieOptions())
   return res.status(200).json({ ok: true })
@@ -41,7 +41,7 @@ export async function login(req: Request, res: Response) {
 export function me(req: Request, res: Response) {
   return res.status(200).json({
     authenticated: true,
-    admin: { sub: req.admin!.sub, cpf: req.admin!.cpf, role: req.admin!.role }
+    admin: { sub: req.admin!.sub, username: req.admin!.username, role: req.admin!.role }
   })
 }
 

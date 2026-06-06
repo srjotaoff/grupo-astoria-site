@@ -1,4 +1,4 @@
-var cpfInput   = document.getElementById('cpf')
+var usernameInput = document.getElementById('username')
 var senhaInput = document.getElementById('senha')
 var acessarBtn = document.getElementById('acessar-btn')
 var errorMsg   = document.getElementById('error-msg')
@@ -9,10 +9,10 @@ function showError(msg) {
 
 if (acessarBtn) {
   acessarBtn.addEventListener('click', async function () {
-    var cpf   = cpfInput  ? cpfInput.value.trim()   : ''
+    var username = usernameInput ? usernameInput.value.trim() : ''
     var senha = senhaInput ? senhaInput.value.trim() : ''
 
-    if (!cpf || !senha) { showError('Preencha usuário e senha.'); return }
+    if (!username || !senha) { showError('Preencha usuário e senha.'); return }
 
     acessarBtn.disabled = true
     showError('')
@@ -22,7 +22,7 @@ if (acessarBtn) {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cpf: cpf, senha: senha })
+        body: JSON.stringify({ username: username, senha: senha })
       })
 
       var body = await res.json().catch(function () { return {} })

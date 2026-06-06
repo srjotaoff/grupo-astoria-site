@@ -5,7 +5,7 @@ import { AppError } from '../../../../packages/core/errors/AppError'
 
 type JwtPayload = {
   sub: string
-  cpf: string
+  username: string
   role: 'admin'
   sid: string
 }
@@ -35,7 +35,7 @@ export async function verifyAdminCookieJWT(req: Request, _res: Response, next: N
     throw new AppError('Token invalido ou expirado', 401)
   }
 
-  if (decoded.role !== 'admin' || !decoded.cpf || !decoded.sid) {
+  if (decoded.role !== 'admin' || !decoded.username || !decoded.sid) {
     throw new AppError('Token invalido ou expirado', 401)
   }
 
@@ -47,7 +47,7 @@ export async function verifyAdminCookieJWT(req: Request, _res: Response, next: N
 
   req.admin = {
     sub: decoded.sub,
-    cpf: decoded.cpf,
+    username: decoded.username,
     role: 'admin',
     sid: decoded.sid,
   }

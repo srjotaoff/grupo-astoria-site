@@ -56,13 +56,14 @@ main{
 }
 
 #main_unico{
+    padding-bottom: 10svh;
     padding-top: 10svh;
     margin-left: 10svw;
     width: 80svw;
-    display: flex;
-    flex-direction: row;
-    gap: 8svh;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10svh 10svw;
+    justify-content: space-evenly;
 }
 
 .main_unico_caixa_texto{
@@ -171,7 +172,7 @@ main{
 .main_unico_caixa_img_marcas{
     margin-top: 3svh;
     width: 50svw;
-    height: auto;
+    height: 15svh;
 }
 
 .main_unico_caixa_img a{
