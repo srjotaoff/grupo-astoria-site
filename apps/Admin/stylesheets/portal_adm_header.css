@@ -71,7 +71,7 @@ body{
 .botao-ativo,
 #header button.active {
     background-color: var(--texto) !important;
-    color: white !important;               
+    color: white !important;
     font-weight: bold !important;          
 
 }

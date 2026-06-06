@@ -41,6 +41,10 @@ function createMarcaCard(parceiro) {
       '<div class="img-overlay">Trocar imagem</div>' +
       '<input type="file" class="card-file-input" accept="image/*" hidden>' +
     '</div>' +
+    '<div class="upload-actions">' +
+      '<button type="button" class="btn-upload">Carregar imagem</button>' +
+      '<span class="upload-filename">Nenhum arquivo selecionado</span>' +
+    '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
       '<label>Nome da marca</label>' +
       '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="nome" value="' + escHtml(parceiro && parceiro.nome) + '" placeholder="Nome da marca">' +
@@ -70,13 +74,17 @@ function createMarcaCard(parceiro) {
 function wireCard(card) {
   var imgArea   = card.querySelector('.main_tudo_caixas_caixa_img')
   var fileInput = card.querySelector('.card-file-input')
+  var uploadBtn = card.querySelector('.btn-upload')
+  var fileName  = card.querySelector('.upload-filename')
   var saveBtn   = card.querySelector('.btn-salvar')
   var delBtn    = card.querySelector('.main_tudo_caixas_caixa_lixeira')
 
   if (imgArea && fileInput) {
     imgArea.addEventListener('click', function () { fileInput.click() })
+    if (uploadBtn) uploadBtn.addEventListener('click', function () { fileInput.click() })
     fileInput.addEventListener('change', function () {
       if (!fileInput.files || !fileInput.files[0]) return
+      if (fileName) fileName.textContent = fileInput.files[0].name
       var reader = new FileReader()
       reader.onload = function (e) {
         var preview = imgArea.querySelector('.img-preview')
@@ -112,7 +120,13 @@ async function saveCard(card) {
   if (nome)     fd.append('nome',     nome.value.trim())
   if (descricao)fd.append('descricao',descricao.value.trim())
   if (empresa)  fd.append('empresa',  empresa.value.trim())
-  if (fileInput && fileInput.files && fileInput.files[0]) fd.append('imagem', fileInput.files[0])
+  var hasNewImage = Boolean(fileInput && fileInput.files && fileInput.files[0])
+  if (hasNewImage) fd.append('imagem', fileInput.files[0])
+
+  if (isNew && !hasNewImage) {
+    setStatus(statusEl, 'Selecione uma imagem para criar a marca.', true)
+    return
+  }
 
   saveBtn.disabled = true
   setStatus(statusEl, 'Salvando...', false)

@@ -113,6 +113,35 @@ header img {
 
 .main_tudo_caixas_caixa_img:hover .img-overlay { display: flex; }
 
+.upload-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.btn-upload {
+  padding: 0.38rem 0.65rem;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  color: #e5e7eb;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.btn-upload:hover {
+  border-color: rgb(245,62,78);
+}
+
+.upload-filename {
+  font-size: 0.74rem;
+  color: rgba(255,255,255,0.62);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 145px;
+}
+
 /* ── Field groups ── */
 .main_tudo_caixas_caixa_conjunto {
   display: flex;
