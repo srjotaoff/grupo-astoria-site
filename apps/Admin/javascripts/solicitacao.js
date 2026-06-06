@@ -40,12 +40,12 @@ function createSolicitacaoCard(s) {
       '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="setor" value="' + escHtml(s && s.setor) + '" placeholder="Ex: Comercial, TI" maxlength="200">' +
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
-      '<label>Colaborador responsável</label>' +
-      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="colaborador" value="' + escHtml(s && s.colaborador) + '" placeholder="Nome do colaborador" maxlength="200">' +
+      '<label>Responsável</label>' +
+      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="responsavel" value="' + escHtml(s && (s.responsavel || s.colaborador)) + '" placeholder="Nome do responsável" maxlength="200">' +
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
-      '<label>Tempo para resolução (horas)</label>' +
-      '<input class="main_tudo_caixas_caixa_texto" type="number" data-field="tempo_horas" value="' + escHtml(s && s.tempo_horas) + '" placeholder="Ex: 24" min="1">' +
+      '<label>SLA (horas)</label>' +
+      '<input class="main_tudo_caixas_caixa_texto" type="number" data-field="sla" value="' + escHtml(s && (s.sla != null ? s.sla : s.tempo_horas)) + '" placeholder="Ex: 24" min="1">' +
     '</div>' +
     '<div class="card-actions">' +
       '<button class="btn-salvar">' + (s && s.id ? 'Salvar' : 'Criar solicitação') + '</button>' +
@@ -70,14 +70,14 @@ async function saveCard(card) {
 
   var descricaoEl  = card.querySelector('[data-field="descricao"]')
   var setorEl      = card.querySelector('[data-field="setor"]')
-  var colaboradorEl= card.querySelector('[data-field="colaborador"]')
-  var tempoEl      = card.querySelector('[data-field="tempo_horas"]')
+  var responsavelEl= card.querySelector('[data-field="responsavel"]')
+  var slaEl        = card.querySelector('[data-field="sla"]')
 
   var body = {
     descricao:   descricaoEl   ? descricaoEl.value.trim()   : '',
     setor:       setorEl       ? setorEl.value.trim()       : '',
-    colaborador: colaboradorEl ? colaboradorEl.value.trim() : '',
-    tempo_horas: tempoEl       ? Number(tempoEl.value) || null : null,
+    responsavel: responsavelEl ? responsavelEl.value.trim() : '',
+    sla:         slaEl         ? Number(slaEl.value) || null : null,
   }
 
   saveBtn.disabled = true

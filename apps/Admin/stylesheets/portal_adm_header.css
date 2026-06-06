@@ -64,12 +64,13 @@ body{
 }
 
 
-#header button:hover:not(.botao-ativo) {
+#header button:hover:not(.botao-ativo):not(.active) {
     background-color: var(--cor_primaria);
 }
 
-.botao-ativo {
-    background-color: var(--texto) !important; 
+.botao-ativo,
+#header button.active {
+    background-color: var(--texto) !important;
     color: white !important;               
     font-weight: bold !important;          
 

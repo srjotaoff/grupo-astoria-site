@@ -6,8 +6,8 @@ import { AppError } from '../../../../packages/core/errors/AppError'
 export interface SolicitacaoInput {
   descricao: string
   setor: string
-  colaborador: string
-  tempo_horas: number | null
+  responsavel: string
+  sla: number | null
 }
 
 export interface UpdateSolicitacaoInput extends Partial<SolicitacaoInput> {
@@ -17,18 +17,19 @@ export interface UpdateSolicitacaoInput extends Partial<SolicitacaoInput> {
 // ── Validation ────────────────────────────────────────────────────────────────
 
 export function validateSolicitacaoInput(raw: any): SolicitacaoInput {
-  const descricao   = String(raw?.descricao   || '').trim()
-  const setor       = String(raw?.setor       || '').trim()
-  const colaborador = String(raw?.colaborador || '').trim()
-  const tempo_horas = raw?.tempo_horas != null ? Number(raw.tempo_horas) : null
+  const descricao = String(raw?.descricao || '').trim()
+  const setor = String(raw?.setor || '').trim()
+  const responsavel = String(raw?.responsavel ?? raw?.colaborador ?? '').trim()
+  const slaRaw = raw?.sla ?? raw?.tempo_horas
+  const sla = slaRaw != null ? Number(slaRaw) : null
 
   if (!descricao)   throw new AppError('Descrição da solicitação é obrigatória.', 400)
   if (!setor)       throw new AppError('Setor responsável é obrigatório.', 400)
-  if (!colaborador) throw new AppError('Colaborador responsável é obrigatório.', 400)
-  if (tempo_horas !== null && (!Number.isInteger(tempo_horas) || tempo_horas <= 0))
+  if (!responsavel) throw new AppError('Responsável é obrigatório.', 400)
+  if (sla !== null && (!Number.isInteger(sla) || sla <= 0))
     throw new AppError('Tempo para resolução deve ser um número inteiro positivo.', 400)
 
-  return { descricao, setor, colaborador, tempo_horas }
+  return { descricao, setor, responsavel, sla }
 }
 
 export function validateUpdateSolicitacaoInput(raw: any): UpdateSolicitacaoInput {
@@ -37,14 +38,17 @@ export function validateUpdateSolicitacaoInput(raw: any): UpdateSolicitacaoInput
 
   const result: UpdateSolicitacaoInput = { id }
 
-  if (raw?.descricao !== undefined)   result.descricao   = String(raw.descricao).trim()
-  if (raw?.setor !== undefined)       result.setor       = String(raw.setor).trim()
-  if (raw?.colaborador !== undefined) result.colaborador = String(raw.colaborador).trim()
-  if (raw?.tempo_horas !== undefined) {
-    const t = raw.tempo_horas != null ? Number(raw.tempo_horas) : null
+  if (raw?.descricao !== undefined) result.descricao = String(raw.descricao).trim()
+  if (raw?.setor !== undefined) result.setor = String(raw.setor).trim()
+  if (raw?.responsavel !== undefined || raw?.colaborador !== undefined) {
+    result.responsavel = String(raw?.responsavel ?? raw?.colaborador ?? '').trim()
+  }
+  if (raw?.sla !== undefined || raw?.tempo_horas !== undefined) {
+    const rawSla = raw?.sla ?? raw?.tempo_horas
+    const t = rawSla != null ? Number(rawSla) : null
     if (t !== null && (!Number.isInteger(t) || t <= 0))
       throw new AppError('Tempo para resolução deve ser um número inteiro positivo.', 400)
-    result.tempo_horas = t
+    result.sla = t
   }
 
   return result
@@ -53,34 +57,34 @@ export function validateUpdateSolicitacaoInput(raw: any): UpdateSolicitacaoInput
 // ── CRUD ──────────────────────────────────────────────────────────────────────
 
 export async function createSolicitacao(data: SolicitacaoInput) {
-  const [id] = await db('solicitacoes').insert({
-    descricao:   data.descricao,
-    setor:       data.setor,
-    colaborador: data.colaborador,
-    tempo_horas: data.tempo_horas,
+  const [id] = await db('solicitacao').insert({
+    descricao: data.descricao,
+    setor: data.setor,
+    responsavel: data.responsavel,
+    sla: data.sla,
   })
   return { id }
 }
 
 export async function listSolicitacoes() {
-  return db('solicitacoes').select('id', 'descricao', 'setor', 'colaborador', 'tempo_horas').orderBy('id', 'asc')
+  return db('solicitacao').select('id', 'descricao', 'setor', 'responsavel', 'sla').orderBy('id', 'asc')
 }
 
 export async function getSolicitacaoById(id: number) {
-  const row = await db('solicitacoes').select('id', 'descricao', 'setor', 'colaborador', 'tempo_horas').where({ id }).first()
+  const row = await db('solicitacao').select('id', 'descricao', 'setor', 'responsavel', 'sla').where({ id }).first()
   if (!row) throw new AppError('Solicitação não encontrada.', 404)
   return row
 }
 
 export async function updateSolicitacao(data: UpdateSolicitacaoInput) {
   const { id, ...fields } = data
-  const existing = await db('solicitacoes').where({ id }).first()
+  const existing = await db('solicitacao').where({ id }).first()
   if (!existing) throw new AppError('Solicitação não encontrada.', 404)
-  await db('solicitacoes').where({ id }).update(fields)
+  await db('solicitacao').where({ id }).update(fields)
 }
 
 export async function deleteSolicitacao(id: number) {
-  const deleted = await db('solicitacoes').where({ id }).delete()
+  const deleted = await db('solicitacao').where({ id }).delete()
   if (!deleted) throw new AppError('Solicitação não encontrada.', 404)
 }
 
