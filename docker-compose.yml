@@ -21,6 +21,8 @@ services:
     restart: unless-stopped
     networks:
       - astoria-net
+    ports:
+      - "3001:3001"
 
   chocosul:
     build:
@@ -44,6 +46,8 @@ services:
     restart: unless-stopped
     networks:
       - astoria-net
+    ports:
+      - "3002:3002"
 
   mastter:
     build:
@@ -67,6 +71,22 @@ services:
     restart: unless-stopped
     networks:
       - astoria-net
+    ports:
+      - "3003:3003"
+
+  mysql:
+    image: mysql:8.0
+    container_name: astoria-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: users
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - astoria-net
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
 
   nginx:
     image: nginx:1.27-alpine
@@ -94,4 +114,5 @@ volumes:
   admin_node_modules:
   chocosul_node_modules:
   mastter_node_modules:
+  mysql_data:
 
