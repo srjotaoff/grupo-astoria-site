@@ -102,6 +102,8 @@ services:
       - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./infra/nginx:/etc/nginx/conf.d
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./apps/Chocosul/stylesheets:/opt/apps/astoria/apps/Chocosul/stylesheets:ro
+      - ./apps/Chocosul/images:/opt/apps/astoria/apps/Chocosul/images:ro
     restart: unless-stopped
     networks:
       - astoria-net
