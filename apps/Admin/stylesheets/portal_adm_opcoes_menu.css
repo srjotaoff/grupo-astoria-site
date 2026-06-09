@@ -66,7 +66,7 @@ header img{
 
 .main_tudo_caixas_caixa{
     width: 20svw;
-    height: 30svh;
+    height: 35svh;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;
@@ -109,7 +109,7 @@ header img{
 
 #main_tudo_caixas_adcionar{
     width: 20svw;
-    height: 30svh;
+    height: 35svh;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;

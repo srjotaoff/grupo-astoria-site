@@ -37,6 +37,9 @@ header{
 }
 
 body{
+    height: 100svh;
+    position: relative;
+    overflow: hidden;
     background-color: var(--branca);
 }
 
@@ -67,12 +70,14 @@ header img{
 .main_tudo_caixas_caixa{
     width: 20svw;
     height: 40svh;
+    position:relative ;
+    overflow: hidden;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;
     display: flex;
     flex-direction: column;
-    gap: 2svh;
+    gap: 1svh;
     
     align-items: center;
 }
@@ -83,7 +88,7 @@ header img{
     height: 12svh;
     background-color: var(--branca);
     border: none;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     border-radius: 2svh;

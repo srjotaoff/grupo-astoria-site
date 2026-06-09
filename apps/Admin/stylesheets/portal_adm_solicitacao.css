@@ -72,7 +72,7 @@ header img{
     border-radius: 5svh;
     display: flex;
     flex-direction: column;
-    gap: 2svh;
+    gap: 0svh;
     justify-content: center;
     align-items: center;
 }
@@ -87,6 +87,7 @@ header img{
 
 .main_tudo_caixas_caixa_conjunto{
     width: 16svw;
+    margin-bottom: 1svh;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -100,10 +101,16 @@ header img{
     color: var(--branca);
 }
 
+.card-actions{
+    width: 16svw;
+    display: flex;
+    flex-direction: row;
+}
+
 .main_tudo_caixas_caixa_lixeira{
     height: 2.5svh;
     margin-left: auto;
-    margin-right: 2svw;
+    margin-right: 0svw;
     cursor: pointer;
 }
 

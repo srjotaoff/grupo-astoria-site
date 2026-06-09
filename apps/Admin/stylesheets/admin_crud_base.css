@@ -5,7 +5,9 @@ body {
   background: rgb(10,4,18);
   color: #e5e7eb;
   font-family: Inter, 'Segoe UI', Roboto, Arial, sans-serif;
-  min-height: 100vh;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
   margin: 0;
 }
 
@@ -14,8 +16,6 @@ header {
   align-items: center;
   padding: 0 2rem;
   height: 64px;
-  background: rgba(8,0,16,0.98);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -33,8 +33,6 @@ header img {
 }
 
 #menu_lateral {
-  background: rgba(8,0,16,0.85);
-  border-right: 1px solid rgba(255,255,255,0.07);
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -156,7 +154,8 @@ header img {
 }
 
 .main_tudo_caixas_caixa_texto {
-  padding: 0.6rem 0.8rem;
+  padding-bottom: 0.5svh;
+  padding-top: 0.5svh;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 8px;
@@ -172,7 +171,7 @@ header img {
 
 textarea.main_tudo_caixas_caixa_texto {
   resize: vertical;
-  min-height: 70px;
+  min-height: 5svh;
 }
 
 /* ── Ativo toggle ── */
@@ -214,7 +213,9 @@ textarea.main_tudo_caixas_caixa_texto {
 
 /* ── Card actions row ── */
 .card-actions {
+  width: 16svw;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   margin-top: 0.25rem;
