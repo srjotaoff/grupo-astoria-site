@@ -52,8 +52,7 @@ main{
     height: 90svh;
     display: flex;
     flex-direction: row; 
-    overflow:auto;
-    position: relative;
+    
 }
 
 #main_unico{   

@@ -36,13 +36,6 @@ header{
     
 }
 
-body{
-    height: 100svh;
-    position: relative;
-    overflow: hidden;
-    background-color: var(--branca);
-}
-
 header img{
     margin-left: 5svw;
     margin-top: 10svh;
@@ -65,6 +58,8 @@ header img{
     display: flex;
     flex-direction: row;
     gap: 2.5svw;
+    margin-left: auto;
+    right: 0;
 }
 
 .main_tudo_caixas_caixa{
