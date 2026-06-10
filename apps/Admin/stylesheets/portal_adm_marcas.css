@@ -83,7 +83,7 @@ header img{
     height: 12svh;
     background-color: var(--branca);
     border: none;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 2svh;

@@ -1,4 +1,5 @@
 const campoCPF = document.getElementById('caixa_cpf');
+const botaoAcesso = document.getElementById('main_unico_caixa_botao');
 
 campoCPF.addEventListener('input', (e) => {
     let valor = e.target.value;
@@ -14,4 +15,18 @@ campoCPF.addEventListener('input', (e) => {
 
     // 3. Atualiza o valor do campo com a máscara
     e.target.value = valor;
+});
+
+botaoAcesso.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const cpf = campoCPF.value.replace(/\D/g, '');
+    const endpoint = cpf
+        ? `/api/portal-vendedor/usuarios?cpf=${encodeURIComponent(cpf)}`
+        : '/api/portal-vendedor/usuarios';
+
+    const response = await fetch(endpoint);
+    const data = await response.json();
+
+    console.log('Dados Oracle retornados:', data);
 });

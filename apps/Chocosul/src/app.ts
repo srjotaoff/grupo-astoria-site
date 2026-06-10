@@ -2,11 +2,63 @@ import express from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
 import path from 'path'
+import oracledb from 'oracledb'
 import { db } from '../../../packages/core/database/knex'
 import { AppError } from '../../../packages/core/errors/AppError'
 
 const app = express()
 const ENTERPRISE = 'Chocosul'
+const ORACLE_VENDEDOR_QUERY = `
+SELECT
+  'VENDEDOR' AS TIPO_USUARIO,
+  (PCUSUARI.CODUSUR||' - '||PCUSUARI.NOME) AS NOME_USUARIO,
+  REGEXP_REPLACE(PCUSUARI.CPF, '[^0-9]', '') AS CPF_USUARIO,
+  PCUSUARI.TELEFONE1 AS LINHA_USUARIO
+FROM PCUSUARI
+WHERE PCUSUARI.CPF IS NOT NULL
+  AND PCUSUARI.CPF NOT IN ('000.000.000-00','111.111.111-11')
+  AND PCUSUARI.CODUSUR NOT IN (
+    (SELECT DISTINCT COD_CADRCA FROM PCSUPERV WHERE COD_CADRCA IS NOT NULL)
+    UNION ALL
+    (SELECT DISTINCT COD_CADRCA FROM PCGERENTE WHERE COD_CADRCA IS NOT NULL)
+  )
+  AND PCUSUARI.DTTERMINO IS NULL
+  AND PCUSUARI.NOME NOT LIKE '%COBERTURA%'
+  AND PCUSUARI.NOME NOT LIKE '%VAGO%'
+  AND PCUSUARI.NOME NOT LIKE '%INATIVO%'
+UNION ALL
+SELECT
+  'SUPERVISOR' AS TIPO_USUARIO,
+  (PCSUPERV.CODSUPERVISOR||' - '||PCSUPERV.NOME) AS NOME_USUARIO,
+  REGEXP_REPLACE(PCSUPERV.CPF, '[^0-9]', '') AS CPF_USUARIO,
+  NULL AS LINHA_USUARIO
+FROM PCSUPERV
+WHERE PCSUPERV.CPF IS NOT NULL
+  AND PCSUPERV.POSICAO = 'A'
+  AND PCSUPERV.NOME NOT LIKE '%INATIVO%'
+  AND PCSUPERV.NOME NOT LIKE '%VAGO%'
+  AND PCSUPERV.NOME NOT LIKE '%VAGA%'
+UNION ALL
+SELECT
+  'GERENTE' AS TIPO_USUARIO,
+  (PCGERENTE.CODGERENTE||' - '||PCGERENTE.NOMEGERENTE) AS NOME_USUARIO,
+  REGEXP_REPLACE(PCGERENTE.CPF, '[^0-9]', '') AS CPF_USUARIO,
+  NULL AS LINHA_USUARIO
+FROM PCGERENTE
+WHERE PCGERENTE.CPF IS NOT NULL
+  AND PCGERENTE.NOMEGERENTE NOT LIKE '%VAGO%'
+UNION ALL
+SELECT
+  'ADMINISTRATIVO' AS TIPO_USUARIO,
+  (PCEMPR.MATRICULA||' - '||PCEMPR.NOME) AS NOME_USUARIO,
+  REGEXP_REPLACE(PCEMPR.CPF, '[^0-9]', '') AS CPF_USUARIO,
+  PCEMPR.CELULAR AS LINHA_USUARIO
+FROM PCEMPR
+WHERE PCEMPR.CPF IS NOT NULL
+  AND PCEMPR.SITUACAO = 'A'
+  AND PCEMPR.DTDEMISSAO IS NULL
+  AND PCEMPR.AREAATUACAO IN ('TI','DIRETORIA','LOGISTICA')
+`
 
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'http://localhost:3002')
   .split(',')
@@ -120,6 +172,42 @@ app.get('/api/banners/:id/imagem', async (req, res, next) => {
     return res.send(buffer)
   } catch (error) {
     return next(error)
+  }
+})
+
+app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
+  let connection: oracledb.Connection | null = null
+
+  try {
+    connection = await oracledb.getConnection({
+      user: process.env.ORACLE_USER,
+      password: process.env.ORACLE_PASSWORD,
+      connectString: process.env.ORACLE_CONNECT_STRING,
+    })
+
+    const result = await connection.execute(ORACLE_VENDEDOR_QUERY, [], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    })
+
+    const cpfFiltro = String(req.query.cpf || '').replace(/\D/g, '')
+    const usuarios = (result.rows || []).map((row: any) => ({
+      tipo_usuario: String(row.TIPO_USUARIO || ''),
+      nome_usuario: String(row.NOME_USUARIO || ''),
+      cpf_usuario: String(row.CPF_USUARIO || ''),
+      linha_usuario: row.LINHA_USUARIO ? String(row.LINHA_USUARIO) : null,
+    }))
+
+    const usuariosFiltrados = cpfFiltro
+      ? usuarios.filter((usuario: { cpf_usuario: string }) => usuario.cpf_usuario === cpfFiltro)
+      : usuarios
+
+    return res.status(200).json({ ok: true, usuarios: usuariosFiltrados })
+  } catch (error) {
+    return next(error)
+  } finally {
+    if (connection) {
+      await connection.close()
+    }
   }
 })
 
