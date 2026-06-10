@@ -99,7 +99,7 @@ main{
     display: flex;
     gap: 0.5svw;
     justify-content: flex-end;
-    margin-top: 0svh;
+    margin-top: auto;
     margin-right: 4svw;
     font-size: 0.5svw;
 }
@@ -219,5 +219,4 @@ main{
     padding-bottom: 2svh;
 }
 }
-
 

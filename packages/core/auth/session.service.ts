@@ -5,6 +5,8 @@ import { db } from '../database/knex'
 const MAX_AGE_MS = parseInt(process.env.SESSION_MAX_AGE_MS || String(8 * 60 * 60 * 1000))
 // Idle timeout — session is invalid if last_seen is older than this (default 1h)
 const IDLE_TIMEOUT_MS = parseInt(process.env.SESSION_IDLE_MS || String(60 * 60 * 1000))
+// Max simultaneous sessions per user (default 3)
+const MAX_CONCURRENT_SESSIONS = Math.max(1, parseInt(process.env.SESSION_MAX_CONCURRENT || '3') || 3)
 // Throttle window for updating last_seen (1 min)
 const TOUCH_THROTTLE_MS = 60_000
 
@@ -16,10 +18,7 @@ function generateToken(): string {
     return crypto.randomBytes(32).toString('hex')
 }
 
-/**
- * Returns the current active+valid session for the user, or null if none.
- */
-export async function getActiveSession(userId: number) {
+function activeSessionsQuery(userId: number) {
     const now = new Date()
     const idleThreshold = new Date(Date.now() - IDLE_TIMEOUT_MS)
 
@@ -27,7 +26,25 @@ export async function getActiveSession(userId: number) {
         .where({ user_id: userId, is_active: 1 })
         .where('expires_at', '>', now)
         .where('last_seen', '>', idleThreshold)
-        .first()
+}
+
+export function getMaxConcurrentSessions(): number {
+    return MAX_CONCURRENT_SESSIONS
+}
+
+/**
+ * Returns the current active+valid session for the user, or null if none.
+ */
+export async function getActiveSession(userId: number) {
+    return activeSessionsQuery(userId).first()
+}
+
+/**
+ * Returns the number of active+valid sessions for the user.
+ */
+export async function countActiveSessions(userId: number): Promise<number> {
+    const row = await activeSessionsQuery(userId).count<{ total: number | string }>({ total: 'id' }).first()
+    return Number(row?.total || 0)
 }
 
 /**
@@ -99,4 +116,3 @@ export async function invalidateSession(token: string): Promise<void> {
 export async function invalidateAllUserSessions(userId: number): Promise<void> {
     await db('sessions').where({ user_id: userId }).update({ is_active: 0 })
 }
-

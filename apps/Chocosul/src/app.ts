@@ -6,6 +6,7 @@ import { db } from '../../../packages/core/database/knex'
 import { AppError } from '../../../packages/core/errors/AppError'
 
 const app = express()
+const ENTERPRISE = 'Chocosul'
 
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'http://localhost:3002')
   .split(',')
@@ -45,13 +46,10 @@ app.use(express.static(path.resolve(__dirname, '../')))
 // Public API routes (used by Chocosul frontend to load dynamic images)
 app.get('/api/parceiros', async (req, res, next) => {
   try {
-    const empresa = typeof req.query.empresa === 'string' && req.query.empresa.trim()
-      ? req.query.empresa.trim()
-      : 'Chocosul'
     const includeDetails = String(req.query.detalhes || '') === '1'
 
-    const columns = includeDetails ? ['id', 'nome', 'descricao'] : ['id', 'nome']
-    const rows = await db('parceiros').select(...columns).where({ empresa }).orderBy('id', 'desc')
+    const columns = includeDetails ? ['id', 'nome', 'descricao', 'url'] : ['id', 'nome']
+    const rows = await db('parceiros').select(...columns).where({ empresa: ENTERPRISE }).orderBy('id', 'desc')
 
     const parceiros = rows.map((row: any) => {
       const payload: Record<string, unknown> = {
@@ -61,6 +59,7 @@ app.get('/api/parceiros', async (req, res, next) => {
 
       if (includeDetails) {
         payload.descricao = String(row.descricao || '')
+        payload.url = String(row.url || '')
       }
 
       return payload
@@ -79,7 +78,7 @@ app.get('/api/parceiros/:id/imagem', async (req, res, next) => {
       throw new AppError('ID de parceiro invalido.', 400)
     }
 
-    const row = await db('parceiros').select('imagem').where({ id, empresa: 'Chocosul' }).first()
+    const row = await db('parceiros').select('imagem').where({ id, empresa: ENTERPRISE }).first()
     if (!row?.imagem) {
       throw new AppError('Imagem nao encontrada.', 404)
     }
@@ -93,12 +92,9 @@ app.get('/api/parceiros/:id/imagem', async (req, res, next) => {
   }
 })
 
-app.get('/api/banners', async (req, res, next) => {
+app.get('/api/banners', async (_req, res, next) => {
   try {
-    const empresa = typeof req.query.empresa === 'string' && req.query.empresa.trim()
-      ? req.query.empresa.trim()
-      : 'Chocosul'
-    const rows = await db('banner').select('id', 'nome').where({ empresa }).orderBy('id', 'desc')
+    const rows = await db('banner').select('id', 'nome').where({ empresa: ENTERPRISE }).orderBy('id', 'desc')
     const banners = rows.map((row: any) => ({ id: Number(row.id), nome: String(row.nome || '') }))
     return res.status(200).json({ ok: true, banners })
   } catch (error) {
@@ -113,7 +109,7 @@ app.get('/api/banners/:id/imagem', async (req, res, next) => {
       throw new AppError('ID de banner invalido.', 400)
     }
 
-    const row = await db('banner').select('imagem').where({ id, empresa: 'Chocosul' }).first()
+    const row = await db('banner').select('imagem').where({ id, empresa: ENTERPRISE }).first()
     if (!row?.imagem) {
       throw new AppError('Imagem nao encontrada.', 404)
     }

@@ -1,30 +1,66 @@
-window.addEventListener('load', () => { // Usamos 'load' para garantir que as imagens carregaram e têm tamanho
-    const scroller = document.querySelector('#main_segundo_inferio_imgs');
-    if (!scroller) return;
+function normalizeText(value) {
+    if (typeof value !== 'string') return '';
+    return value.replace(/\s+/g, ' ').trim();
+}
 
-    // 1. Clonar as logos (Set A + Set B)
-    const items = Array.from(scroller.children);
-    items.forEach(item => {
+async function fetchParceiros() {
+    const response = await fetch('/api/parceiros', {
+        credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+        throw new Error('Falha ao carregar parceiros.');
+    }
+
+    const data = await response.json();
+    return Array.isArray(data?.parceiros) ? data.parceiros : [];
+}
+
+function renderLogos(scroller, parceiros) {
+    if (!scroller || !parceiros.length) return;
+
+    scroller.innerHTML = '';
+    const baseFragment = document.createDocumentFragment();
+
+    parceiros.forEach((parceiro) => {
+        const image = document.createElement('img');
+        image.src = `/api/parceiros/${parceiro.id}/imagem`;
+        image.alt = normalizeText(parceiro?.nome) || 'Parceiro';
+        image.loading = 'lazy';
+        image.decoding = 'async';
+        baseFragment.appendChild(image);
+    });
+
+    scroller.appendChild(baseFragment);
+
+    Array.from(scroller.children).forEach((item) => {
         const clone = item.cloneNode(true);
-        clone.setAttribute('aria-hidden', true);
+        clone.setAttribute('aria-hidden', 'true');
         scroller.appendChild(clone);
     });
 
-    // 2. O SEGREDO: Calcular a largura real de METADE do scroller
-    // Usamos scrollWidth / 2 para saber exatamente onde a primeira metade termina
     const halfWidth = scroller.scrollWidth / 2;
-
-    // 3. Criar a animação usando o valor em pixels
     const animation = scroller.animate([
         { transform: 'translateX(0)' },
-        { transform: `translateX(-${halfWidth}px)` } // Move exatamente a largura das logos originais
+        { transform: `translateX(-${halfWidth}px)` }
     ], {
-        duration: 40000, // 30 segundos para um deslize suave
+        duration: 40000,
         iterations: Infinity,
         easing: 'linear'
     });
 
-    // Pausar ao passar o mouse (opcional, mas profissional)
     scroller.addEventListener('mouseenter', () => animation.pause());
     scroller.addEventListener('mouseleave', () => animation.play());
+}
+
+window.addEventListener('load', async () => {
+    const scroller = document.querySelector('#main_segundo_inferio_imgs');
+    if (!scroller) return;
+
+    try {
+        const parceiros = await fetchParceiros();
+        renderLogos(scroller, parceiros);
+    } catch (error) {
+        console.error('Nao foi possivel carregar as imagens dinamicas de Sobre nos.', error);
+    }
 });

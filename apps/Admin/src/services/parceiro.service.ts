@@ -8,6 +8,7 @@ type CreateParceiroInput = {
   nome: unknown
   descricao: unknown
   empresa: unknown
+  url: unknown
   imagemBuffer: Buffer | undefined
 }
 
@@ -15,6 +16,7 @@ export type CreateParceiroPayload = {
   nome: string
   descricao: string
   empresa: AllowedEnterprise
+  url?: string
   imagem: Buffer
 }
 
@@ -22,6 +24,7 @@ export function validateParceiroInput(input: CreateParceiroInput): CreateParceir
   const nome = typeof input.nome === 'string' ? input.nome.trim() : ''
   const descricao = typeof input.descricao === 'string' ? input.descricao.trim() : ''
   const empresa = typeof input.empresa === 'string' ? input.empresa.trim() : ''
+  const url = typeof input.url === 'string' ? input.url.trim() : ''
 
   if (!nome || !descricao || !empresa || !input.imagemBuffer) {
     throw new AppError('Todos os campos sao obrigatorios.', 400)
@@ -35,6 +38,23 @@ export function validateParceiroInput(input: CreateParceiroInput): CreateParceir
     throw new AppError('Descricao deve ter no maximo 1000 caracteres.', 400)
   }
 
+  if (url.length > 255) {
+    throw new AppError('URL deve ter no maximo 255 caracteres.', 400)
+  }
+
+  if (url) {
+    let parsedUrl: URL
+    try {
+      parsedUrl = new URL(url)
+    } catch {
+      throw new AppError('URL invalida. Informe uma URL completa (https://...).', 400)
+    }
+
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+      throw new AppError('URL invalida. Use http:// ou https://.', 400)
+    }
+  }
+
   if (!ALLOWED_ENTERPRISES.includes(empresa as AllowedEnterprise)) {
     throw new AppError('Empresa invalida. Use Chocosul ou Mastter.', 400)
   }
@@ -43,6 +63,7 @@ export function validateParceiroInput(input: CreateParceiroInput): CreateParceir
     nome,
     descricao,
     empresa: empresa as AllowedEnterprise,
+    url: url || undefined,
     imagem: input.imagemBuffer,
   }
 }
@@ -53,6 +74,7 @@ export async function createEmpresa(payload: CreateParceiroPayload): Promise<{ i
     descricao: payload.descricao,
     imagem: payload.imagem,
     empresa: payload.empresa,
+    url: payload.url ?? null,
   })
 
   const rawId = Array.isArray(insertResult) ? insertResult[0] : insertResult
@@ -64,6 +86,9 @@ export async function createEmpresa(payload: CreateParceiroPayload): Promise<{ i
 export type EmpresaListItem = {
   id: number
   nome: string
+  descricao: string
+  empresa: AllowedEnterprise
+  url: string
 }
 
 export type EmpresaDetails = {
@@ -71,6 +96,7 @@ export type EmpresaDetails = {
   nome: string
   descricao: string
   empresa: AllowedEnterprise
+  url: string
 }
 
 type UpdateEmpresaInput = {
@@ -78,6 +104,7 @@ type UpdateEmpresaInput = {
   nome: unknown
   descricao: unknown
   empresa: unknown
+  url: unknown
   imagemBuffer: Buffer | undefined
 }
 
@@ -86,6 +113,7 @@ export type UpdateEmpresaPayload = {
   nome?: string
   descricao?: string
   empresa?: AllowedEnterprise
+  url?: string
   imagem?: Buffer
 }
 
@@ -123,6 +151,28 @@ export function validateUpdateEmpresaInput(input: UpdateEmpresaInput): UpdateEmp
     }
   }
 
+  if (typeof input.url === 'string') {
+    const url = input.url.trim()
+    if (url.length > 255) {
+      throw new AppError('URL deve ter no maximo 255 caracteres.', 400)
+    }
+
+    if (url) {
+      let parsedUrl: URL
+      try {
+        parsedUrl = new URL(url)
+      } catch {
+        throw new AppError('URL invalida. Informe uma URL completa (https://...).', 400)
+      }
+
+      if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+        throw new AppError('URL invalida. Use http:// ou https://.', 400)
+      }
+
+      payload.url = url
+    }
+  }
+
   if (input.imagemBuffer) {
     payload.imagem = input.imagemBuffer
   }
@@ -131,6 +181,7 @@ export function validateUpdateEmpresaInput(input: UpdateEmpresaInput): UpdateEmp
     payload.nome === undefined &&
     payload.descricao === undefined &&
     payload.empresa === undefined &&
+    payload.url === undefined &&
     payload.imagem === undefined
   ) {
     throw new AppError('Informe ao menos um campo para atualizar.', 400)
@@ -140,12 +191,18 @@ export function validateUpdateEmpresaInput(input: UpdateEmpresaInput): UpdateEmp
 }
 
 export async function listEmpresas(): Promise<EmpresaListItem[]> {
-  const rows = await db('parceiros').select('id', 'nome').orderBy('id', 'desc')
-  return rows.map((row: any) => ({ id: Number(row.id), nome: String(row.nome || '') }))
+  const rows = await db('parceiros').select('id', 'nome', 'descricao', 'empresa', 'url').where({ empresa: 'Chocosul' }).orderBy('id', 'desc')
+  return rows.map((row: any) => ({
+    id: Number(row.id),
+    nome: String(row.nome || ''),
+    descricao: String(row.descricao || ''),
+    empresa: row.empresa as AllowedEnterprise,
+    url: String(row.url || ''),
+  }))
 }
 
 export async function getEmpresaById(id: number): Promise<EmpresaDetails> {
-  const row = await db('parceiros').where({ id }).first()
+  const row = await db('parceiros').where({ id, empresa: 'Chocosul' }).first()
   if (!row) {
     throw new AppError('Empresa nao encontrada.', 404)
   }
@@ -155,6 +212,7 @@ export async function getEmpresaById(id: number): Promise<EmpresaDetails> {
     nome: String(row.nome || ''),
     descricao: String(row.descricao || ''),
     empresa: row.empresa as AllowedEnterprise,
+    url: String(row.url || ''),
   }
 }
 
@@ -163,16 +221,17 @@ export async function updateEmpresa(payload: UpdateEmpresaPayload): Promise<void
   if (payload.nome !== undefined) updateData.nome = payload.nome
   if (payload.descricao !== undefined) updateData.descricao = payload.descricao
   if (payload.empresa !== undefined) updateData.empresa = payload.empresa
+  if (payload.url !== undefined) updateData.url = payload.url
   if (payload.imagem !== undefined) updateData.imagem = payload.imagem
 
-  const updated = await db('parceiros').where({ id: payload.id }).update(updateData)
+  const updated = await db('parceiros').where({ id: payload.id, empresa: 'Chocosul' }).update(updateData)
   if (!updated) {
     throw new AppError('Empresa nao encontrada.', 404)
   }
 }
 
 export async function deleteEmpresa(id: number): Promise<void> {
-  const deleted = await db('parceiros').where({ id }).del()
+  const deleted = await db('parceiros').where({ id, empresa: 'Chocosul' }).del()
   if (!deleted) {
     throw new AppError('Empresa nao encontrada.', 404)
   }

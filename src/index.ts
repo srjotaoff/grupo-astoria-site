@@ -1,7 +1,7 @@
 /**
  * Main entry point for Grupo Astoria Site
  * Default (npm run dev): starts BOTH Chocosul (3002) and Admin (3001)
- * To run only one: APP_NAME=admin npm run dev  |  APP_NAME=chocosul npm run dev
+ * To run only one: APP_NAME=admin npm run dev  |  APP_NAME=chocosul npm run dev  |  APP_NAME=admin-mastter npm run dev
  */
 
 import dotenv from 'dotenv'
@@ -39,12 +39,25 @@ async function startChocosul() {
   }
 }
 
+async function startAdminMastter() {
+  try {
+    console.log('\n🚀 Starting ADMIN MASTTER application...\n')
+    await import('../apps/AdminMastter/server')
+  } catch (err) {
+    console.error('Failed to start AdminMastter app:', err)
+    process.exit(1)
+  }
+}
+
 if (APP === 'admin') {
   startAdmin()
 } else if (APP === 'chocosul') {
   startChocosul()
+} else if (APP === 'admin-mastter') {
+  startAdminMastter()
 } else {
-  // Default: start both
+  // Default: start all three
   startAdmin()
   startChocosul()
+  startAdminMastter()
 }

@@ -1,0 +1,156 @@
+@font-face {
+    font-family: 'Poppins-Bold';
+    src: url(fontes/Poppins-Bold.ttf) format('truetype');
+
+}
+
+@font-face {
+    font-family: 'Poppins-Regular';
+    src: url(fontes/Poppins-Regular.ttf) format('truetype');
+
+}
+
+@font-face {
+    font-family: 'Poppins-SemiBold';
+    src: url(fontes/Poppins-SemiBold.ttf) format('truetype');
+
+}
+
+@font-face {
+    font-family: 'Poppins-black';
+    src: url(fontes/Poppins-Black.ttf) format('truetype');
+
+}
+
+:root{
+    --branca:rgb(251, 249, 249);
+    --texto:rgb(76,66,67);
+    --principal: rgb(245,62,78);
+    --cor_primaria:rgb(169, 169, 169);
+    --cor_caixa:rgba(246, 241, 241, 0.973);
+}
+
+header{
+    height: 20svh;
+    width: 100svw;
+    
+}
+
+header img{
+    margin-left: 5svw;
+    margin-top: 10svh;
+    width: 15svw;
+    height: 7svh;
+}
+
+#main_tudo{
+    display: flex;
+    flex-direction: row;
+    gap: 5svw;
+}
+
+#menu_lateral{
+    width: 20svw;
+    height: 80svh;
+}
+
+#main_tudo_caixas{
+    display: flex;
+    flex-direction: row;
+    gap: 2.5svw;
+    margin-left: auto;
+    right: 0;
+}
+
+.main_tudo_caixas_caixa{
+    width: 20svw;
+    height: 40svh;
+    background-color: var(--texto);
+    border: none;
+    border-radius: 5svh;
+    display: flex;
+    flex-direction: column;
+    gap: 0svh;
+    
+    align-items: center;
+}
+
+.main_tudo_caixas_caixa_img{
+    margin-top: 0svh;
+    margin-bottom: 1svh;
+    width: 8svw;
+    height: 7svh;
+    background-color: var(--branca);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2svh;
+    cursor: pointer;
+}
+
+.main_tudo_caixas_caixa_img p{
+    font-size: 5svw;
+    font-family:"Poppins-Regular" ;
+    color: var(--texto);
+}
+
+.main_tudo_caixas_caixa_texto{
+    height: 5.5svh;
+    width: 15.5svw;
+    border: none;
+    border-radius: 2svh;
+    padding-left: 0.5svw;
+}
+
+.main_tudo_caixas_caixa_conjunto{
+    width: 16svw;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1svh;
+    gap: 1svh;
+
+}
+
+.main_tudo_caixas_caixa_conjunto label{
+    font-family: "Poppins-Regular";
+    font-size: 0.75svw;
+    color: var(--branca);
+}
+
+.main_tudo_caixas_caixa_lixeira{
+    height: 2.5svh;
+    margin-left: auto;
+    margin-right: 0svw;
+    cursor: pointer;
+}
+
+.card-actions{
+    width: 16svw;
+    display: flex;
+    flex-direction: row;
+}
+
+.btn-salvar{
+
+}
+
+#main_tudo_caixas_adcionar{
+    width: 20svw;
+    height: 40svh;
+    background-color: var(--texto);
+    border: none;
+    border-radius: 5svh;
+    display: flex;
+    flex-direction: column;
+    gap: 2svh;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#main_tudo_caixas_adcionar p{
+    font-size: 7.84316svw;
+    font-family:"Poppins-Regular" ;
+    color: var(--branca);
+}

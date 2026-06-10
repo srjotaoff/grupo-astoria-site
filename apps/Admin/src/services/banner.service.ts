@@ -115,12 +115,12 @@ export function validateUpdateBannerInput(input: UpdateBannerInput): UpdateBanne
 }
 
 export async function listBanners(): Promise<BannerListItem[]> {
-  const rows = await db('banner').select('id', 'nome').orderBy('id', 'desc')
+  const rows = await db('banner').select('id', 'nome').where({ empresa: 'Chocosul' }).orderBy('id', 'desc')
   return rows.map((row: any) => ({ id: Number(row.id), nome: String(row.nome || '') }))
 }
 
 export async function getBannerById(id: number): Promise<BannerDetails> {
-  const row = await db('banner').where({ id }).first()
+  const row = await db('banner').where({ id, empresa: 'Chocosul' }).first()
   if (!row) {
     throw new AppError('Banner nao encontrado.', 404)
   }
@@ -138,14 +138,14 @@ export async function updateBanner(payload: UpdateBannerPayload): Promise<void> 
   if (payload.empresa !== undefined) updateData.empresa = payload.empresa
   if (payload.imagem !== undefined) updateData.imagem = payload.imagem
 
-  const updated = await db('banner').where({ id: payload.id }).update(updateData)
+  const updated = await db('banner').where({ id: payload.id, empresa: 'Chocosul' }).update(updateData)
   if (!updated) {
     throw new AppError('Banner nao encontrado.', 404)
   }
 }
 
 export async function deleteBanner(id: number): Promise<void> {
-  const deleted = await db('banner').where({ id }).del()
+  const deleted = await db('banner').where({ id, empresa: 'Chocosul' }).del()
   if (!deleted) {
     throw new AppError('Banner nao encontrado.', 404)
   }

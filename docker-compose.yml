@@ -74,6 +74,31 @@ services:
     ports:
       - "3003:3003"
 
+  admin-mastter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: astoria-admin-mastter-dev
+    command: npm run dev:admin-mastter
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      APP_NAME: admin-mastter
+      PORT_ADMIN_MASTTER: 3004
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./:/workspace
+      - admin_mastter_node_modules:/workspace/node_modules
+    expose:
+      - "3004"
+    restart: unless-stopped
+    networks:
+      - astoria-net
+    ports:
+      - "3004:3004"
+
   mysql:
     image: mysql:8.0
     container_name: astoria-mysql
@@ -95,6 +120,7 @@ services:
       - admin
       - chocosul
       - mastter
+      - admin-mastter
     ports:
       - "80:80"
       - "443:443"
@@ -116,5 +142,6 @@ volumes:
   admin_node_modules:
   chocosul_node_modules:
   mastter_node_modules:
+  admin_mastter_node_modules:
   mysql_data:
 
