@@ -5,11 +5,9 @@ body {
   background-color: var(--branca);
   color: #e5e7eb;
   font-family: Inter, 'Segoe UI', Roboto, Arial, sans-serif;
-  width: 100dvw;
+  width: 90dvw;
   height: auto;
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
+  
   margin: 0;
 }
 
@@ -28,12 +26,15 @@ header img {
   object-fit: contain;
 }
 main{
+  width: 90svw;
   height: auto;
 }
 
 #main_tudo {
   height: auto;
-  width: auto;
+  width: 100svw;
+  position: relative;
+  
   display: grid;
   grid-template-columns: 220px 1fr;
   min-height: calc(100vh - 64px);
@@ -47,7 +48,7 @@ main{
 }
 
 #main_tudo_caixas {
-  width: auto;
+  width: 70svw;
   height: auto;
   padding: 2rem;
   display: flex;
@@ -297,3 +298,4 @@ textarea.main_tudo_caixas_caixa_texto {
   #main_tudo_caixas { padding: 1rem; }
   .main_tudo_caixas_caixa, #main_tudo_caixas_adcionar { width: 100%; }
 }
+

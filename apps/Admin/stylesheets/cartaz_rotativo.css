@@ -32,7 +32,7 @@
 
 header{
     height: 20svh;
-    width: 100svw;
+    width: 90svw;
     
 }
 
@@ -44,6 +44,7 @@ header img{
 }
 
 #main_tudo{
+    width: 95svw;
     display: flex;
     flex-direction: row;
     gap: 5svw;
@@ -55,11 +56,10 @@ header img{
 }
 
 #main_tudo_caixas{
+    width: 70svw;
     display: flex;
     flex-direction: row;
     gap: 2.5svw;
-    margin-left: auto;
-    right: 0;
 }
 
 .main_tudo_caixas_caixa{
