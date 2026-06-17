@@ -2,7 +2,6 @@ import express from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
 import path from 'path'
-import oracledb from 'oracledb'
 import { db } from '../../../packages/core/database/knex'
 import { AppError } from '../../../packages/core/errors/AppError'
 
@@ -176,9 +175,14 @@ app.get('/api/banners/:id/imagem', async (req, res, next) => {
 })
 
 app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
-  let connection: oracledb.Connection | null = null
+  let connection: {
+    execute: (sql: string, binds: unknown[], options: { outFormat: number }) => Promise<{ rows?: any[] }>
+    close: () => Promise<void>
+  } | null = null
 
   try {
+    const oracledb = await import('oracledb')
+
     connection = await oracledb.getConnection({
       user: process.env.ORACLE_USER,
       password: process.env.ORACLE_PASSWORD,
@@ -203,6 +207,9 @@ app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
 
     return res.status(200).json({ ok: true, usuarios: usuariosFiltrados })
   } catch (error) {
+    if ((error as NodeJS.ErrnoException)?.code === 'MODULE_NOT_FOUND') {
+      return next(new AppError('Modulo oracledb nao encontrado no ambiente.', 500))
+    }
     return next(error)
   } finally {
     if (connection) {
