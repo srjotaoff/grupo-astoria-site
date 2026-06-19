@@ -183,7 +183,8 @@ app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
   } | null = null
 
   try {
-    const oracledb = await import('oracledb')
+    const oracledbModule = await import('oracledb')
+    const oracledb = (oracledbModule as any).default ?? oracledbModule
 
     connection = await oracledb.getConnection({
       user: process.env.ORACLE_USER,
