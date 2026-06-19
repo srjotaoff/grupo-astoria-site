@@ -17,16 +17,46 @@ campoCPF.addEventListener('input', (e) => {
     e.target.value = valor;
 });
 
+const STORAGE_KEY = 'portal_vendedor_usuario';
+
+function mostrarMensagem(texto) {
+    const alvo = document.getElementById('main_unico_texto');
+    if (alvo) alvo.textContent = texto;
+}
+
 botaoAcesso.addEventListener('click', async (e) => {
     e.preventDefault();
 
     const cpf = campoCPF.value.replace(/\D/g, '');
-    const endpoint = cpf
-        ? `/api/portal-vendedor/usuarios?cpf=${encodeURIComponent(cpf)}`
-        : '/api/portal-vendedor/usuarios';
+    if (cpf.length !== 11) {
+        mostrarMensagem('Informe um CPF válido.');
+        return;
+    }
 
-    const response = await fetch(endpoint);
-    const data = await response.json();
+    botaoAcesso.disabled = true;
+    mostrarMensagem('Verificando...');
 
-    console.log('Dados Oracle retornados:', data);
+    try {
+        const response = await fetch(`/api/portal-vendedor/usuarios?cpf=${encodeURIComponent(cpf)}`);
+        const data = await response.json();
+
+        const usuario = response.ok && data.ok ? (data.usuarios || [])[0] : null;
+        if (!usuario) {
+            mostrarMensagem('CPF não encontrado. Verifique e tente novamente.');
+            return;
+        }
+
+        // Salva na sessão apenas dados não sensíveis (sem CPF e sem telefone)
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+            tipo_usuario: usuario.tipo_usuario,
+            nome_usuario: usuario.nome_usuario,
+        }));
+
+        window.location.href = 'portal_vendedor_menu.html';
+    } catch (erro) {
+        console.error('Erro ao acessar o portal:', erro);
+        mostrarMensagem('Erro ao acessar. Tente novamente em instantes.');
+    } finally {
+        botaoAcesso.disabled = false;
+    }
 });
