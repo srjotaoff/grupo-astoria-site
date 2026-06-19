@@ -178,7 +178,7 @@ app.get('/api/banners/:id/imagem', async (req, res, next) => {
 
 app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
   let connection: {
-    execute: (sql: string, binds: unknown[], options: { outFormat: number }) => Promise<{ rows?: any[] }>
+    execute: (sql: string, binds: Record<string, unknown>, options: { outFormat: number }) => Promise<{ rows?: any[] }>
     close: () => Promise<void>
   } | null = null
 
@@ -196,7 +196,7 @@ app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
       return next(new AppError('CPF nao informado.', 400))
     }
 
-    const result = await connection.execute(ORACLE_VENDEDOR_QUERY, [cpfFiltro], {
+    const result = await connection.execute(ORACLE_VENDEDOR_QUERY, { cpf: cpfFiltro }, {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     })
 
