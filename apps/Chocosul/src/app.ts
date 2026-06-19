@@ -8,6 +8,7 @@ import { AppError } from '../../../packages/core/errors/AppError'
 const app = express()
 const ENTERPRISE = 'Chocosul'
 const ORACLE_VENDEDOR_QUERY = `
+SELECT * FROM (
 SELECT
   'VENDEDOR' AS TIPO_USUARIO,
   (PCUSUARI.CODUSUR||' - '||PCUSUARI.NOME) AS NOME_USUARIO,
@@ -57,6 +58,7 @@ WHERE PCEMPR.CPF IS NOT NULL
   AND PCEMPR.SITUACAO = 'A'
   AND PCEMPR.DTDEMISSAO IS NULL
   AND PCEMPR.AREAATUACAO IN ('TI','DIRETORIA','LOGISTICA')
+) WHERE CPF_USUARIO = :cpf
 `
 
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'http://localhost:3002')
@@ -189,11 +191,15 @@ app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
       connectString: process.env.ORACLE_CONNECT_STRING,
     })
 
-    const result = await connection.execute(ORACLE_VENDEDOR_QUERY, [], {
+    const cpfFiltro = String(req.query.cpf || '').replace(/\D/g, '')
+    if (!cpfFiltro) {
+      return next(new AppError('CPF nao informado.', 400))
+    }
+
+    const result = await connection.execute(ORACLE_VENDEDOR_QUERY, [cpfFiltro], {
       outFormat: oracledb.OUT_FORMAT_OBJECT,
     })
 
-    const cpfFiltro = String(req.query.cpf || '').replace(/\D/g, '')
     const usuarios = (result.rows || []).map((row: any) => ({
       tipo_usuario: String(row.TIPO_USUARIO || ''),
       nome_usuario: String(row.NOME_USUARIO || ''),
@@ -201,11 +207,7 @@ app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
       linha_usuario: row.LINHA_USUARIO ? String(row.LINHA_USUARIO) : null,
     }))
 
-    const usuariosFiltrados = cpfFiltro
-      ? usuarios.filter((usuario: { cpf_usuario: string }) => usuario.cpf_usuario === cpfFiltro)
-      : usuarios
-
-    return res.status(200).json({ ok: true, usuarios: usuariosFiltrados })
+    return res.status(200).json({ ok: true, usuarios })
   } catch (error) {
     if ((error as NodeJS.ErrnoException)?.code === 'MODULE_NOT_FOUND') {
       return next(new AppError('Modulo oracledb nao encontrado no ambiente.', 500))
