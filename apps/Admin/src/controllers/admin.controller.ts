@@ -163,7 +163,7 @@ export async function getBannerImageHandler(req: Request, res: Response) {
 // ── Opcoes handlers ───────────────────────────────────────────────────────────
 
 export async function createOpcaoHandler(req: Request, res: Response) {
-  const payload = validateOpcaoInput({ nome: req.body?.nome, url: req.body?.url, ativo: req.body?.ativo })
+  const payload = validateOpcaoInput({ nome: req.body?.nome, url: req.body?.url, filtro: req.body?.filtro, ativo: req.body?.ativo })
   const opcao = await createOpcao(payload)
   return res.status(201).json({ ok: true, id: opcao.id })
 }
@@ -181,7 +181,7 @@ export async function getOpcaoHandler(req: Request, res: Response) {
 }
 
 export async function updateOpcaoHandler(req: Request, res: Response) {
-  const payload = validateUpdateOpcaoInput({ id: req.params.id, nome: req.body?.nome, url: req.body?.url, ativo: req.body?.ativo })
+  const payload = validateUpdateOpcaoInput({ id: req.params.id, nome: req.body?.nome, url: req.body?.url, filtro: req.body?.filtro, ativo: req.body?.ativo })
   await updateOpcao(payload)
   return res.status(200).json({ ok: true })
 }

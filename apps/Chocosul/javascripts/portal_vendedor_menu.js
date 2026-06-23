@@ -33,7 +33,10 @@ function renderOpcoes(opcoes) {
     container.innerHTML = '';
 
     opcoes.forEach(function (opcao) {
-        container.appendChild(criarBotao(opcao.nome, opcao.url));
+        var href = opcao.filtro
+            ? 'relatorio.html?id=' + opcao.id
+            : opcao.url;
+        container.appendChild(criarBotao(opcao.nome, href));
     });
 
     container.appendChild(criarBotao('SOLICITAR SUPORTE', 'solicitar_suporte.html'));

@@ -38,8 +38,12 @@ function createOpcaoCard(opcao) {
       '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="nome" value="' + escHtml(opcao && opcao.nome) + '" placeholder="Título da opção" maxlength="200">' +
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
-      '<label>Url</label>' +
-      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="url" value="' + escHtml(opcao && opcao.url) + '" placeholder="Ex: https://exemplo.com">' +
+      '<label>Url (Looker embed sem params)</label>' +
+      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="url" value="' + escHtml(opcao && opcao.url) + '" placeholder="Ex: https://lookerstudio.google.com/embed/reporting/.../page/...">' +
+    '</div>' +
+    '<div class="main_tudo_caixas_caixa_conjunto">' +
+      '<label>Filtro CPF (param Looker)</label>' +
+      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="filtro" value="' + escHtml(opcao && opcao.filtro) + '" placeholder="Ex: df166 (deixe vazio se não filtrar por CPF)">' +
     '</div>' +
     '<label class="ativo-toggle">' +
       '<input type="checkbox" data-field="ativo"' + ativoChecked + '>' +
@@ -66,14 +70,16 @@ async function saveCard(card) {
   var statusEl = card.querySelector('.card-status')
   var saveBtn  = card.querySelector('.btn-salvar')
 
-  var nomeEl  = card.querySelector('[data-field="nome"]')
-  var urlEl   = card.querySelector('[data-field="url"]')
-  var ativoEl = card.querySelector('[data-field="ativo"]')
+  var nomeEl   = card.querySelector('[data-field="nome"]')
+  var urlEl    = card.querySelector('[data-field="url"]')
+  var filtroEl = card.querySelector('[data-field="filtro"]')
+  var ativoEl  = card.querySelector('[data-field="ativo"]')
 
   var body = {
-    nome:  nomeEl  ? nomeEl.value.trim() : '',
-    url:   urlEl   ? urlEl.value.trim()  : '',
-    ativo: ativoEl ? (ativoEl.checked ? 1 : 0) : 1,
+    nome:   nomeEl   ? nomeEl.value.trim()   : '',
+    url:    urlEl    ? urlEl.value.trim()     : '',
+    filtro: filtroEl ? filtroEl.value.trim()  : '',
+    ativo:  ativoEl  ? (ativoEl.checked ? 1 : 0) : 1,
   }
 
   saveBtn.disabled = true

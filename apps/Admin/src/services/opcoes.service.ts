@@ -1,17 +1,19 @@
 import { db } from '../../../../packages/core/database/knex'
 import { AppError } from '../../../../packages/core/errors/AppError'
 
-// Table: opcoes (id, nome, ativo, url)
+// Table: opcoes (id, nome, ativo, url, filtro)
 
 type CreateOpcaoInput = {
   nome: unknown
   url: unknown
+  filtro?: unknown
   ativo?: unknown
 }
 
 export type CreateOpcaoPayload = {
   nome: string
   url: string
+  filtro: string | null
   ativo: 0 | 1
 }
 
@@ -30,13 +32,16 @@ export function validateOpcaoInput(input: CreateOpcaoInput): CreateOpcaoPayload 
 
   if (nome.length > 200) throw new AppError('Nome deve ter no maximo 200 caracteres.', 400)
 
-  return { nome, url, ativo: parseAtivo(input.ativo) }
+  const filtro = typeof input.filtro === 'string' ? input.filtro.trim() || null : null
+
+  return { nome, url, filtro, ativo: parseAtivo(input.ativo) }
 }
 
 export async function createOpcao(payload: CreateOpcaoPayload): Promise<{ id: number }> {
   const insertResult = await db('opcoes').insert({
     nome: payload.nome,
     url: payload.url,
+    filtro: payload.filtro,
     ativo: payload.ativo,
   })
   const rawId = Array.isArray(insertResult) ? insertResult[0] : insertResult
@@ -48,15 +53,17 @@ export type OpcaoItem = {
   nome: string
   ativo: boolean
   url: string
+  filtro: string | null
 }
 
 export async function listOpcoes(): Promise<OpcaoItem[]> {
-  const rows = await db('opcoes').select('id', 'nome', 'ativo', 'url').orderBy('id', 'desc')
+  const rows = await db('opcoes').select('id', 'nome', 'ativo', 'url', 'filtro').orderBy('id', 'desc')
   return rows.map((row: any) => ({
     id: Number(row.id),
     nome: String(row.nome || ''),
     ativo: Boolean(row.ativo),
     url: String(row.url || ''),
+    filtro: row.filtro ? String(row.filtro) : null,
   }))
 }
 
@@ -68,6 +75,7 @@ export async function getOpcaoById(id: number): Promise<OpcaoItem> {
     nome: String(row.nome || ''),
     ativo: Boolean(row.ativo),
     url: String(row.url || ''),
+    filtro: row.filtro ? String(row.filtro) : null,
   }
 }
 
@@ -75,6 +83,7 @@ type UpdateOpcaoInput = {
   id: unknown
   nome?: unknown
   url?: unknown
+  filtro?: unknown
   ativo?: unknown
 }
 
@@ -82,6 +91,7 @@ export type UpdateOpcaoPayload = {
   id: number
   nome?: string
   url?: string
+  filtro?: string | null
   ativo?: 0 | 1
 }
 
@@ -102,11 +112,15 @@ export function validateUpdateOpcaoInput(input: UpdateOpcaoInput): UpdateOpcaoPa
     if (url) payload.url = url
   }
 
+  if (input.filtro !== undefined) {
+    payload.filtro = typeof input.filtro === 'string' ? input.filtro.trim() || null : null
+  }
+
   if (input.ativo !== undefined) {
     payload.ativo = parseAtivo(input.ativo)
   }
 
-  if (payload.nome === undefined && payload.url === undefined && payload.ativo === undefined) {
+  if (payload.nome === undefined && payload.url === undefined && payload.filtro === undefined && payload.ativo === undefined) {
     throw new AppError('Informe ao menos um campo para atualizar.', 400)
   }
 
@@ -117,6 +131,7 @@ export async function updateOpcao(payload: UpdateOpcaoPayload): Promise<void> {
   const updateData: Record<string, unknown> = {}
   if (payload.nome !== undefined) updateData.nome = payload.nome
   if (payload.url !== undefined) updateData.url = payload.url
+  if (payload.filtro !== undefined) updateData.filtro = payload.filtro
   if (payload.ativo !== undefined) updateData.ativo = payload.ativo
 
   const updated = await db('opcoes').where({ id: payload.id }).update(updateData)
