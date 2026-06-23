@@ -8,13 +8,6 @@ function getUsuario() {
     }
 }
 
-// A URL salva no banco ja vem com um CPF padrao (11 digitos) ocupado.
-// Substitui esse CPF padrao pelo CPF do usuario logado.
-function montarLink(url, cpf) {
-    if (!url) return '';
-    return url.replace(/\d{11}/, cpf);
-}
-
 function criarBotao(texto, href) {
     const a = document.createElement('a');
     a.href = href;
@@ -34,13 +27,13 @@ function criarBotao(texto, href) {
     return a;
 }
 
-function renderOpcoes(opcoes, cpf) {
+function renderOpcoes(opcoes) {
     const container = document.getElementById('main_unico_caixa');
     if (!container) return;
     container.innerHTML = '';
 
     opcoes.forEach(function (opcao) {
-        container.appendChild(criarBotao(opcao.nome, montarLink(opcao.url, cpf)));
+        container.appendChild(criarBotao(opcao.nome, opcao.url));
     });
 
     container.appendChild(criarBotao('SOLICITAR SUPORTE', 'solicitar_suporte.html'));
@@ -57,7 +50,7 @@ async function carregarOpcoes() {
         const res = await fetch('/api/portal-vendedor/opcoes');
         const data = await res.json();
         const opcoes = (res.ok && data.ok) ? (data.opcoes || []) : [];
-        renderOpcoes(opcoes, usuario.cpf_usuario);
+        renderOpcoes(opcoes);
     } catch (_e) {
         // silencioso
     }
