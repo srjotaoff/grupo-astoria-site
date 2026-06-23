@@ -7,6 +7,7 @@ export interface SolicitacaoInput {
   descricao: string
   setor: string
   responsavel: string
+  id_responsavel: number | null
   sla: number | null
 }
 
@@ -20,6 +21,8 @@ export function validateSolicitacaoInput(raw: any): SolicitacaoInput {
   const descricao = String(raw?.descricao || '').trim()
   const setor = String(raw?.setor || '').trim()
   const responsavel = String(raw?.responsavel ?? raw?.colaborador ?? '').trim()
+  const idRespRaw = raw?.id_responsavel
+  const id_responsavel = idRespRaw != null ? Number(idRespRaw) : null
   const slaRaw = raw?.sla ?? raw?.tempo_horas
   const sla = slaRaw != null ? Number(slaRaw) : null
 
@@ -29,7 +32,7 @@ export function validateSolicitacaoInput(raw: any): SolicitacaoInput {
   if (sla !== null && (!Number.isInteger(sla) || sla <= 0))
     throw new AppError('Tempo para resolução deve ser um número inteiro positivo.', 400)
 
-  return { descricao, setor, responsavel, sla }
+  return { descricao, setor, responsavel, id_responsavel, sla }
 }
 
 export function validateUpdateSolicitacaoInput(raw: any): UpdateSolicitacaoInput {
@@ -42,6 +45,10 @@ export function validateUpdateSolicitacaoInput(raw: any): UpdateSolicitacaoInput
   if (raw?.setor !== undefined) result.setor = String(raw.setor).trim()
   if (raw?.responsavel !== undefined || raw?.colaborador !== undefined) {
     result.responsavel = String(raw?.responsavel ?? raw?.colaborador ?? '').trim()
+  }
+  if (raw?.id_responsavel !== undefined) {
+    const idResp = raw.id_responsavel != null ? Number(raw.id_responsavel) : null
+    result.id_responsavel = idResp
   }
   if (raw?.sla !== undefined || raw?.tempo_horas !== undefined) {
     const rawSla = raw?.sla ?? raw?.tempo_horas
@@ -61,17 +68,18 @@ export async function createSolicitacao(data: SolicitacaoInput) {
     descricao: data.descricao,
     setor: data.setor,
     responsavel: data.responsavel,
+    id_responsavel: data.id_responsavel,
     sla: data.sla,
   })
   return { id }
 }
 
 export async function listSolicitacoes() {
-  return db('solicitacao').select('id', 'descricao', 'setor', 'responsavel', 'sla').orderBy('id', 'asc')
+  return db('solicitacao').select('id', 'descricao', 'setor', 'responsavel', 'id_responsavel', 'sla').orderBy('id', 'asc')
 }
 
 export async function getSolicitacaoById(id: number) {
-  const row = await db('solicitacao').select('id', 'descricao', 'setor', 'responsavel', 'sla').where({ id }).first()
+  const row = await db('solicitacao').select('id', 'descricao', 'setor', 'responsavel', 'id_responsavel', 'sla').where({ id }).first()
   if (!row) throw new AppError('Solicitação não encontrada.', 404)
   return row
 }

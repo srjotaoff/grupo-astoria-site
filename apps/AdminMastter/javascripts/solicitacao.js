@@ -16,7 +16,7 @@ function setStatus(el, msg, isError) {
 }
 
 // ── Bitrix: responsáveis ────────────────────────────────────────────────────────
-var WEBHOOK_BASE            = 'https://chocosul.bitrix24.com.br/rest/270/mwze5xa0wbsh91l1/'
+var WEBHOOK_BASE           = 'https://chocosul.bitrix24.com.br/rest/270/mwze5xa0wbsh91l1/'
 var RESPONSAVEIS_CACHE_KEY = 'bitrix_responsaveis'
 var responsaveisPromise    = null
 
@@ -31,8 +31,6 @@ function nomeCompleto(u) {
     .join(' ')
 }
 
-// Busca os usuários ATIVOS do Bitrix paginando de 50 em 50 (2s entre requisições).
-// Roda uma única vez por sessão: cache em memória (responsaveisPromise) + sessionStorage.
 function fetchResponsaveis() {
   if (responsaveisPromise) return responsaveisPromise
 
@@ -45,10 +43,10 @@ function fetchResponsaveis() {
         return responsaveisPromise
       }
     }
-  } catch (_e) { /* cache inválido, ignora */ }
+  } catch (_e) { /* cache inválido */ }
 
   responsaveisPromise = (async function () {
-    var nomes    = []
+    var usuarios = []
     var start    = 0
     var primeira = true
 
@@ -64,11 +62,10 @@ function fetchResponsaveis() {
       lista.forEach(function (u) {
         if (u && u.ACTIVE === true) {
           var nome = nomeCompleto(u)
-          if (nome) nomes.push(nome)
+          if (nome) usuarios.push({ id: Number(u.ID), nome: nome })
         }
       })
 
-      // Bitrix retorna "next" (offset da próxima página) enquanto houver mais registros
       if (data && typeof data.next === 'number') {
         start = data.next
       } else {
@@ -76,37 +73,41 @@ function fetchResponsaveis() {
       }
     }
 
-    nomes = nomes.filter(function (n, i) { return nomes.indexOf(n) === i })
-    nomes.sort(function (a, b) { return a.localeCompare(b, 'pt-BR') })
+    var vistos = {}
+    usuarios = usuarios.filter(function (u) {
+      if (vistos[u.id]) return false
+      vistos[u.id] = true
+      return true
+    })
+    usuarios.sort(function (a, b) { return a.nome.localeCompare(b.nome, 'pt-BR') })
 
-    try { sessionStorage.setItem(RESPONSAVEIS_CACHE_KEY, JSON.stringify(nomes)) } catch (_e) { /* sessão cheia */ }
-    return nomes
+    try { sessionStorage.setItem(RESPONSAVEIS_CACHE_KEY, JSON.stringify(usuarios)) } catch (_e) {}
+    return usuarios
   })()
 
   return responsaveisPromise
 }
 
-// Preenche um <select> de responsável com a lista do Bitrix, preservando o valor atual.
-function popularResponsaveis(selectEl, valorAtual) {
+function popularResponsaveis(selectEl, idAtual, nomeAtual) {
   if (!selectEl) return
-  var atual = String(valorAtual || '').trim()
+  var idStr  = String(idAtual || '').trim()
+  var nome   = String(nomeAtual || '').trim()
 
-  fetchResponsaveis().then(function (nomes) {
-    var html     = '<option value="">Selecione um responsável</option>'
+  fetchResponsaveis().then(function (usuarios) {
+    var html    = '<option value="">Selecione um responsável</option>'
     var temAtual = false
-    nomes.forEach(function (n) {
-      var sel = (n === atual) ? ' selected' : ''
+    usuarios.forEach(function (u) {
+      var sel = (String(u.id) === idStr) ? ' selected' : ''
       if (sel) temAtual = true
-      html += '<option value="' + escHtml(n) + '"' + sel + '>' + escHtml(n) + '</option>'
+      html += '<option value="' + u.id + '" data-nome="' + escHtml(u.nome) + '"' + sel + '>' + escHtml(u.nome) + '</option>'
     })
-    // mantém um valor antigo que não exista mais na lista do Bitrix
-    if (atual && !temAtual) {
-      html += '<option value="' + escHtml(atual) + '" selected>' + escHtml(atual) + '</option>'
+    if (idStr && !temAtual) {
+      html += '<option value="' + escHtml(idStr) + '" data-nome="' + escHtml(nome) + '" selected>' + escHtml(nome || idStr) + '</option>'
     }
     selectEl.innerHTML = html
   }).catch(function () {
     selectEl.innerHTML = '<option value="">Erro ao carregar responsáveis</option>'
-    if (atual) selectEl.innerHTML += '<option value="' + escHtml(atual) + '" selected>' + escHtml(atual) + '</option>'
+    if (idStr) selectEl.innerHTML += '<option value="' + escHtml(idStr) + '" selected>' + escHtml(nome || idStr) + '</option>'
   })
 }
 
@@ -156,7 +157,7 @@ function createSolicitacaoCard(s) {
   if (delBtn)  delBtn.addEventListener('click',  function () { deleteCard(card) })
 
   var responsavelEl = card.querySelector('[data-field="responsavel"]')
-  popularResponsaveis(responsavelEl, s && (s.responsavel || s.colaborador))
+  popularResponsaveis(responsavelEl, s && s.id_responsavel, s && (s.responsavel || s.colaborador))
 
   return card
 }
@@ -173,11 +174,13 @@ async function saveCard(card) {
   var responsavelEl= card.querySelector('[data-field="responsavel"]')
   var slaEl        = card.querySelector('[data-field="sla"]')
 
+  var selectedOption = responsavelEl && responsavelEl.options[responsavelEl.selectedIndex]
   var body = {
-    descricao:   descricaoEl   ? descricaoEl.value.trim()   : '',
-    setor:       setorEl       ? setorEl.value.trim()       : '',
-    responsavel: responsavelEl ? responsavelEl.value.trim() : '',
-    sla:         slaEl         ? Number(slaEl.value) || null : null,
+    descricao:      descricaoEl   ? descricaoEl.value.trim()   : '',
+    setor:          setorEl       ? setorEl.value.trim()       : '',
+    responsavel:    selectedOption ? (selectedOption.getAttribute('data-nome') || selectedOption.textContent || '').trim() : '',
+    id_responsavel: responsavelEl && responsavelEl.value ? Number(responsavelEl.value) : null,
+    sla:            slaEl         ? Number(slaEl.value) || null : null,
   }
 
   saveBtn.disabled = true

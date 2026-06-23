@@ -1,21 +1,21 @@
 @font-face {
     font-family: 'Poppins-Light';
-    src: url(Poppins-Light.ttf) format('truetype');
+    src: url(fontes/Poppins-Regular.ttf) format('truetype');
 }
 
 @font-face {
     font-family: 'Poppins';
-    src: url(Poppins-Regular.ttf) format('truetype');
+    src: url(fontes/Poppins-Regular.ttf) format('truetype');
 }
 
 @font-face {
     font-family: 'Poppins-Bold';
-    src: url(Poppins-Bold.ttf) format('truetype');
+    src: url(fontes/Poppins-Bold.ttf) format('truetype');
 }
 
 @font-face {
     font-family: 'Poppins-SemiBold';
-    src: url(Poppins-SemiBold.ttf) format('truetype');
+    src: url(fontes/Poppins-SemiBold.ttf) format('truetype');
 }
 
 :root {
@@ -281,15 +281,17 @@ main{
     color: var(--var_cor_branco);
     background-color: var(--var_cor_vermelho);
     border-radius: 5svh;
-    display: none;                  /*flex;*/
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 #main_painel_formulario_botoes_anexo_label{
     font-size: 1.5svh;
-    display: none;/*block;         garante que funcione */
+    display: block;
+    cursor: pointer;
     max-width: 100%;         /* limite dentro do container */
     white-space: nowrap;     /* impede quebrar linha */
     overflow: hidden;        /* esconde o que passar */
@@ -621,15 +623,17 @@ footer{
 
     #main_painel_formulario_botoes_anexo{
         height: auto;
-        min-height: 3svh;;
+        min-height: 3svh;
         width: 50svw;
         font-family: 'Poppins';
         color: var(--var_cor_branco);
         background-color: var(--var_cor_vermelho);
         border-radius: 3svh;
+        display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
+        cursor: pointer;
     }
 
     #main_painel_formulario_botoes_salvar{

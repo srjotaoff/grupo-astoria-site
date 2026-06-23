@@ -15,31 +15,35 @@ function montarLink(url, cpf) {
     return url.replace(/\d{11}/, cpf);
 }
 
+function criarBotao(texto, href) {
+    const a = document.createElement('a');
+    a.href = href;
+
+    const botao = document.createElement('button');
+
+    const p = document.createElement('p');
+    p.textContent = texto;
+
+    const img = document.createElement('img');
+    img.src = 'images/icones/icone_seta_direita_preto.svg';
+    img.alt = '';
+
+    botao.appendChild(p);
+    botao.appendChild(img);
+    a.appendChild(botao);
+    return a;
+}
+
 function renderOpcoes(opcoes, cpf) {
     const container = document.getElementById('main_unico_caixa');
     if (!container) return;
     container.innerHTML = '';
 
     opcoes.forEach(function (opcao) {
-        const link = montarLink(opcao.url, cpf);
-
-        const a = document.createElement('a');
-        a.href = link || '#';
-
-        const botao = document.createElement('button');
-
-        const p = document.createElement('p');
-        p.textContent = opcao.nome;
-
-        const img = document.createElement('img');
-        img.src = 'images/icones/icone_seta_direita_preto.svg';
-        img.alt = '';
-
-        botao.appendChild(p);
-        botao.appendChild(img);
-        a.appendChild(botao);
-        container.appendChild(a);
+        container.appendChild(criarBotao(opcao.nome, montarLink(opcao.url, cpf)));
     });
+
+    container.appendChild(criarBotao('SOLICITAR SUPORTE', 'solicitar_suporte.html'));
 }
 
 async function carregarOpcoes() {

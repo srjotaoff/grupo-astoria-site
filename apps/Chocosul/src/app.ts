@@ -221,6 +221,27 @@ app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
   }
 })
 
+// Solicitações ativas para o portal do vendedor (agrupadas por setor no frontend)
+app.get('/api/portal-vendedor/solicitacoes', async (_req, res, next) => {
+  try {
+    const rows = await db('solicitacao')
+      .select('id', 'descricao', 'setor', 'responsavel', 'id_responsavel', 'sla')
+      .orderBy('setor', 'asc')
+      .orderBy('descricao', 'asc')
+    const solicitacoes = rows.map((row: any) => ({
+      id: Number(row.id),
+      descricao: String(row.descricao || ''),
+      setor: String(row.setor || ''),
+      responsavel: String(row.responsavel || ''),
+      id_responsavel: row.id_responsavel != null ? Number(row.id_responsavel) : null,
+      sla: row.sla != null ? Number(row.sla) : null,
+    }))
+    return res.status(200).json({ ok: true, solicitacoes })
+  } catch (error) {
+    return next(error)
+  }
+})
+
 // Opcoes do menu do portal do vendedor (gerenciadas no Admin)
 app.get('/api/portal-vendedor/opcoes', async (_req, res, next) => {
   try {
