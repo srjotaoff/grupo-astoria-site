@@ -15,6 +15,101 @@ function setStatus(el, msg, isError) {
   el.className = 'card-status' + (isError ? ' error' : '')
 }
 
+// ── Bitrix: responsáveis ────────────────────────────────────────────────────────
+var WEBHOOK_BASE            = 'https://chocosul.bitrix24.com.br/rest/270/mwze5xa0wbsh91l1/'
+var RESPONSAVEIS_CACHE_KEY = 'bitrix_responsaveis'
+var responsaveisPromise    = null
+
+function sleep(ms) {
+  return new Promise(function (resolve) { setTimeout(resolve, ms) })
+}
+
+function nomeCompleto(u) {
+  return [u && u.NAME, u && u.SECOND_NAME, u && u.LAST_NAME]
+    .map(function (p) { return String(p || '').trim() })
+    .filter(Boolean)
+    .join(' ')
+}
+
+// Busca os usuários ATIVOS do Bitrix paginando de 50 em 50 (2s entre requisições).
+// Roda uma única vez por sessão: cache em memória (responsaveisPromise) + sessionStorage.
+function fetchResponsaveis() {
+  if (responsaveisPromise) return responsaveisPromise
+
+  try {
+    var raw = sessionStorage.getItem(RESPONSAVEIS_CACHE_KEY)
+    if (raw) {
+      var cached = JSON.parse(raw)
+      if (Array.isArray(cached) && cached.length) {
+        responsaveisPromise = Promise.resolve(cached)
+        return responsaveisPromise
+      }
+    }
+  } catch (_e) { /* cache inválido, ignora */ }
+
+  responsaveisPromise = (async function () {
+    var nomes    = []
+    var start    = 0
+    var primeira = true
+
+    for (var pagina = 0; pagina < 100; pagina++) {
+      if (!primeira) await sleep(2000)
+      primeira = false
+
+      var res = await fetch(WEBHOOK_BASE + 'user.get.json?start=' + start)
+      if (!res.ok) break
+
+      var data  = await res.json()
+      var lista = (data && data.result) || []
+      lista.forEach(function (u) {
+        if (u && u.ACTIVE === true) {
+          var nome = nomeCompleto(u)
+          if (nome) nomes.push(nome)
+        }
+      })
+
+      // Bitrix retorna "next" (offset da próxima página) enquanto houver mais registros
+      if (data && typeof data.next === 'number') {
+        start = data.next
+      } else {
+        break
+      }
+    }
+
+    nomes = nomes.filter(function (n, i) { return nomes.indexOf(n) === i })
+    nomes.sort(function (a, b) { return a.localeCompare(b, 'pt-BR') })
+
+    try { sessionStorage.setItem(RESPONSAVEIS_CACHE_KEY, JSON.stringify(nomes)) } catch (_e) { /* sessão cheia */ }
+    return nomes
+  })()
+
+  return responsaveisPromise
+}
+
+// Preenche um <select> de responsável com a lista do Bitrix, preservando o valor atual.
+function popularResponsaveis(selectEl, valorAtual) {
+  if (!selectEl) return
+  var atual = String(valorAtual || '').trim()
+
+  fetchResponsaveis().then(function (nomes) {
+    var html     = '<option value="">Selecione um responsável</option>'
+    var temAtual = false
+    nomes.forEach(function (n) {
+      var sel = (n === atual) ? ' selected' : ''
+      if (sel) temAtual = true
+      html += '<option value="' + escHtml(n) + '"' + sel + '>' + escHtml(n) + '</option>'
+    })
+    // mantém um valor antigo que não exista mais na lista do Bitrix
+    if (atual && !temAtual) {
+      html += '<option value="' + escHtml(atual) + '" selected>' + escHtml(atual) + '</option>'
+    }
+    selectEl.innerHTML = html
+  }).catch(function () {
+    selectEl.innerHTML = '<option value="">Erro ao carregar responsáveis</option>'
+    if (atual) selectEl.innerHTML += '<option value="' + escHtml(atual) + '" selected>' + escHtml(atual) + '</option>'
+  })
+}
+
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderSolicitacoes(solicitacoes) {
   var container = document.getElementById('main_tudo_caixas')
@@ -41,7 +136,9 @@ function createSolicitacaoCard(s) {
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
       '<label>Responsável</label>' +
-      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="responsavel" value="' + escHtml(s && (s.responsavel || s.colaborador)) + '" placeholder="Nome do responsável" maxlength="200">' +
+      '<select class="main_tudo_caixas_caixa_texto" data-field="responsavel">' +
+        '<option value="">Carregando responsáveis...</option>' +
+      '</select>' +
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
       '<label>SLA (horas)</label>' +
@@ -57,6 +154,9 @@ function createSolicitacaoCard(s) {
   var delBtn  = card.querySelector('.main_tudo_caixas_caixa_lixeira')
   if (saveBtn) saveBtn.addEventListener('click', function () { saveCard(card) })
   if (delBtn)  delBtn.addEventListener('click',  function () { deleteCard(card) })
+
+  var responsavelEl = card.querySelector('[data-field="responsavel"]')
+  popularResponsaveis(responsavelEl, s && (s.responsavel || s.colaborador))
 
   return card
 }
@@ -146,5 +246,6 @@ document.getElementById('main_tudo_caixas_adcionar').addEventListener('click', f
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 checkAuth()
+fetchResponsaveis() // dispara a busca dos responsáveis assim que a página abre
 loadSolicitacoes()
 
