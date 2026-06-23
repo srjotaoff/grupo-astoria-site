@@ -19,43 +19,6 @@ var WEBHOOK_BASE = 'https://chocosul.bitrix24.com.br/rest/270/mwze5xa0wbsh91l1/'
 // ================== DADOS CARREGADOS DO BANCO ==================
 var solicitacoesCarregadas = [];
 
-// ================== FILE INPUT (mostra nome do anexo) ==================
-document.addEventListener('DOMContentLoaded', function () {
-  var inputFile = document.getElementById('main_painel_formulario_botoes_anexo_input');
-  var labelFile = document.getElementById('main_painel_formulario_botoes_anexo_label');
-
-  if (inputFile && labelFile) {
-    inputFile.addEventListener('change', function () {
-      if (this.files && this.files.length > 0) {
-        labelFile.textContent = this.files[0].name;
-      } else {
-        labelFile.textContent = 'Anexar arquivo';
-      }
-    });
-  }
-});
-
-// ================== MENU NAV ==================
-function menu_navegacao() {
-  var botao_menu = document.getElementById('header_painel_navegacao_fundo_esquerda_menu');
-  var navegacao_paginas = document.getElementById('header_painel_navegacao_paginas');
-
-  var aberto = navegacao_paginas.classList.toggle('aberto');
-  botao_menu.setAttribute('aria-expanded', aberto ? 'true' : 'false');
-}
-
-document.addEventListener('click', function (e) {
-  var botao_menu = document.getElementById('header_painel_navegacao_fundo_esquerda_menu');
-  var navegacao_paginas = document.getElementById('header_painel_navegacao_paginas');
-
-  if (!navegacao_paginas.classList.contains('aberto')) return;
-
-  if (!navegacao_paginas.contains(e.target) && !botao_menu.contains(e.target)) {
-    navegacao_paginas.classList.remove('aberto');
-    botao_menu.setAttribute('aria-expanded', 'false');
-  }
-});
-
 // ================== HELPERS ==================
 function slugify(str) {
   return String(str || '')
@@ -151,21 +114,6 @@ function mostrar_opcoes_lista(setor) {
   }
 }
 
-// ================== CARREGA SOLICITAÇÕES DO BANCO ==================
-document.addEventListener('DOMContentLoaded', function () {
-  fetch('/api/portal-vendedor/solicitacoes')
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      solicitacoesCarregadas = (data.ok ? data.solicitacoes : []) || [];
-      criarBotoesSetor(solicitacoesCarregadas);
-      criarListasOpcoesPorSetor(solicitacoesCarregadas);
-      desmarcarTodasOpcoes();
-    })
-    .catch(function (err) {
-      console.error('Erro ao carregar solicitações:', err);
-    });
-});
-
 // ================== BITRIX: HELPERS ==================
 function getTaskIdFromResult(data) {
   return (
@@ -182,14 +130,13 @@ function taskLinkForUser(userId, taskId) {
 
 async function bitrixNotifyUser(userId, titulo, taskId) {
   try {
-    var body = {
-      USER_ID: userId,
-      MESSAGE: 'Nova tarefa: ' + titulo + '\n' + taskLinkForUser(userId, taskId)
-    };
     var resp = await fetch(WEBHOOK_BASE + 'im.notify.personal.add', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        USER_ID: userId,
+        MESSAGE: 'Nova tarefa: ' + titulo + '\n' + taskLinkForUser(userId, taskId)
+      })
     });
     var j = await resp.json();
     if (j.error) console.warn('Falha ao notificar', userId, j);
@@ -198,16 +145,20 @@ async function bitrixNotifyUser(userId, titulo, taskId) {
   }
 }
 
-function fileToBase64(file) {
-  return new Promise(function (resolve, reject) {
-    var reader = new FileReader();
-    reader.onload = function () {
-      var base64 = reader.result.split(',')[1];
-      resolve(base64);
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+async function uploadFileToBitrix(file) {
+  var formData = new FormData();
+  formData.append('file', file);
+  formData.append('data', JSON.stringify({ NAME: file.name }));
+
+  var resp = await fetch(WEBHOOK_BASE + 'disk.folder.uploadfile?id=0', {
+    method: 'POST',
+    body: formData
   });
+  var data = await resp.json();
+  if (data && data.result && data.result.ID) {
+    return Number(data.result.ID);
+  }
+  return null;
 }
 
 // ================== SALVAR SOLICITAÇÃO ==================
@@ -262,13 +213,13 @@ async function salvar_solicitacao() {
       }
     };
 
-    // Anexo
+    // Anexo: faz upload para o Bitrix Disk e vincula à tarefa
     var inputFile = document.getElementById('main_painel_formulario_botoes_anexo_input');
     if (inputFile && inputFile.files && inputFile.files.length > 0) {
-      var file = inputFile.files[0];
-      var base64 = await fileToBase64(file);
-      parametros_api.fields.UF_TASK_WEBDAV_FILES = [];
-      parametros_api.fields.SE_PARAMETER = [{ FILE_NAME: file.name, CONTENT: base64 }];
+      var fileId = await uploadFileToBitrix(inputFile.files[0]);
+      if (fileId) {
+        parametros_api.fields.UF_TASK_WEBDAV_FILES = ['n' + fileId];
+      }
     }
 
     var resp = await fetch(WEBHOOK_BASE + 'tasks.task.add', {
@@ -293,3 +244,34 @@ async function salvar_solicitacao() {
     botaoSalvar.disabled = false;
   }
 }
+
+// ================== INIT ==================
+document.addEventListener('DOMContentLoaded', function () {
+  // File input: mostra nome do arquivo selecionado
+  var inputFile = document.getElementById('main_painel_formulario_botoes_anexo_input');
+  var labelFile = document.getElementById('main_painel_formulario_botoes_anexo_label');
+  if (inputFile && labelFile) {
+    inputFile.addEventListener('change', function () {
+      labelFile.textContent = (this.files && this.files.length > 0) ? this.files[0].name : 'Anexar arquivo';
+    });
+  }
+
+  // Botão salvar
+  var botaoSalvar = document.getElementById('main_painel_formulario_botoes_salvar');
+  if (botaoSalvar) {
+    botaoSalvar.addEventListener('click', salvar_solicitacao);
+  }
+
+  // Carrega solicitações do banco
+  fetch('/api/portal-vendedor/solicitacoes')
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      solicitacoesCarregadas = (data.ok ? data.solicitacoes : []) || [];
+      criarBotoesSetor(solicitacoesCarregadas);
+      criarListasOpcoesPorSetor(solicitacoesCarregadas);
+      desmarcarTodasOpcoes();
+    })
+    .catch(function (err) {
+      console.error('Erro ao carregar solicitações:', err);
+    });
+});
