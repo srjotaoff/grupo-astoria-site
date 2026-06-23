@@ -177,7 +177,7 @@ main{
   transition: border-color 0.15s;
 }
 
-select.main_tudo_caixas_caixa_texto { color-scheme: dark; }
+select.main_tudo_caixas_caixa_texto option { color: #000; background: #fff; }
 
 .main_tudo_caixas_caixa_texto:focus { border-color: rgb(245,62,78); }
 

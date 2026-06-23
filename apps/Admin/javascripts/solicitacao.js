@@ -17,7 +17,7 @@ function setStatus(el, msg, isError) {
 
 // ── Bitrix: responsáveis ────────────────────────────────────────────────────────
 var WEBHOOK_BASE           = 'https://chocosul.bitrix24.com.br/rest/270/mwze5xa0wbsh91l1/'
-var RESPONSAVEIS_CACHE_KEY = 'bitrix_responsaveis'
+var RESPONSAVEIS_CACHE_KEY = 'bitrix_responsaveis_v2'
 var responsaveisPromise    = null
 
 function sleep(ms) {
@@ -38,7 +38,10 @@ function fetchResponsaveis() {
     var raw = sessionStorage.getItem(RESPONSAVEIS_CACHE_KEY)
     if (raw) {
       var cached = JSON.parse(raw)
-      if (Array.isArray(cached) && cached.length) {
+      // só usa o cache se tiver o formato esperado: [{ id, nome }, ...]
+      if (Array.isArray(cached) && cached.length &&
+          cached[0] && typeof cached[0] === 'object' &&
+          cached[0].id != null && cached[0].nome) {
         responsaveisPromise = Promise.resolve(cached)
         return responsaveisPromise
       }
