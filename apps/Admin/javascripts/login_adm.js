@@ -9,9 +9,9 @@ function showError(msg) {
 
 async function redirectIfAlreadyAuthenticated() {
   try {
-    var res = await fetch('/auth/me', { credentials: 'include' })
+    var res = await fetch(BASE_PATH + '/auth/me', { credentials: 'include' })
     if (res.ok) {
-      window.location.replace('/opcoes-menu')
+      window.location.replace(BASE_PATH + '/opcoes-menu')
     }
   } catch (_e) {
     // keep login page when server is unavailable
@@ -31,7 +31,7 @@ if (acessarBtn) {
     showError('')
 
     try {
-      var res = await fetch('/auth/login', {
+      var res = await fetch(BASE_PATH + '/auth/login', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -46,7 +46,7 @@ if (acessarBtn) {
       }
 
       // Send admin to the menu hub first, where they can choose the section to manage.
-      window.location.replace('/opcoes-menu')
+      window.location.replace(BASE_PATH + '/opcoes-menu')
     } catch (_e) {
       showError('Sem conexão com o servidor.')
     } finally {

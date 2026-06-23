@@ -1,7 +1,7 @@
 // ── Auth ──────────────────────────────────────────────────────────────────────
 async function checkAuth() {
-  var res = await fetch('/admin/session-check', { credentials: 'include' })
-  if (res.status === 401 || res.status === 403) window.location.replace('/')
+  var res = await fetch(BASE_PATH + '/admin/session-check', { credentials: 'include' })
+  if (res.status === 401 || res.status === 403) window.location.replace(BASE_PATH + '/')
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -80,7 +80,7 @@ async function saveCard(card) {
   setStatus(statusEl, 'Salvando...', false)
 
   try {
-    var url    = isNew ? '/admin/opcoes' : '/admin/opcoes/' + id
+    var url    = isNew ? BASE_PATH + '/admin/opcoes' : BASE_PATH + '/admin/opcoes/' + id
     var method = isNew ? 'POST' : 'PATCH'
     var res    = await fetch(url, {
       method: method,
@@ -88,7 +88,7 @@ async function saveCard(card) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE_PATH + '/'); return }
     var data = await res.json().catch(function () { return {} })
     if (!res.ok) { setStatus(statusEl, (data && data.message) || 'Erro ao salvar.', true); return }
     setStatus(statusEl, isNew ? 'Opção criada!' : 'Salvo com sucesso!', false)
@@ -110,8 +110,8 @@ async function deleteCard(card) {
   setStatus(statusEl, 'Excluindo...', false)
 
   try {
-    var res = await fetch('/admin/opcoes/' + id, { method: 'DELETE', credentials: 'include' })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    var res = await fetch(BASE_PATH + '/admin/opcoes/' + id, { method: 'DELETE', credentials: 'include' })
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE_PATH + '/'); return }
     if (!res.ok) {
       var data = await res.json().catch(function () { return {} })
       setStatus(statusEl, (data && data.message) || 'Erro ao excluir.', true)
@@ -126,8 +126,8 @@ async function deleteCard(card) {
 // ── Load ──────────────────────────────────────────────────────────────────────
 async function loadOpcoes() {
   try {
-    var res  = await fetch('/admin/opcoes', { credentials: 'include' })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    var res  = await fetch(BASE_PATH + '/admin/opcoes', { credentials: 'include' })
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE_PATH + '/'); return }
     var data = await res.json()
     renderOpcoes(data.opcoes || [])
   } catch (_e) { /* silent */ }

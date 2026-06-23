@@ -4,11 +4,12 @@
 
   var currentPath = window.location.pathname
 
+  var bp = (typeof BASE_PATH !== 'undefined') ? BASE_PATH : ''
   var links = [
-    { href: '/cartaz-rotativo', label: 'Cartaz Rotativo' },
-    { href: '/marcas',          label: 'Marcas do Portifólio' },
-    { href: '/opcoes-menu',     label: 'Opções do Menu' },
-    { href: '/solicitacao',     label: 'Gestão de Solicitação' },
+    { href: bp + '/cartaz-rotativo', label: 'Cartaz Rotativo' },
+    { href: bp + '/marcas',          label: 'Marcas do Portifólio' },
+    { href: bp + '/opcoes-menu',     label: 'Opções do Menu' },
+    { href: bp + '/solicitacao',     label: 'Gestão de Solicitação' },
   ]
 
   var nav = document.createElement('nav')
@@ -19,7 +20,7 @@
     var btn = document.createElement('button')
     a.href  = link.href
     btn.textContent = link.label
-    if (currentPath === link.href) btn.classList.add('active')
+    if (currentPath === link.href || currentPath === link.href + '/') btn.classList.add('active')
     a.appendChild(btn)
     nav.appendChild(a)
   })
@@ -32,9 +33,9 @@
 
   logoutBtn.addEventListener('click', async function () {
     try {
-      await fetch('/auth/logout', { method: 'POST', credentials: 'include' })
+      await fetch(bp + '/auth/logout', { method: 'POST', credentials: 'include' })
     } finally {
-      window.location.replace('/')
+      window.location.replace(bp + '/')
     }
   })
 

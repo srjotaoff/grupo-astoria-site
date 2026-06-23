@@ -1,7 +1,7 @@
 // ── Auth ──────────────────────────────────────────────────────────────────────
 async function checkAuth() {
-  var res = await fetch('/admin/session-check', { credentials: 'include' })
-  if (res.status === 401 || res.status === 403) window.location.replace('/')
+  var res = await fetch(BASE_PATH + '/admin/session-check', { credentials: 'include' })
+  if (res.status === 401 || res.status === 403) window.location.replace(BASE_PATH + '/')
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -30,7 +30,7 @@ function createBannerCard(banner) {
   card.className = 'main_tudo_caixas_caixa'
   if (banner && banner.id) card.dataset.id = banner.id
 
-  var imgUrl = banner && banner.id ? '/admin/banners/' + banner.id + '/imagem' : ''
+  var imgUrl = banner && banner.id ? BASE_PATH + '/admin/banners/' + banner.id + '/imagem' : ''
 
   card.innerHTML =
     '<div class="main_tudo_caixas_caixa_img" title="Clique para alterar imagem">' +
@@ -112,10 +112,10 @@ async function saveCard(card) {
   setStatus(statusEl, 'Salvando...', false)
 
   try {
-    var url    = isNew ? '/admin/banners' : '/admin/banners/' + id
+    var url    = isNew ? BASE_PATH + '/admin/banners' : BASE_PATH + '/admin/banners/' + id
     var method = isNew ? 'POST' : 'PATCH'
     var res    = await fetch(url, { method: method, credentials: 'include', body: fd })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE_PATH + '/'); return }
     var data   = await res.json().catch(function () { return {} })
     if (!res.ok) { setStatus(statusEl, (data && data.message) || 'Erro ao salvar.', true); return }
     setStatus(statusEl, isNew ? 'Banner criado!' : 'Salvo com sucesso!', false)
@@ -137,8 +137,8 @@ async function deleteCard(card) {
   setStatus(statusEl, 'Excluindo...', false)
 
   try {
-    var res = await fetch('/admin/banners/' + id, { method: 'DELETE', credentials: 'include' })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    var res = await fetch(BASE_PATH + '/admin/banners/' + id, { method: 'DELETE', credentials: 'include' })
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE_PATH + '/'); return }
     if (!res.ok) {
       var data = await res.json().catch(function () { return {} })
       setStatus(statusEl, (data && data.message) || 'Erro ao excluir.', true)
@@ -153,8 +153,8 @@ async function deleteCard(card) {
 // ── Load ──────────────────────────────────────────────────────────────────────
 async function loadBanners() {
   try {
-    var res  = await fetch('/admin/banners', { credentials: 'include' })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    var res  = await fetch(BASE_PATH + '/admin/banners', { credentials: 'include' })
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE_PATH + '/'); return }
     var data = await res.json()
     renderBanners(data.banners || [])
   } catch (_e) { /* silent */ }
