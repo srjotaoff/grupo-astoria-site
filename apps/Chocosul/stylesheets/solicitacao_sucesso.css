@@ -1,21 +1,21 @@
 @font-face {
     font-family: 'Poppins-Light';
-    src: url(Poppins-Light.ttf) format('truetype');
+    src: url(fontes/Poppins-Regular.ttf) format('truetype');
 }
 
 @font-face {
     font-family: 'Poppins';
-    src: url(Poppins-Regular.ttf) format('truetype');
+    src: url(fontes/Poppins-Regular.ttf) format('truetype');
 }
 
 @font-face {
     font-family: 'Poppins-Bold';
-    src: url(Poppins-Bold.ttf) format('truetype');
+    src: url(fontes/Poppins-Bold.ttf) format('truetype');
 }
 
 @font-face {
     font-family: 'Poppins-SemiBold';
-    src: url(Poppins-SemiBold.ttf) format('truetype');
+    src: url(fontes/Poppins-SemiBold.ttf) format('truetype');
 }
 
 :root {
