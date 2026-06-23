@@ -38,8 +38,8 @@ function createOpcaoCard(opcao) {
       '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="nome" value="' + escHtml(opcao && opcao.nome) + '" placeholder="Título da opção" maxlength="200">' +
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
-      '<label>Redirecionamento (setor)</label>' +
-      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="setor" value="' + escHtml(opcao && opcao.setor) + '" placeholder="Ex: /vendas, /catalogo" maxlength="200">' +
+      '<label>Url</label>' +
+      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="url" value="' + escHtml(opcao && opcao.url) + '" placeholder="Ex: https://exemplo.com">' +
     '</div>' +
     '<label class="ativo-toggle">' +
       '<input type="checkbox" data-field="ativo"' + ativoChecked + '>' +
@@ -67,12 +67,12 @@ async function saveCard(card) {
   var saveBtn  = card.querySelector('.btn-salvar')
 
   var nomeEl  = card.querySelector('[data-field="nome"]')
-  var setorEl = card.querySelector('[data-field="setor"]')
+  var urlEl   = card.querySelector('[data-field="url"]')
   var ativoEl = card.querySelector('[data-field="ativo"]')
 
   var body = {
-    nome:  nomeEl  ? nomeEl.value.trim()   : '',
-    setor: setorEl ? setorEl.value.trim()  : '',
+    nome:  nomeEl  ? nomeEl.value.trim() : '',
+    url:   urlEl   ? urlEl.value.trim()  : '',
     ativo: ativoEl ? (ativoEl.checked ? 1 : 0) : 1,
   }
 

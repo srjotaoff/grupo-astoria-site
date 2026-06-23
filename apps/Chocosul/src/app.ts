@@ -221,6 +221,21 @@ app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
   }
 })
 
+// Opcoes do menu do portal do vendedor (gerenciadas no Admin)
+app.get('/api/portal-vendedor/opcoes', async (_req, res, next) => {
+  try {
+    const rows = await db('opcoes').select('id', 'nome', 'url').where({ ativo: 1 }).orderBy('id', 'asc')
+    const opcoes = rows.map((row: any) => ({
+      id: Number(row.id),
+      nome: String(row.nome || ''),
+      url: String(row.url || ''),
+    }))
+    return res.status(200).json({ ok: true, opcoes })
+  } catch (error) {
+    return next(error)
+  }
+})
+
 // Routes for main pages
 app.get('/', (_req, res) => {
   res.sendFile(path.resolve(__dirname, '../index.html'))

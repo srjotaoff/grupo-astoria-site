@@ -1,17 +1,17 @@
 import { db } from '../../../../packages/core/database/knex'
 import { AppError } from '../../../../packages/core/errors/AppError'
 
-// Table: opcoes (id, nome, ativo, setor)
+// Table: opcoes (id, nome, ativo, url)
 
 type CreateOpcaoInput = {
   nome: unknown
-  setor: unknown
+  url: unknown
   ativo?: unknown
 }
 
 export type CreateOpcaoPayload = {
   nome: string
-  setor: string
+  url: string
   ativo: 0 | 1
 }
 
@@ -22,22 +22,21 @@ function parseAtivo(value: unknown): 0 | 1 {
 
 export function validateOpcaoInput(input: CreateOpcaoInput): CreateOpcaoPayload {
   const nome = typeof input.nome === 'string' ? input.nome.trim() : ''
-  const setor = typeof input.setor === 'string' ? input.setor.trim() : ''
+  const url = typeof input.url === 'string' ? input.url.trim() : ''
 
-  if (!nome || !setor) {
-    throw new AppError('Nome e setor sao obrigatorios.', 400)
+  if (!nome || !url) {
+    throw new AppError('Nome e url sao obrigatorios.', 400)
   }
 
   if (nome.length > 200) throw new AppError('Nome deve ter no maximo 200 caracteres.', 400)
-  if (setor.length > 200) throw new AppError('Setor deve ter no maximo 200 caracteres.', 400)
 
-  return { nome, setor, ativo: parseAtivo(input.ativo) }
+  return { nome, url, ativo: parseAtivo(input.ativo) }
 }
 
 export async function createOpcao(payload: CreateOpcaoPayload): Promise<{ id: number }> {
   const insertResult = await db('opcoes').insert({
     nome: payload.nome,
-    setor: payload.setor,
+    url: payload.url,
     ativo: payload.ativo,
   })
   const rawId = Array.isArray(insertResult) ? insertResult[0] : insertResult
@@ -48,16 +47,16 @@ export type OpcaoItem = {
   id: number
   nome: string
   ativo: boolean
-  setor: string
+  url: string
 }
 
 export async function listOpcoes(): Promise<OpcaoItem[]> {
-  const rows = await db('opcoes').select('id', 'nome', 'ativo', 'setor').orderBy('id', 'desc')
+  const rows = await db('opcoes').select('id', 'nome', 'ativo', 'url').orderBy('id', 'desc')
   return rows.map((row: any) => ({
     id: Number(row.id),
     nome: String(row.nome || ''),
     ativo: Boolean(row.ativo),
-    setor: String(row.setor || ''),
+    url: String(row.url || ''),
   }))
 }
 
@@ -68,21 +67,21 @@ export async function getOpcaoById(id: number): Promise<OpcaoItem> {
     id: Number(row.id),
     nome: String(row.nome || ''),
     ativo: Boolean(row.ativo),
-    setor: String(row.setor || ''),
+    url: String(row.url || ''),
   }
 }
 
 type UpdateOpcaoInput = {
   id: unknown
   nome?: unknown
-  setor?: unknown
+  url?: unknown
   ativo?: unknown
 }
 
 export type UpdateOpcaoPayload = {
   id: number
   nome?: string
-  setor?: string
+  url?: string
   ativo?: 0 | 1
 }
 
@@ -98,17 +97,16 @@ export function validateUpdateOpcaoInput(input: UpdateOpcaoInput): UpdateOpcaoPa
     if (nome) payload.nome = nome
   }
 
-  if (typeof input.setor === 'string') {
-    const setor = input.setor.trim()
-    if (setor.length > 200) throw new AppError('Setor deve ter no maximo 200 caracteres.', 400)
-    if (setor) payload.setor = setor
+  if (typeof input.url === 'string') {
+    const url = input.url.trim()
+    if (url) payload.url = url
   }
 
   if (input.ativo !== undefined) {
     payload.ativo = parseAtivo(input.ativo)
   }
 
-  if (payload.nome === undefined && payload.setor === undefined && payload.ativo === undefined) {
+  if (payload.nome === undefined && payload.url === undefined && payload.ativo === undefined) {
     throw new AppError('Informe ao menos um campo para atualizar.', 400)
   }
 
@@ -118,7 +116,7 @@ export function validateUpdateOpcaoInput(input: UpdateOpcaoInput): UpdateOpcaoPa
 export async function updateOpcao(payload: UpdateOpcaoPayload): Promise<void> {
   const updateData: Record<string, unknown> = {}
   if (payload.nome !== undefined) updateData.nome = payload.nome
-  if (payload.setor !== undefined) updateData.setor = payload.setor
+  if (payload.url !== undefined) updateData.url = payload.url
   if (payload.ativo !== undefined) updateData.ativo = payload.ativo
 
   const updated = await db('opcoes').where({ id: payload.id }).update(updateData)
@@ -129,4 +127,3 @@ export async function deleteOpcao(id: number): Promise<void> {
   const deleted = await db('opcoes').where({ id }).del()
   if (!deleted) throw new AppError('Opcao nao encontrada.', 404)
 }
-
