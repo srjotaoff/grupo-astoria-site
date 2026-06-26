@@ -39,7 +39,7 @@ function createOpcaoCard(opcao) {
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
       '<label>Url</label>' +
-      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="url" value="' + escHtml(opcao && opcao.url) + '" placeholder="Ex: https://exemplo.com">' +
+      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="url" value="' + escHtml(opcao && opcao.url) + '" placeholder="Ex: https://exemplo.com/?cpf=%%cpf%%">' +
     '</div>' +
     '<label class="ativo-toggle">' +
       '<input type="checkbox" data-field="ativo"' + ativoChecked + '>' +
@@ -74,6 +74,15 @@ async function saveCard(card) {
     nome:  nomeEl  ? nomeEl.value.trim() : '',
     url:   urlEl   ? urlEl.value.trim()  : '',
     ativo: ativoEl ? (ativoEl.checked ? 1 : 0) : 1,
+  }
+
+  if (!body.nome || !body.url) {
+    setStatus(statusEl, 'Nome e url são obrigatórios.', true)
+    return
+  }
+  if (!/^https?:\/\/.+/i.test(body.url)) {
+    setStatus(statusEl, 'Informe um link válido (começando com http:// ou https://).', true)
+    return
   }
 
   saveBtn.disabled = true

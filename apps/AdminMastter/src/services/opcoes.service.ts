@@ -20,6 +20,20 @@ function parseAtivo(value: unknown): 0 | 1 {
   return 1
 }
 
+// Valida que a url e um link http(s) valido.
+function validateUrl(url: string): void {
+  let parsed: URL
+  try {
+    parsed = new URL(url)
+  } catch {
+    throw new AppError('Informe um link valido (ex: https://exemplo.com).', 400)
+  }
+
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw new AppError('O link deve comecar com http:// ou https://.', 400)
+  }
+}
+
 export function validateOpcaoInput(input: CreateOpcaoInput): CreateOpcaoPayload {
   const nome = typeof input.nome === 'string' ? input.nome.trim() : ''
   const url = typeof input.url === 'string' ? input.url.trim() : ''
@@ -29,6 +43,8 @@ export function validateOpcaoInput(input: CreateOpcaoInput): CreateOpcaoPayload 
   }
 
   if (nome.length > 200) throw new AppError('Nome deve ter no maximo 200 caracteres.', 400)
+
+  validateUrl(url)
 
   return { nome, url, ativo: parseAtivo(input.ativo) }
 }
@@ -99,7 +115,10 @@ export function validateUpdateOpcaoInput(input: UpdateOpcaoInput): UpdateOpcaoPa
 
   if (typeof input.url === 'string') {
     const url = input.url.trim()
-    if (url) payload.url = url
+    if (url) {
+      validateUrl(url)
+      payload.url = url
+    }
   }
 
   if (input.ativo !== undefined) {
