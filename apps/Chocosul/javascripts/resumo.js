@@ -38,14 +38,20 @@ function embedIframe(src) {
 }
 
 async function carregarRelatorio() {
+    console.log('[resumo] raw localStorage:', localStorage.getItem(STORAGE_KEY));
+
     const cpf = getCpf();
+    console.log('[resumo] cpf logado:', JSON.stringify(cpf), 'tamanho:', cpf.length);
     if (!cpf) {
+        console.warn('[resumo] sem CPF -> redirecionando para acesso');
         window.location.href = 'portal_vendedor_acesso.html';
         return;
     }
 
     const id = getOpcaoId();
+    console.log('[resumo] query string:', window.location.search, '-> id:', id);
     if (!id) {
+        console.warn('[resumo] sem id valido -> redirecionando para menu');
         window.location.href = 'portal_vendedor_menu.html';
         return;
     }
@@ -53,17 +59,28 @@ async function carregarRelatorio() {
     try {
         const res = await fetch('/api/portal-vendedor/opcoes');
         const data = await res.json();
+        console.log('[resumo] resposta /opcoes:', res.status, data);
         const opcoes = (res.ok && data.ok) ? (data.opcoes || []) : [];
         const opcao = opcoes.find(function (o) { return o.id === id; });
+        console.log('[resumo] opcao encontrada:', opcao);
 
         if (!opcao || !opcao.url) {
+            console.warn('[resumo] opcao/url ausente -> redirecionando para menu');
             window.location.href = 'portal_vendedor_menu.html';
             return;
         }
 
-        embedIframe(montarUrl(opcao.url, cpf));
-    } catch (_e) {
-        // silencioso
+        const match = opcao.url.match(/\d{11}(?!\d)/);
+        console.log('[resumo] url do banco:', opcao.url);
+        console.log('[resumo] trecho que sera substituido (CPF placeholder):', match ? match[0] : '(NENHUM 11-digitos encontrado)');
+
+        const urlFinal = montarUrl(opcao.url, cpf);
+        console.log('[resumo] url final (com CPF logado):', urlFinal);
+        console.log('[resumo] substituicao ocorreu?', urlFinal !== opcao.url);
+
+        embedIframe(urlFinal);
+    } catch (e) {
+        console.error('[resumo] erro ao carregar relatorio:', e);
     }
 }
 
