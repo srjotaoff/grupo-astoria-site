@@ -53,6 +53,12 @@ botaoAcesso.addEventListener('click', async (e) => {
             cpf_usuario: usuario.cpf_usuario,
         }));
 
+        localStorage.setItem('colaborador', JSON.stringify({
+            nome: usuario.nome_usuario,
+            tipo_cargo: usuario.tipo_usuario,
+            cpf: usuario.cpf_usuario,
+        }));
+
         window.location.href = 'portal_vendedor_menu.html';
     } catch (erro) {
         console.error('Erro ao acessar o portal:', erro);

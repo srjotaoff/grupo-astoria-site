@@ -245,38 +245,13 @@ app.get('/api/portal-vendedor/solicitacoes', async (_req, res, next) => {
 // Opcoes do menu do portal do vendedor (gerenciadas no Admin)
 app.get('/api/portal-vendedor/opcoes', async (_req, res, next) => {
   try {
-    const rows = await db('opcoes').select('id', 'nome', 'url', 'filtro').where({ ativo: 1 }).orderBy('id', 'asc')
+    const rows = await db('opcoes').select('id', 'nome', 'url').where({ ativo: 1 }).orderBy('id', 'asc')
     const opcoes = rows.map((row: any) => ({
       id: Number(row.id),
       nome: String(row.nome || ''),
       url: String(row.url || ''),
-      filtro: row.filtro ? String(row.filtro) : null,
     }))
     return res.status(200).json({ ok: true, opcoes })
-  } catch (error) {
-    return next(error)
-  }
-})
-
-app.get('/api/portal-vendedor/opcoes/:id', async (req, res, next) => {
-  try {
-    const id = Number(req.params.id)
-    if (!Number.isInteger(id) || id <= 0) {
-      throw new AppError('ID de opcao invalido.', 400)
-    }
-
-    const row = await db('opcoes').select('id', 'nome', 'url', 'filtro').where({ id, ativo: 1 }).first()
-    if (!row) throw new AppError('Opcao nao encontrada.', 404)
-
-    return res.status(200).json({
-      ok: true,
-      opcao: {
-        id: Number(row.id),
-        nome: String(row.nome || ''),
-        url: String(row.url || ''),
-        filtro: row.filtro ? String(row.filtro) : null,
-      },
-    })
   } catch (error) {
     return next(error)
   }

@@ -33,10 +33,9 @@ function renderOpcoes(opcoes) {
     container.innerHTML = '';
 
     opcoes.forEach(function (opcao) {
-        var href = opcao.filtro
-            ? 'relatorio.html?id=' + opcao.id
-            : opcao.url;
-        container.appendChild(criarBotao(opcao.nome, href));
+        // Roteia para a página genérica de relatório; a substituição do CPF
+        // placeholder pelo CPF do usuário logado acontece no resumo.js.
+        container.appendChild(criarBotao(opcao.nome, 'resumo.html?id=' + encodeURIComponent(opcao.id)));
     });
 
     container.appendChild(criarBotao('SOLICITAR SUPORTE', 'solicitar_suporte.html'));
