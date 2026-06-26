@@ -56,19 +56,14 @@ main{
 }
 
 #main_unico{
+    padding-bottom: 10svh;
     padding-top: 10svh;
     margin-left: 10svw;
     width: 80svw;
-    display: flex;
-    flex-direction: row;
-    gap: 8svh;
-    justify-content: space-between;
-}
-
-.main_unico_caixa_texto{
-    color: var(--texto);
-    font-family: "Poppins-Regular";
-    font-size: 0.5svw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10svh 10svw;
+    justify-content: space-evenly;
 }
 
 .main_unico_caixa{
@@ -83,14 +78,14 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 40svh;
+    height: 35svh;
     object-fit: contain; /* adicione essa linha */
 }
 
 .main_unico_caixa_img_marcas{
     margin-top: 0svh;
     width: 16svw;
-    height: 38svh;
+    height: 35svh;
 }
 
 .main_unico_caixa_img a{
@@ -98,7 +93,7 @@ main{
     display: flex;
     gap: 0.5svw;
     justify-content: flex-end;
-    margin-top: 0svh;
+    margin-top: auto;
     margin-right: 4svw;
     font-size: 0.5svw;
 }
@@ -107,9 +102,15 @@ main{
     width: 0.5svw;
 }
 
+.main_unico_caixa_texto{
+    color: var(--texto);
+    font-family: "Poppins-Regular";
+    font-size: 0.5svw;
+}
+
 .main_unico_caixa_texto_informaçao{
     height: 34svh;
-    margin-top: 0.2svh;
+    margin-top: 2.2svh;
     padding-left: 0svw;
     padding-right: 0svw;
     width: 20svw;
@@ -171,7 +172,7 @@ main{
 .main_unico_caixa_img_marcas{
     margin-top: 3svh;
     width: 50svw;
-    height: auto;
+    height: 15svh;
 }
 
 .main_unico_caixa_img a{
@@ -218,5 +219,4 @@ main{
     padding-bottom: 2svh;
 }
 }
-
 

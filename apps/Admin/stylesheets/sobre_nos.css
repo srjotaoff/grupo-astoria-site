@@ -488,7 +488,7 @@ button{
 
 body{
 
-    height: 300svh;
+    height: auto;
     width: 100svw;
     background-color: var(--branca);
     overflow-x:hidden;
@@ -515,7 +515,7 @@ main{
 
 #main_primeiro_tudo{
     height: auto;
-    padding-bottom: 0svh;
+    padding-bottom: 1svh;
     margin-top:0svh;
     display: flex;
     flex-direction: column;

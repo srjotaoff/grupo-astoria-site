@@ -32,8 +32,12 @@
 
 header{
     height: 20svh;
-    width: 90svw;
-    
+    width: 100svw;
+
+}
+
+body{
+    background-color: var(--branca);
 }
 
 header img{
@@ -44,7 +48,6 @@ header img{
 }
 
 #main_tudo{
-    width: 95svw;
     display: flex;
     flex-direction: row;
     gap: 5svw;
@@ -56,7 +59,6 @@ header img{
 }
 
 #main_tudo_caixas{
-    width: 70svw;
     display: flex;
     flex-direction: row;
     gap: 2.5svw;
@@ -70,16 +72,15 @@ header img{
     border-radius: 5svh;
     display: flex;
     flex-direction: column;
-    gap: 0svh;
+    gap: 2svh;
     
     align-items: center;
 }
 
 .main_tudo_caixas_caixa_img{
-    margin-top: 0svh;
-    margin-bottom: 1svh;
-    width: 8svw;
-    height: 7svh;
+    margin-top: 3svh;
+    width: 16svw;
+    height: 19svh;
     background-color: var(--branca);
     border: none;
     display: flex;
@@ -90,13 +91,13 @@ header img{
 }
 
 .main_tudo_caixas_caixa_img p{
-    font-size: 5svw;
+    font-size: 7.84316svw;
     font-family:"Poppins-Regular" ;
     color: var(--texto);
 }
 
 .main_tudo_caixas_caixa_texto{
-    height: 5.5svh;
+    height: 4svh;
     width: 15.5svw;
     border: none;
     border-radius: 2svh;
@@ -107,8 +108,7 @@ header img{
     width: 16svw;
     display: flex;
     flex-direction: column;
-    margin-bottom: 1svh;
-    gap: 1svh;
+    gap: 0.5svh;
 
 }
 
@@ -121,18 +121,8 @@ header img{
 .main_tudo_caixas_caixa_lixeira{
     height: 2.5svh;
     margin-left: auto;
-    margin-right: 0svw;
+    margin-right: 2svw;
     cursor: pointer;
-}
-
-.card-actions{
-    width: 16svw;
-    display: flex;
-    flex-direction: row;
-}
-
-.btn-salvar{
-
 }
 
 #main_tudo_caixas_adcionar{

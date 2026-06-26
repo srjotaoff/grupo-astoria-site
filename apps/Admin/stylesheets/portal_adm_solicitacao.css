@@ -32,7 +32,7 @@
 
 header{
     height: 20svh;
-    width: 90svw;
+    width: 100svw;
 
 }
 
@@ -48,7 +48,6 @@ header img{
 }
 
 #main_tudo{
-    width: 95svw;
     display: flex;
     flex-direction: row;
     gap: 5svw;
@@ -60,7 +59,6 @@ header img{
 }
 
 #main_tudo_caixas{
-    width: 70svw;
     display: flex;
     flex-direction: row;
     gap: 2.5svw;
@@ -74,7 +72,7 @@ header img{
     border-radius: 5svh;
     display: flex;
     flex-direction: column;
-    gap: 0svh;
+    gap: 2svh;
     justify-content: center;
     align-items: center;
 }
@@ -89,7 +87,6 @@ header img{
 
 .main_tudo_caixas_caixa_conjunto{
     width: 16svw;
-    margin-bottom: 1svh;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -103,16 +100,10 @@ header img{
     color: var(--branca);
 }
 
-.card-actions{
-    width: 16svw;
-    display: flex;
-    flex-direction: row;
-}
-
 .main_tudo_caixas_caixa_lixeira{
     height: 2.5svh;
     margin-left: auto;
-    margin-right: 0svw;
+    margin-right: 2svw;
     cursor: pointer;
 }
 
