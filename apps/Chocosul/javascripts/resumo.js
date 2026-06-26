@@ -1,18 +1,11 @@
 const STORAGE_KEY = 'portal_vendedor_usuario';
 
-// Recupera o CPF do usuário logado (sessão do portal ou fallback no localStorage).
+// Recupera o CPF do usuário logado a partir do localStorage.
 function getCpf() {
     try {
-        const usuario = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || 'null');
+        const usuario = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
         if (usuario && usuario.cpf_usuario) {
             return String(usuario.cpf_usuario).replace(/\D/g, '');
-        }
-    } catch (_e) { /* ignora */ }
-
-    try {
-        const colaborador = JSON.parse(localStorage.getItem('colaborador') || 'null');
-        if (colaborador && colaborador.cpf) {
-            return String(colaborador.cpf).replace(/\D/g, '');
         }
     } catch (_e) { /* ignora */ }
 
@@ -25,9 +18,12 @@ function getOpcaoId() {
     return Number.isInteger(id) && id > 0 ? id : null;
 }
 
-// Troca o CPF placeholder salvo no link (11 dígitos) pelo CPF do usuário logado.
+// Troca o CPF placeholder salvo no link pelo CPF do usuário logado.
+// O CPF são os últimos 11 dígitos do bloco numérico (na URL do Looker ele vem
+// "colado" no delimitador codificado, ex.: ...%2580 + 09671254560), por isso
+// usamos (?!\d) para pegar exatamente os 11 dígitos finais do bloco.
 function montarUrl(url, cpf) {
-    return url.replace(/\d{11}/, cpf);
+    return url.replace(/\d{11}(?!\d)/, cpf);
 }
 
 function embedIframe(src) {

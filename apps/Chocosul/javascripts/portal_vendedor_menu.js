@@ -2,7 +2,7 @@ const STORAGE_KEY = 'portal_vendedor_usuario';
 
 function getUsuario() {
     try {
-        return JSON.parse(sessionStorage.getItem(STORAGE_KEY) || 'null');
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
     } catch (_e) {
         return null;
     }

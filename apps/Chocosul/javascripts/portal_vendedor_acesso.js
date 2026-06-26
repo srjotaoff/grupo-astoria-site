@@ -46,17 +46,11 @@ botaoAcesso.addEventListener('click', async (e) => {
             return;
         }
 
-        // Salva na sessão apenas dados não sensíveis (sem CPF e sem telefone)
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+        // Persiste o usuário logado para manter o acesso entre páginas/sessões.
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
             tipo_usuario: usuario.tipo_usuario,
             nome_usuario: usuario.nome_usuario,
             cpf_usuario: usuario.cpf_usuario,
-        }));
-
-        localStorage.setItem('colaborador', JSON.stringify({
-            nome: usuario.nome_usuario,
-            tipo_cargo: usuario.tipo_usuario,
-            cpf: usuario.cpf_usuario,
         }));
 
         window.location.href = 'portal_vendedor_menu.html';

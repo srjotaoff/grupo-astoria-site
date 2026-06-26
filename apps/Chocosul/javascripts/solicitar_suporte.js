@@ -1,11 +1,11 @@
-// ================== DADOS DO USUÁRIO (sessionStorage) ==================
+// ================== DADOS DO USUÁRIO (localStorage) ==================
 var STORAGE_KEY = 'portal_vendedor_usuario';
 var nome_usuario = '';
 var cpf_usuario = '';
 
 (function carregarUsuario() {
   try {
-    var raw = sessionStorage.getItem(STORAGE_KEY);
+    var raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     var u = JSON.parse(raw);
     nome_usuario = u.nome_usuario || '';
