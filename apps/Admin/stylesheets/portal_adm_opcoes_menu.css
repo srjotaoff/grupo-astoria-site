@@ -32,7 +32,7 @@
 
 header{
     height: 20svh;
-    width: 100svw;
+    
 
 }
 
@@ -48,6 +48,7 @@ header img{
 }
 
 #main_tudo{
+    width: 95svw;
     display: flex;
     flex-direction: row;
     gap: 5svw;
@@ -66,7 +67,7 @@ header img{
 
 .main_tudo_caixas_caixa{
     width: 20svw;
-    height: 30svh;
+    height: 35svh;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;
@@ -86,6 +87,7 @@ header img{
 }
 
 .main_tudo_caixas_caixa_conjunto{
+    height: 10svh;
     width: 16svw;
     display: flex;
     flex-direction: column;
@@ -94,6 +96,7 @@ header img{
 }
 
 .main_tudo_caixas_caixa_conjunto label{
+    height: 3svh;
     font-family: "Poppins-Regular";
     font-size: 0.75svw;
     color: var(--branca);
@@ -101,7 +104,7 @@ header img{
 
 .main_tudo_caixas_caixa_lixeira{
     height: 2.5svh;
-    margin-top: 1svh;
+    margin-top: 0svh;
     margin-left: auto;
     margin-right: 2svw;
     cursor: pointer;
@@ -109,7 +112,7 @@ header img{
 
 #main_tudo_caixas_adcionar{
     width: 20svw;
-    height: 30svh;
+    height: 35svh;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;
