@@ -22,6 +22,10 @@
 
 }
 
+* {
+    font-family: "Poppins-Regular";
+}
+
 a,button{
     cursor: pointer;
 }
@@ -196,7 +200,7 @@ html {
 }
 
 #caixa_cpf{
-    font-family: "Poppins-Bold";
+    font-family: "Poppins-Regular";
     text-align: center;
     border-radius: 2svh;
     font-size: 2svh;

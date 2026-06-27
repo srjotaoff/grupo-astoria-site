@@ -19,14 +19,14 @@
 }
 
 :root {
-  --var_cor_branco: #f2ebebff;
-  --var_cor_vermelho: #f42f40ff;
+  --var_cor_branco: rgb(251, 249, 249);
+  --var_cor_vermelho: rgb(1, 0, 0);
   --var_cor_amarelo:  #f9a919ff;
   --var-cor-preto: #1a1a1aff;
 }
 
 body{
-    background-color: rgb(255, 255, 255);
+    background-color: var(--var_cor_branco);
     height: 100svh;
     width: 100svw;
     font-family: 'Poppins-Light';
