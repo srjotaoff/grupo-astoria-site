@@ -32,7 +32,7 @@
 
 header{
     height: 20svh;
-    width: 100svw;
+    
 
 }
 
@@ -48,6 +48,7 @@ header img{
 }
 
 #main_tudo{
+    width: 95svw;
     display: flex;
     flex-direction: row;
     gap: 5svw;

@@ -32,7 +32,7 @@
 
 header{
     height: 20svh;
-    width: 100svw;
+    
 
 }
 
@@ -48,6 +48,7 @@ header img{
 }
 
 #main_tudo{
+    width: 95svw;
     display: flex;
     flex-direction: row;
     gap: 5svw;
@@ -65,8 +66,10 @@ header img{
 }
 
 .main_tudo_caixas_caixa{
+    padding-top: 2svh;
+    padding-bottom: 2svh;
     width: 20svw;
-    height: 40svh;
+    height: 60svh;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;
@@ -127,7 +130,7 @@ header img{
 
 #main_tudo_caixas_adcionar{
     width: 20svw;
-    height: 40svh;
+    height: 60svh;
     background-color: var(--texto);
     border: none;
     border-radius: 5svh;
