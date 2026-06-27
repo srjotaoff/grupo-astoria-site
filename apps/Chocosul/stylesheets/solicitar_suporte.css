@@ -20,7 +20,7 @@
 
 :root {
   --var_cor_branco: rgb(251, 249, 249);
-  --var_cor_vermelho: rgb(1, 0, 0);
+  --var_cor_vermelho: #f42f40ff;
   --var_cor_amarelo:  #f9a919ff;
   --var-cor-preto: #1a1a1aff;
 }
@@ -511,7 +511,7 @@ footer{
 
     .main_painel_formulario_setor{
         height: 4svh;
-        width: 80%;
+        width: 33svw;
         color: var(--var_cor_branco);
         border-radius: 4svh;
         border: none;
