@@ -45,14 +45,6 @@ function createBannerCard(banner) {
       '<label>Nome do banner</label>' +
       '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="nome" value="' + escHtml(banner && banner.nome) + '" placeholder="Nome do banner">' +
     '</div>' +
-    '<div class="main_tudo_caixas_caixa_conjunto">' +
-      '<label>Empresa</label>' +
-      '<select class="main_tudo_caixas_caixa_texto" data-field="empresa">' +
-        '<option value="">Selecione...</option>' +
-        '<option value="Chocosul"' + ((banner && banner.empresa) === 'Chocosul' ? ' selected' : '') + '>Chocosul</option>' +
-        '<option value="Mastter"' + ((banner && banner.empresa) === 'Mastter' ? ' selected' : '') + '>Mastter</option>' +
-      '</select>' +
-    '</div>' +
     '<div class="card-actions">' +
       '<button class="btn-salvar">' + (banner && banner.id ? 'Salvar' : 'Criar banner') + '</button>' +
       '<img class="main_tudo_caixas_caixa_lixeira" src="images/icones/lixeira.svg" alt="Excluir">' +
@@ -102,10 +94,8 @@ async function saveCard(card) {
   var fileInput = card.querySelector('.card-file-input')
 
   var fd = new FormData()
-  var nome    = card.querySelector('[data-field="nome"]')
-  var empresa = card.querySelector('[data-field="empresa"]')
-  if (nome)    fd.append('nome',    nome.value.trim())
-  if (empresa) fd.append('empresa', empresa.value.trim())
+  var nome = card.querySelector('[data-field="nome"]')
+  if (nome) fd.append('nome', nome.value.trim())
   if (fileInput && fileInput.files && fileInput.files[0]) fd.append('imagem', fileInput.files[0])
 
   saveBtn.disabled = true
