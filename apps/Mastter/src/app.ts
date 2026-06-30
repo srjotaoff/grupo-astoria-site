@@ -85,10 +85,11 @@ app.use(helmet({ contentSecurityPolicy: false }))
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (isOriginAllowed(origin)) {
-        return callback(null, true)
-      }
-      return callback(new Error('Not allowed by CORS'))
+      // Deny disallowed origins gracefully (no Access-Control-Allow-Origin header)
+      // instead of throwing, which would surface as a 500 on every request that
+      // carries an Origin header — notably same-origin @font-face requests, which
+      // the browser always sends in CORS mode. Same fix as the Admin app.
+      return callback(null, isOriginAllowed(origin))
     },
     credentials: true
   })
