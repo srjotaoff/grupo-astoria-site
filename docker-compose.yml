@@ -143,6 +143,8 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./apps/Chocosul/stylesheets:/opt/apps/astoria/apps/Chocosul/stylesheets:ro
       - ./apps/Chocosul/images:/opt/apps/astoria/apps/Chocosul/images:ro
+      - ./apps/Mastter/stylesheets:/opt/apps/astoria/apps/Mastter/stylesheets:ro
+      - ./apps/Mastter/images:/opt/apps/astoria/apps/Mastter/images:ro
     restart: unless-stopped
     networks:
       - astoria-net
