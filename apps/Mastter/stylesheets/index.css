@@ -35,10 +35,11 @@ header{
 
 :root{
     --branca:rgb(251, 249, 249);
-    --texto:rgb(76,66,67);
-    --principal: rgb(245,62,78);
+    --texto:rgb(34,44,89);
+    --principal: rgb(37, 75, 160);
     --cor_primaria:rgb(8, 0, 16);
-    --cor_caixa:rgb(246, 241, 241);
+    --cor_caixa:rgb(239, 241, 245);
+    --cor_amarelo:rgb(249, 169, 25);
 }
 
 a{
