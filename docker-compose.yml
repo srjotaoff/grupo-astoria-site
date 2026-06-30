@@ -102,6 +102,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: astoria-mysql
+    command: --max_allowed_packet=67108864
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: users
