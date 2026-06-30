@@ -1,15 +1,16 @@
 ﻿// ── Helpers ──────────────────────────────────────────────────────────────────
+var BASE = window.location.pathname.startsWith('/admin') ? '/admin' : ''
 var userInfoEl = document.getElementById('user-info')
 
-function redirectToLogin() { window.location.replace('/') }
+function redirectToLogin() { window.location.replace(BASE + '/') }
 
 async function doLogout() {
-  try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }) } finally { redirectToLogin() }
+  try { await fetch(BASE + '/auth/logout', { method: 'POST', credentials: 'include' }) } finally { redirectToLogin() }
 }
 
 async function checkSession() {
   try {
-    var res = await fetch('/auth/me', { credentials: 'include' })
+    var res = await fetch(BASE + '/auth/me', { credentials: 'include' })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     if (!res.ok) return
     var data = await res.json()
@@ -20,7 +21,7 @@ async function checkSession() {
 }
 
 async function ensureSession() {
-  var authRes = await fetch('/admin/session-check', { credentials: 'include' })
+  var authRes = await fetch(BASE + '/admin/session-check', { credentials: 'include' })
   if (authRes.status === 401 || authRes.status === 403) { redirectToLogin(); return false }
   return true
 }
@@ -119,7 +120,7 @@ function closeParceiro() {
 
 async function loadParceiros() {
   try {
-    var res = await fetch('/admin/empresas', { credentials: 'include' })
+    var res = await fetch(BASE + '/admin/empresas', { credentials: 'include' })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     var data = await res.json()
     if (!res.ok) return setStatus(parceiroStatusEl, (data && data.message) || 'Falha ao carregar parceiros.', true)
@@ -129,7 +130,7 @@ async function loadParceiros() {
 
 async function loadParceiroForEdit(id) {
   try {
-    var res = await fetch('/admin/empresas/' + id, { credentials: 'include' })
+    var res = await fetch(BASE + '/admin/empresas/' + id, { credentials: 'include' })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     var data = await res.json()
     if (!res.ok) return setStatus(parceiroStatusEl, (data && data.message) || 'Falha ao carregar parceiro.', true)
@@ -140,7 +141,7 @@ async function loadParceiroForEdit(id) {
 async function deleteParceiroById(id) {
   if (!window.confirm('Deseja excluir este parceiro?')) return
   try {
-    var res = await fetch('/admin/empresas/' + id, { method: 'DELETE', credentials: 'include' })
+    var res = await fetch(BASE + '/admin/empresas/' + id, { method: 'DELETE', credentials: 'include' })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     var data = null; try { data = await res.json() } catch (_) {}
     if (!res.ok) return setStatus(parceiroStatusEl, (data && data.message) || 'Falha ao excluir.', true)
@@ -170,7 +171,7 @@ async function submitParceiroForm(event) {
     if (descricao) fd.append('descricao', descricao)
     if (empresa) fd.append('empresa', empresa)
     if (file) fd.append('imagem', file)
-    var endpoint = parceiroEditingId ? '/admin/empresas/' + parceiroEditingId : '/admin/empresas'
+    var endpoint = parceiroEditingId ? BASE + '/admin/empresas/' + parceiroEditingId : BASE + '/admin/empresas'
     var res = await fetch(endpoint, { method: parceiroEditingId ? 'PATCH' : 'POST', credentials: 'include', body: fd })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     var data = null; try { data = await res.json() } catch (_) {}
@@ -235,7 +236,7 @@ function closeBanner() {
 
 async function loadBanners() {
   try {
-    var res = await fetch('/admin/banners', { credentials: 'include' })
+    var res = await fetch(BASE + '/admin/banners', { credentials: 'include' })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     var data = await res.json()
     if (!res.ok) return setStatus(bannerStatusEl, (data && data.message) || 'Falha ao carregar banners.', true)
@@ -245,7 +246,7 @@ async function loadBanners() {
 
 async function loadBannerForEdit(id) {
   try {
-    var res = await fetch('/admin/banners/' + id, { credentials: 'include' })
+    var res = await fetch(BASE + '/admin/banners/' + id, { credentials: 'include' })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     var data = await res.json()
     if (!res.ok) return setStatus(bannerStatusEl, (data && data.message) || 'Falha ao carregar banner.', true)
@@ -256,7 +257,7 @@ async function loadBannerForEdit(id) {
 async function deleteBannerById(id) {
   if (!window.confirm('Deseja excluir este banner?')) return
   try {
-    var res = await fetch('/admin/banners/' + id, { method: 'DELETE', credentials: 'include' })
+    var res = await fetch(BASE + '/admin/banners/' + id, { method: 'DELETE', credentials: 'include' })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     var data = null; try { data = await res.json() } catch (_) {}
     if (!res.ok) return setStatus(bannerStatusEl, (data && data.message) || 'Falha ao excluir.', true)
@@ -284,7 +285,7 @@ async function submitBannerForm(event) {
     if (nome) fd.append('nome', nome)
     if (empresa) fd.append('empresa', empresa)
     if (file) fd.append('imagem', file)
-    var endpoint = bannerEditingId ? '/admin/banners/' + bannerEditingId : '/admin/banners'
+    var endpoint = bannerEditingId ? BASE + '/admin/banners/' + bannerEditingId : BASE + '/admin/banners'
     var res = await fetch(endpoint, { method: bannerEditingId ? 'PATCH' : 'POST', credentials: 'include', body: fd })
     if (res.status === 401 || res.status === 403) return redirectToLogin()
     var data = null; try { data = await res.json() } catch (_) {}

@@ -1,7 +1,8 @@
 // ── Auth ──────────────────────────────────────────────────────────────────────
+var BASE = window.location.pathname.startsWith('/admin') ? '/admin' : ''
 async function checkAuth() {
-  var res = await fetch('/admin/session-check', { credentials: 'include' })
-  if (res.status === 401 || res.status === 403) window.location.replace('/')
+  var res = await fetch(BASE + '/admin/session-check', { credentials: 'include' })
+  if (res.status === 401 || res.status === 403) window.location.replace(BASE + '/')
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -30,7 +31,7 @@ function createMarcaCard(parceiro) {
   card.className = 'main_tudo_caixas_caixa'
   if (parceiro && parceiro.id) card.dataset.id = parceiro.id
 
-  var imgUrl = parceiro && parceiro.id ? '/admin/empresas/' + parceiro.id + '/imagem' : ''
+  var imgUrl = parceiro && parceiro.id ? BASE + '/admin/empresas/' + parceiro.id + '/imagem' : ''
 
   card.innerHTML =
     '<div class="main_tudo_caixas_caixa_img" title="Clique para alterar imagem">' +
@@ -128,10 +129,10 @@ async function saveCard(card) {
   setStatus(statusEl, 'Salvando...', false)
 
   try {
-    var url    = isNew ? '/admin/empresas' : '/admin/empresas/' + id
+    var url    = isNew ? BASE + '/admin/empresas' : BASE + '/admin/empresas/' + id
     var method = isNew ? 'POST' : 'PATCH'
     var res    = await fetch(url, { method: method, credentials: 'include', body: fd })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE + '/'); return }
     var data   = await res.json().catch(function () { return {} })
     if (!res.ok) { setStatus(statusEl, (data && data.message) || 'Erro ao salvar.', true); return }
     setStatus(statusEl, isNew ? 'Marca criada!' : 'Salvo com sucesso!', false)
@@ -153,8 +154,8 @@ async function deleteCard(card) {
   setStatus(statusEl, 'Excluindo...', false)
 
   try {
-    var res = await fetch('/admin/empresas/' + id, { method: 'DELETE', credentials: 'include' })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    var res = await fetch(BASE + '/admin/empresas/' + id, { method: 'DELETE', credentials: 'include' })
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE + '/'); return }
     if (!res.ok) {
       var data = await res.json().catch(function () { return {} })
       setStatus(statusEl, (data && data.message) || 'Erro ao excluir.', true)
@@ -169,8 +170,8 @@ async function deleteCard(card) {
 // ── Load ──────────────────────────────────────────────────────────────────────
 async function loadMarcas() {
   try {
-    var res  = await fetch('/admin/empresas', { credentials: 'include' })
-    if (res.status === 401 || res.status === 403) { window.location.replace('/'); return }
+    var res  = await fetch(BASE + '/admin/empresas', { credentials: 'include' })
+    if (res.status === 401 || res.status === 403) { window.location.replace(BASE + '/'); return }
     var data = await res.json()
     renderMarcas(data.empresas || [])
   } catch (_e) { /* silent */ }

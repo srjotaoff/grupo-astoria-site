@@ -1,3 +1,5 @@
+var BASE = window.location.pathname.startsWith('/admin') ? '/admin' : ''
+
 const form = document.getElementById('login-form')
 const result = document.getElementById('result')
 
@@ -25,11 +27,11 @@ form.addEventListener('submit', async function (event) {
   var username = document.getElementById('username').value
   var senha = document.getElementById('senha').value
   try {
-    await request('/auth/login', {
+    await request(BASE + '/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username: username, senha: senha })
     })
-    window.location.replace('/dashboard')
+    window.location.replace(BASE + '/dashboard')
   } catch (error) {
     if (error.status === 409) {
       setResult('[Sessao ativa] ' + error.message)
