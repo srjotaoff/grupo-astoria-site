@@ -8,7 +8,7 @@
     "dev": "tsx watch src/index.ts",
     "dev:admin": "cross-env APP_NAME=admin tsx watch src/index.ts",
     "dev:chocosul": "cross-env APP_NAME=chocosul tsx watch src/index.ts",
-    "dev:mastter": "cross-env APP_NAME=chocosul PORT_CHOCOSUL=3003 tsx watch src/index.ts",
+    "dev:mastter": "cross-env APP_NAME=mastter tsx watch src/index.ts",
     "dev:admin-mastter": "cross-env APP_NAME=admin-mastter tsx watch src/index.ts",
     "dev:all": "concurrently -n admin,chocosul,mastter,admin-mastter -c blue,green,magenta,cyan \"npm:dev:admin\" \"npm:dev:chocosul\" \"npm:dev:mastter\" \"npm:dev:admin-mastter\"",
     "optimize:chocosul-images": "node apps/Chocosul/scripts/convert-images-to-webp.mjs",

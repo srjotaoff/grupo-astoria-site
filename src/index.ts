@@ -39,6 +39,16 @@ async function startChocosul() {
   }
 }
 
+async function startMastter() {
+  try {
+    console.log('\n🚀 Starting MASTTER application...\n')
+    await import('../apps/Mastter/server')
+  } catch (err) {
+    console.error('Failed to start Mastter app:', err)
+    process.exit(1)
+  }
+}
+
 async function startAdminMastter() {
   try {
     console.log('\n🚀 Starting ADMIN MASTTER application...\n')
@@ -53,11 +63,14 @@ if (APP === 'admin') {
   startAdmin()
 } else if (APP === 'chocosul') {
   startChocosul()
+} else if (APP === 'mastter') {
+  startMastter()
 } else if (APP === 'admin-mastter') {
   startAdminMastter()
 } else {
-  // Default: start all three
+  // Default: start all
   startAdmin()
   startChocosul()
+  startMastter()
   startAdminMastter()
 }
