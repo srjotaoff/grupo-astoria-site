@@ -2,13 +2,14 @@
   var menuLateral = document.getElementById('menu_lateral')
   if (!menuLateral) return
 
+  var BASE = window.location.pathname.startsWith('/admin') ? '/admin' : ''
   var currentPath = window.location.pathname
 
   var links = [
-    { href: '/cartaz-rotativo', label: 'Cartaz Rotativo' },
-    { href: '/marcas',          label: 'Marcas do Portifólio' },
-    { href: '/opcoes-menu',     label: 'Opções do Menu' },
-    { href: '/solicitacao',     label: 'Gestão de Solicitação' },
+    { href: BASE + '/cartaz-rotativo', label: 'Cartaz Rotativo' },
+    { href: BASE + '/marcas',          label: 'Marcas do Portifólio' },
+    { href: BASE + '/opcoes-menu',     label: 'Opções do Menu' },
+    { href: BASE + '/solicitacao',     label: 'Gestão de Solicitação' },
   ]
 
   var nav = document.createElement('nav')
@@ -32,9 +33,9 @@
 
   logoutBtn.addEventListener('click', async function () {
     try {
-      await fetch('/auth/logout', { method: 'POST', credentials: 'include' })
+      await fetch(BASE + '/auth/logout', { method: 'POST', credentials: 'include' })
     } finally {
-      window.location.replace('/')
+      window.location.replace(BASE + '/')
     }
   })
 

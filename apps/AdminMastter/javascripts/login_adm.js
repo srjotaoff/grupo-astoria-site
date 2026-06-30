@@ -1,3 +1,7 @@
+// When served under a sub-path (e.g. mastter.com.br/admin/), prefix all
+// fetch and navigation paths so requests are not routed to the wrong app.
+var BASE = window.location.pathname.startsWith('/admin') ? '/admin' : ''
+
 var usernameInput = document.getElementById('username')
 var senhaInput = document.getElementById('senha')
 var acessarBtn = document.getElementById('acessar-btn')
@@ -9,9 +13,9 @@ function showError(msg) {
 
 async function redirectIfAlreadyAuthenticated() {
   try {
-    var res = await fetch('/auth/me', { credentials: 'include' })
+    var res = await fetch(BASE + '/auth/me', { credentials: 'include' })
     if (res.ok) {
-      window.location.replace('/opcoes-menu')
+      window.location.replace(BASE + '/opcoes-menu')
     }
   } catch (_e) {
     // keep login page when server is unavailable
@@ -31,7 +35,7 @@ if (acessarBtn) {
     showError('')
 
     try {
-      var res = await fetch('/auth/login', {
+      var res = await fetch(BASE + '/auth/login', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -46,7 +50,7 @@ if (acessarBtn) {
       }
 
       // Send admin to the menu hub first, where they can choose the section to manage.
-      window.location.replace('/opcoes-menu')
+      window.location.replace(BASE + '/opcoes-menu')
     } catch (_e) {
       showError('Sem conexão com o servidor.')
     } finally {
