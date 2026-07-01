@@ -10,7 +10,9 @@
     "dev:chocosul": "cross-env APP_NAME=chocosul tsx watch src/index.ts",
     "dev:mastter": "cross-env APP_NAME=mastter tsx watch src/index.ts",
     "dev:admin-mastter": "cross-env APP_NAME=admin-mastter tsx watch src/index.ts",
-    "dev:all": "concurrently -n admin,chocosul,mastter,admin-mastter -c blue,green,magenta,cyan \"npm:dev:admin\" \"npm:dev:chocosul\" \"npm:dev:mastter\" \"npm:dev:admin-mastter\"",
+    "dev:astoria": "cross-env APP_NAME=astoria tsx watch src/index.ts",
+    "dev:admin-astoria": "cross-env APP_NAME=admin-astoria tsx watch src/index.ts",
+    "dev:all": "concurrently -n admin,chocosul,mastter,admin-mastter,astoria,admin-astoria -c blue,green,magenta,cyan,yellow,white \"npm:dev:admin\" \"npm:dev:chocosul\" \"npm:dev:mastter\" \"npm:dev:admin-mastter\" \"npm:dev:astoria\" \"npm:dev:admin-astoria\"",
     "optimize:chocosul-images": "node apps/Chocosul/scripts/convert-images-to-webp.mjs",
     "build": "tsc",
     "start": "node dist/index.js"
