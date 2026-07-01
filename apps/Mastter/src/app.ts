@@ -211,7 +211,7 @@ app.get('/api/portal-vendedor/usuarios', async (req, res, next) => {
 
     return res.status(200).json({ ok: true, usuarios })
   } catch (error) {
-    if ((error as NodeJS.ErrnoException)?.code === 'MODULE_NOT_FOUND') {
+    if ((error as NodeJS.ErrnoException)?.code === 'ERR_MODULE_NOT_FOUND') {
       return next(new AppError('Modulo oracledb nao encontrado no ambiente.', 500))
     }
     return next(error)
