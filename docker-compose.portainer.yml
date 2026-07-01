@@ -1,13 +1,13 @@
 services:
   admin:
     build:
-      context: ${PROJECT_PATH:-/opt/grupo-astoria-site}
+      context: ${PROJECT_PATH:-/opt/apps/astoria}
       dockerfile: Dockerfile
     container_name: astoria-admin
     working_dir: /workspace
     command: npm run dev:admin
     env_file:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/.env
+      - ${PROJECT_PATH:-/opt//apps/astoria}/.env
     environment:
       NODE_ENV: development
       APP_NAME: admin
@@ -15,7 +15,7 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}:/workspace
+      - ${PROJECT_PATH:-/opt/apps/astoria}:/workspace
       - admin_node_modules:/workspace/node_modules
     expose:
       - "3001"
@@ -25,13 +25,13 @@ services:
 
   chocosul:
     build:
-      context: ${PROJECT_PATH:-/opt/grupo-astoria-site}
+      context: ${PROJECT_PATH:-/opt/apps/astoria}
       dockerfile: Dockerfile
     container_name: astoria-chocosul
     working_dir: /workspace
     command: npm run dev:chocosul
     env_file:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/.env
+      - ${PROJECT_PATH:-/opt/apps/astoria}/.env
     environment:
       NODE_ENV: development
       APP_NAME: chocosul
@@ -39,7 +39,7 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}:/workspace
+      - ${PROJECT_PATH:-/opt/apps/astoria}:/workspace
       - chocosul_node_modules:/workspace/node_modules
     expose:
       - "3002"
@@ -49,13 +49,13 @@ services:
 
   mastter:
     build:
-      context: ${PROJECT_PATH:-/opt/grupo-astoria-site}
+      context: ${PROJECT_PATH:-/opt/apps/astoria}
       dockerfile: Dockerfile
     container_name: astoria-mastter
     working_dir: /workspace
     command: npm run dev:mastter
     env_file:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/.env
+      - ${PROJECT_PATH:-/opt/apps/astoria}/.env
     environment:
       NODE_ENV: development
       APP_NAME: mastter
@@ -63,7 +63,7 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}:/workspace
+      - ${PROJECT_PATH:-/opt/apps/astoria}:/workspace
       - mastter_node_modules:/workspace/node_modules
     expose:
       - "3003"
@@ -73,13 +73,13 @@ services:
 
   admin-mastter:
     build:
-      context: ${PROJECT_PATH:-/opt/grupo-astoria-site}
+      context: ${PROJECT_PATH:-/opt/apps/astoria}
       dockerfile: Dockerfile
     container_name: astoria-admin-mastter
     working_dir: /workspace
     command: npm run dev:admin-mastter
     env_file:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/.env
+      - ${PROJECT_PATH:-/opt/apps/astoria}/.env
     environment:
       NODE_ENV: development
       APP_NAME: admin-mastter
@@ -87,7 +87,7 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}:/workspace
+      - ${PROJECT_PATH:-/opt/apps/astoria}:/workspace
       - admin_mastter_node_modules:/workspace/node_modules
     expose:
       - "3004"
@@ -97,13 +97,13 @@ services:
 
   astoria:
     build:
-      context: ${PROJECT_PATH:-/opt/grupo-astoria-site}
+      context: ${PROJECT_PATH:-/opt/apps/astoria}
       dockerfile: Dockerfile
     container_name: astoria-astoria
     working_dir: /workspace
     command: npm run dev:astoria
     env_file:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/.env
+      - ${PROJECT_PATH:-/opt/apps/astoria}/.env
     environment:
       NODE_ENV: development
       APP_NAME: astoria
@@ -111,7 +111,7 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}:/workspace
+      - ${PROJECT_PATH:-/opt/apps/astoria}:/workspace
       - astoria_node_modules:/workspace/node_modules
     expose:
       - "3005"
@@ -121,13 +121,13 @@ services:
 
   admin-astoria:
     build:
-      context: ${PROJECT_PATH:-/opt/grupo-astoria-site}
+      context: ${PROJECT_PATH:-/opt/apps/astoria}
       dockerfile: Dockerfile
     container_name: astoria-admin-astoria
     working_dir: /workspace
     command: npm run dev:admin-astoria
     env_file:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/.env
+      - ${PROJECT_PATH:-/opt/apps/astoria}/.env
     environment:
       NODE_ENV: development
       APP_NAME: admin-astoria
@@ -135,7 +135,7 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}:/workspace
+      - ${PROJECT_PATH:-/opt/apps/astoria}:/workspace
       - admin_astoria_node_modules:/workspace/node_modules
     expose:
       - "3006"
@@ -170,14 +170,14 @@ services:
       - "443:443"
       - "3009:3009"
     volumes:
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${PROJECT_PATH:-/opt/apps/astoria}/infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Chocosul/stylesheets:/opt/apps/astoria/apps/Chocosul/stylesheets:ro
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Chocosul/images:/opt/apps/astoria/apps/Chocosul/images:ro
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Mastter/stylesheets:/opt/apps/astoria/apps/Mastter/stylesheets:ro
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Mastter/images:/opt/apps/astoria/apps/Mastter/images:ro
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Astoria/stylesheets:/opt/apps/astoria/apps/Astoria/stylesheets:ro
-      - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Astoria/images:/opt/apps/astoria/apps/Astoria/images:ro
+      - ${PROJECT_PATH:-/opt/apps/astoria}/apps/Chocosul/stylesheets:/opt/apps/astoria/apps/Chocosul/stylesheets:ro
+      - ${PROJECT_PATH:-/opt/apps/astoria}/apps/Chocosul/images:/opt/apps/astoria/apps/Chocosul/images:ro
+      - ${PROJECT_PATH:-/opt/apps/astoria}/apps/Mastter/stylesheets:/opt/apps/astoria/apps/Mastter/stylesheets:ro
+      - ${PROJECT_PATH:-/opt/apps/astoria}/apps/Mastter/images:/opt/apps/astoria/apps/Mastter/images:ro
+      - ${PROJECT_PATH:-/opt/apps/astoria}/apps/Astoria/stylesheets:/opt/apps/astoria/apps/Astoria/stylesheets:ro
+      - ${PROJECT_PATH:-/opt/apps/astoria}/apps/Astoria/images:/opt/apps/astoria/apps/Astoria/images:ro
     restart: unless-stopped
     networks:
       - astoria-net
