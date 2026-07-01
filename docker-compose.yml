@@ -59,8 +59,8 @@ services:
       - .env
     environment:
       NODE_ENV: development
-      APP_NAME: chocosul
-      PORT_CHOCOSUL: 3003
+      APP_NAME: mastter
+      PORT_MASTTER: 3003
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     volumes:
@@ -99,6 +99,56 @@ services:
     ports:
       - "3004:3004"
 
+  astoria:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: astoria-astoria-dev
+    command: npm run dev:astoria
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      APP_NAME: astoria
+      PORT_ASTORIA: 3005
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./:/workspace
+      - astoria_node_modules:/workspace/node_modules
+    expose:
+      - "3005"
+    restart: unless-stopped
+    networks:
+      - astoria-net
+    ports:
+      - "3005:3005"
+
+  admin-astoria:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: astoria-admin-astoria-dev
+    command: npm run dev:admin-astoria
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      APP_NAME: admin-astoria
+      PORT_ADMIN_ASTORIA: 3006
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./:/workspace
+      - admin_astoria_node_modules:/workspace/node_modules
+    expose:
+      - "3006"
+    restart: unless-stopped
+    networks:
+      - astoria-net
+    ports:
+      - "3006:3006"
+
   mysql:
     image: mysql:8.0
     container_name: astoria-mysql
@@ -132,6 +182,8 @@ services:
       - chocosul
       - mastter
       - admin-mastter
+      - astoria
+      - admin-astoria
       - cloudbeaver
     ports:
       - "80:80"
@@ -145,6 +197,8 @@ services:
       - ./apps/Chocosul/images:/opt/apps/astoria/apps/Chocosul/images:ro
       - ./apps/Mastter/stylesheets:/opt/apps/astoria/apps/Mastter/stylesheets:ro
       - ./apps/Mastter/images:/opt/apps/astoria/apps/Mastter/images:ro
+      - ./apps/Astoria/stylesheets:/opt/apps/astoria/apps/Astoria/stylesheets:ro
+      - ./apps/Astoria/images:/opt/apps/astoria/apps/Astoria/images:ro
     restart: unless-stopped
     networks:
       - astoria-net
@@ -158,6 +212,8 @@ volumes:
   chocosul_node_modules:
   mastter_node_modules:
   admin_mastter_node_modules:
+  astoria_node_modules:
+  admin_astoria_node_modules:
   mysql_data:
   cloudbeaver_data:
 
