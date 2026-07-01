@@ -167,9 +167,11 @@ services:
       - cloudbeaver
     ports:
       - "80:80"
+      - "443:443"
       - "3009:3009"
     volumes:
       - ${PROJECT_PATH:-/opt/grupo-astoria-site}/infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Chocosul/stylesheets:/opt/apps/astoria/apps/Chocosul/stylesheets:ro
       - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Chocosul/images:/opt/apps/astoria/apps/Chocosul/images:ro
       - ${PROJECT_PATH:-/opt/grupo-astoria-site}/apps/Mastter/stylesheets:/opt/apps/astoria/apps/Mastter/stylesheets:ro
