@@ -33,7 +33,7 @@ docker compose up --build
 - `http://admin-astoria.local`
 - `http://chocosul.local`
 - `http://mastter.local`
-- `http://astoria.local` (site publico; localmente o admin roda direto em `http://localhost:3006`, ja que o proxy `/admin/` so existe no dominio `astoria.com.br`)
+- `http://astoria.local` (site publico; localmente o admin roda direto em `http://localhost:3006`, ja que o proxy `/admin/` so existe no dominio `grupoastoria.com.br`)
 
 ## 3) Hot reload sem restart de container
 
@@ -76,7 +76,7 @@ No DNS publico, configure:
 - `admin-astoria.com.br` -> IP do servidor
 - `chocosul.com.br` -> IP do servidor
 - `mastter.com.br` -> IP do servidor
-- `astoria.com.br` e `www.astoria.com.br` -> IP do servidor (o admin da Astoria fica em `astoria.com.br/admin/`, sem dominio proprio)
+- `grupoastoria.com.br` e `www.grupoastoria.com.br` -> IP do servidor (o admin da Astoria fica em `grupoastoria.com.br/admin/`, sem dominio proprio)
 
 O arquivo `infra/nginx/default.conf` ja roteia por `server_name` para cada app.
 
@@ -84,14 +84,14 @@ O arquivo `infra/nginx/default.conf` ja roteia por `server_name` para cada app.
 
 Para TLS automatizado, use um proxy com ACME (Traefik/Caddy) ou Nginx + certbot.
 
-**Atencao ao adicionar um dominio novo (ex: astoria.com.br):** o `default.conf` referencia
+**Atencao ao adicionar um dominio novo (ex: grupoastoria.com.br):** o `default.conf` referencia
 `/etc/letsencrypt/live/<dominio>/fullchain.pem`. Se esse certificado ainda nao existir no host,
 o container `nginx` falha ao iniciar — e derruba tambem chocosul/mastter, que usam o mesmo
 container. Emita o certificado **antes** de atualizar a stack com o novo bloco `server`:
 
 ```bash
 docker stop astoria-nginx   # libera a porta 80 temporariamente
-sudo certbot certonly --standalone -d astoria.com.br -d www.astoria.com.br
+sudo certbot certonly --standalone -d grupoastoria.com.br -d www.grupoastoria.com.br
 docker start astoria-nginx  # ou "Update the stack" no Portainer
 ```
 

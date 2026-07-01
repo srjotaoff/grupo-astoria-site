@@ -1,4 +1,4 @@
-// When served under a sub-path (e.g. astoria.com.br/admin/), prefix all
+// When served under a sub-path (e.g. grupoastoria.com.br/admin/), prefix all
 // fetch and navigation paths so requests are not routed to the wrong app.
 var BASE = window.location.pathname.startsWith('/admin') ? '/admin' : ''
 
