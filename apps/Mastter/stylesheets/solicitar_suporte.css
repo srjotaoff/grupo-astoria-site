@@ -19,7 +19,7 @@
 }
 
 :root {
-  --var_cor_branco: #f2ebebff;
+  --var_cor_branco: rgb(255, 255, 255);
   --var_cor_vermelho: rgb(37, 75, 160);
   --var_cor_amarelo:  #f9a919ff;
   --var-cor-preto: #1a1a1aff;
