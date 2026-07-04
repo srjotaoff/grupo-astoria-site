@@ -159,14 +159,6 @@ html {
   scrollbar-gutter: stable;
 }
 
-:root{
-    --branca:rgb(251, 249, 249);
-    --texto:rgb(76,66,67);
-    --principal: rgb(245,62,78);
-    --cor_amarelo:rgb(249, 169, 25);
-    --cor_caixa:rgb(246, 241, 241);
-}
-
 #main_unico{
     display: flex;
     flex-direction: column;
