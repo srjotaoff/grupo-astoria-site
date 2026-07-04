@@ -426,10 +426,6 @@ html {
     border: none;
     border-radius: 5svh;
     padding-bottom: 3svh;
-    opacity: 0;
-    transform: translateY(60px) scale(0.95);
-    transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), 
-                transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .main_terceiro_elementos_caixas_titulo{
@@ -448,7 +444,7 @@ html {
     font-size: 0.874998svw;
     text-align: center;
     color: var(--texto);
-    opacity: 0;
+    
     transform: translateY(15px);
     transition: opacity 1s ease-out, transform 1s ease-out;
     transition-delay: 0.5s; 
@@ -460,18 +456,6 @@ html {
 .main_terceiro_elementos_caixas_textos{
     display: flex;
     flex-direction: column;
-}
-
-.main_terceiro_elementos_caixas {
-    opacity: 0;
-    transform: translateY(60px) scale(0.95);
-    transition: opacity 7s cubic-bezier(0.22, 1, 0.36, 1), 
-                transform 2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.main_terceiro_elementos_caixas.visivel {
-    opacity: 1;
-    transform: translateY(0) scale(1);
 }
 
 .main_terceiro_elementos_caixas_texto_informacao {
@@ -490,13 +474,6 @@ html {
     letter-spacing: 0.07svw;
     line-height: 2svh;
 }
-
-.main_terceiro_elementos_caixas:nth-child(1) { 
-    transition-delay: 0.05s; }
-.main_terceiro_elementos_caixas:nth-child(2) { 
-    transition-delay: 0.1s; }
-.main_terceiro_elementos_caixas:nth-child(3) { 
-    transition-delay: 0.15s; }
 
 .main_terceiro_elementos_caixas img{
     position: absolute;
@@ -691,7 +668,7 @@ html {
 
 #main_primeiro_informacao{
     margin-top: 15svh;
-    border-radius: 5svh ;
+    border-radius: 5svh 5svh 0 0 ;
     width: 100svw;
     height: 85svh;
     position: relative;
@@ -837,9 +814,11 @@ html {
 }
 
 #main_segundo_texto{
-    margin-top: 10svh;
+    margin-top:7svh;
     padding-left: 10svw;
     color: var(--texto);
+    height: 20svh;
+    
 }
 
 #main_segundo_texto_principal{
@@ -871,7 +850,7 @@ html {
 
 #main_segundo_informacoa{
     width: 100svw;
-    height: 10svh;
+    height: 13svh;
     background-color: var(--texto);
 }
 
@@ -908,10 +887,10 @@ html {
 }
 
 #main_segundo_inferior{
-    margin-top: 5svh;
+    margin-top: 1svh;
     display: flex;
     flex-direction: column;
-    gap: 2svh;
+    gap: 1svh;
     margin-left: 10svw;
 }
 
@@ -923,7 +902,7 @@ html {
     border: none;
     border-radius: 3svh;
     width: 80svw;
-    height: 9svh;
+    height: auto;
     background-color: var(--branca);
 }
 
@@ -952,6 +931,7 @@ html {
 .main_segundo_inferior_caixa_texto{
     width: 46svw;
     display: flex;
+    line-height: 1.2svh;
     flex-direction: column;
     gap: 0.5svh;
     height: auto;
@@ -964,6 +944,7 @@ html {
 
 .main_segundo_inferior_texto_informacao{
     font-family: "Poppins-Regular";
+    line-height: 1.2svh;
     font-size: 1svh;
 }
 
@@ -1059,10 +1040,6 @@ html {
     justify-content: center;
     border: none;
     border-radius: 5svh;
-    opacity: 0;
-    transform: translateY(60px) scale(0.95);
-    transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), 
-                transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .main_terceiro_elementos_caixas_titulo{
@@ -1092,18 +1069,6 @@ html {
     flex-direction: column;
 }
 
-.main_terceiro_elementos_caixas {
-    opacity: 0;
-    transform: translateY(60px) scale(0.95);
-    transition: opacity 7.4s cubic-bezier(0.22, 1, 0.36, 1), 
-                transform 2.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.main_terceiro_elementos_caixas.visivel {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
 .main_terceiro_elementos_caixas_texto_informacao {
     opacity: 1;
     transform: translateY(0);
@@ -1118,13 +1083,6 @@ html {
     font-size: 1.25svh;
     color: var(--branca);
 }
-
-.main_terceiro_elementos_caixas:nth-child(1) { 
-    transition-delay: 0.1s; }
-.main_terceiro_elementos_caixas:nth-child(2) { 
-    transition-delay: 0.2s; }
-.main_terceiro_elementos_caixas:nth-child(3) { 
-    transition-delay: 0.3s; }
 
 .main_terceiro_elementos_caixas img{
     position: absolute;
@@ -1143,7 +1101,7 @@ html {
 }
 
 #main_quarto_espaco{
-    margin-top: 39svh;
+    margin-top: 48svh;
     height: 120svh;
     width: 120svw;
 }
@@ -1151,6 +1109,7 @@ html {
 #main_quarto_mapa{
     z-index: 1;
     left: 0;
+    
     margin-left: -10svw;
     position: absolute;
     height: auto;

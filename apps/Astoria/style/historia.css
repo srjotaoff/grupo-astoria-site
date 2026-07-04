@@ -806,7 +806,7 @@ footer{
 }
 
 #footer_texto{
-    margin-top: 5svh;
+    margin-top: 2svh;
     width: 100svw;
     height: 5svh;
     display: flex;
@@ -826,7 +826,7 @@ footer{
     top: 0;
     margin-bottom: auto;
     height: auto;
-    width: 20svw;
+    width: 30svw;
 }
 
 #main_footer_slide_caixa{

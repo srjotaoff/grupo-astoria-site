@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="15"
+   width="15.000001"
    height="15"
-   viewBox="0 0 3.9687499 3.9687497"
+   viewBox="0 0 3.9687501 3.9687499"
    version="1.1"
    id="svg1"
    xml:space="preserve"
@@ -62,13 +62,19 @@
        id="color-profile6" /><color-profile
        name="sRGB"
        xlink:href="file:///app/share/color/icc/colord/sRGB.icc"
-       id="color-profile7" /></defs><g
+       id="color-profile7" /><style
+       id="style1-5">
+      .cls-1 {
+        fill: #f9a819;
+        fill-rule: evenodd;
+      }
+    </style></defs><g
      id="layer1"
-     transform="translate(-123.11197,-224.23438)"><g
-       id="g45"
-       transform="translate(1.4036357)"><path
-         d="m 124.7283,226.4668 h -3.01997 v -0.49609 h 3.01997 l -1.38906,-1.38906 0.35346,-0.34727 1.98438,1.98438 -1.98438,1.98437 -0.35346,-0.34727 z"
-         id="path1-0"
+     transform="translate(-205.69235,-224.23437)"><g
+       id="g46"
+       transform="translate(-0.6825897)"><path
+         d="m 209.39496,226.4668 h -3.01997 v -0.49609 h 3.01997 l -1.38906,-1.38906 0.35346,-0.34727 1.98438,1.98438 -1.98438,1.98437 -0.35346,-0.34727 z"
+         id="path1-0-9"
          style="fill:#323f67;fill-opacity:1;stroke-width:0.0066146" /></g></g><style
      type="text/css"
      id="style1-0">

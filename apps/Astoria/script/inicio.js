@@ -46,7 +46,7 @@ elementos.forEach((elemento) => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    const caixas = document.querySelectorAll('.main_terceiro_elementos_caixas, .main_segundo_inferior_caixa');
+    const caixas = document.querySelectorAll('.main_segundo_inferior_caixa');
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
