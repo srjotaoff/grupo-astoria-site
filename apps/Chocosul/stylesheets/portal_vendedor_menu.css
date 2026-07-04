@@ -56,10 +56,10 @@ html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 80svh;
 }
 
 #main_unico_caixa{
-    margin-top: 20svh;
     display: flex;
     flex-direction: column;
     gap: 2svh;
@@ -67,8 +67,10 @@ html {
     justify-content: center;
     border-radius: 5svw;
     width: 30svw;
-    height: 40svh;
+    height: auto;
     background-color:var(--texto) ;
+    padding-top: 5svh;
+    padding-bottom: 5svh;
 
 }
 
@@ -128,6 +130,7 @@ html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 80svh;
 }
 
 #main_unico_caixa{
@@ -137,8 +140,10 @@ html {
     align-items: center;
     border-radius: 4.5svh;
     width: 80svw;
-    height: 30svh;
+    height: auto;
     background-color:var(--texto) ;
+    padding-top: 5svh;
+    padding-bottom: 5svh;
 }
 
 #main_unico_caixa a button{
