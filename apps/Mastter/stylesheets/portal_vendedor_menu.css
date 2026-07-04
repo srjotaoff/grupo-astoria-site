@@ -135,7 +135,6 @@ html {
 }
 
 #main_unico_caixa{
-    margin-top: 25svh;
     display: flex;
     flex-direction: column;
     align-items: center;
