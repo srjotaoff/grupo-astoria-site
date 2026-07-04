@@ -26,7 +26,7 @@
 }
 
 body{
-    background-color: rgb(255, 255, 255);
+    background-color: var(--var_cor_branco);
     height: 100svh;
     width: 100svw;
     font-family: 'Poppins-Light';
@@ -511,7 +511,7 @@ footer{
 
     .main_painel_formulario_setor{
         height: 4svh;
-        width: 80%;
+        width: 33svw;
         color: var(--var_cor_branco);
         border-radius: 4svh;
         border: none;
