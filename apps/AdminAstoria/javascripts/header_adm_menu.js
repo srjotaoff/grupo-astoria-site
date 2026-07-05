@@ -7,6 +7,9 @@
 
   var links = [
     { href: BASE + '/cartaz-rotativo', label: 'Cartaz Rotativo' },
+    { href: BASE + '/marcas',          label: 'Marcas do Portifólio' },
+    { href: BASE + '/opcoes-menu',     label: 'Opções do Menu' },
+    { href: BASE + '/solicitacao',     label: 'Gestão de Solicitação' },
   ]
 
   var nav = document.createElement('nav')

@@ -57,13 +57,6 @@ header{
     position: relative;
 }
 
-.secao-full { 
-    
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    
-}
-
 main{
     border: none;
     border-radius: 6svh 6svh 0 0;
@@ -317,13 +310,6 @@ body{
 header{
     height: 10svh;
     position: relative;
-}
-
-.secao-full { 
-    
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    
 }
 
 main{
