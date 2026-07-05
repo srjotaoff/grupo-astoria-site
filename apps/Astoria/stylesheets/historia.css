@@ -334,7 +334,7 @@ main{
 .main_segundo_caixa_informacao_texto{
     display: flex;
     z-index: 3;
-
+    font-family: "Poppins-Regular";
     width: 16svw;
     font-size: 1.1665svw;
 }
@@ -768,7 +768,7 @@ main{
 .main_segundo_caixa_informacao_texto{
     display: flex;
     z-index: 3;
-    
+    font-family: "Poppins-Regular";
     width: 40svw;
     font-size: 1.1665svh;
 }
