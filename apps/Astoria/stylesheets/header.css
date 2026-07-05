@@ -66,13 +66,9 @@
     justify-content: center;
     align-items: center;
     width: 15svw;
-    padding-left: 1svw;
-    padding-right: 1svw;
-}
-
-#header_meio_img img{
-    height: 5svh;
-    width: auto;
+    padding-left: 2svw;
+    padding-right: 2svw;
+    box-sizing: border-box;
 }
 
 #header_direito {
@@ -194,13 +190,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-left: 5svw;
-        padding-right: 5svw;
-    }
-
-    #header_meio_img img{
-        height: 5svh;
-        width: auto;
+        padding-left: 2svw;
+        padding-right: 2svw;
+        box-sizing: border-box;
     }
 
     /* Lado direito vira pílula vermelha decorativa */
