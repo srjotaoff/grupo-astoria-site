@@ -59,9 +59,16 @@ a, button {
 }
 
 #header_meio_img {
-    padding-left: 1svw;
-    padding-right: 1svw;
     height: 5svh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15svw;
+}
+
+#header_meio_img img{
+    height: 5svh;
+    width: auto;
 }
 
 #header_direito {
@@ -178,8 +185,15 @@ a, button {
     /* Logo */
     #header_meio_img {
         height: 5svh;
-        margin-left: 2svw;
-        margin-right: 2svw;
+        width: 40svw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #header_meio_img img{
+        height: 5svh;
+        width: auto;
     }
 
     /* Lado direito vira pílula vermelha decorativa */
