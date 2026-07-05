@@ -64,6 +64,8 @@ a, button {
     justify-content: center;
     align-items: center;
     width: 15svw;
+    padding-left: 2svw;
+    padding-right: 2svw;
 }
 
 #header_meio_img img{
@@ -189,6 +191,8 @@ a, button {
         display: flex;
         justify-content: center;
         align-items: center;
+        padding-left: 5svw;
+        padding-right: 5svw;
     }
 
     #header_meio_img img{
