@@ -39,7 +39,7 @@
     width: 100svw;
     display: flex;
     align-items: center;
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
