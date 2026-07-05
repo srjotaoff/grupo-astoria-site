@@ -1149,7 +1149,7 @@ html {
     padding-left: 0svw;
     padding-right: 0svw;
     height: 5svh;
-    border: solid var(--texto);
+    border: 0.3svh solid var(--texto);
     border-radius: 2.5svh;
     font-family: "Poppins-SemiBold";
     font-size: 1.25svh;
