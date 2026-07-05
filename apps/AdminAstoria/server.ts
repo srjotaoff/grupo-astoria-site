@@ -5,8 +5,8 @@ dotenv.config({ path: path.resolve(__dirname, '.env') })
 
 import app from './src/app'
 
-const PORT = process.env.PORT_ADMIN_ASTORIA || 3006
+const PORT = process.env.PORT_ADMIN_MASTTER || 3004
 
 app.listen(PORT, () => {
-  console.log(`Painel AdminAstoria rodando na porta ${PORT}`)
+  console.log(`Painel AdminMastter rodando na porta ${PORT}`)
 })

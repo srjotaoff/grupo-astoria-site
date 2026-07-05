@@ -1,8 +1,6 @@
 import { db } from '../../../../packages/core/database/knex'
 import { AppError } from '../../../../packages/core/errors/AppError'
-
-export const ALLOWED_ENTERPRISES = ['Chocosul', 'Astoria'] as const
-export type AllowedEnterprise = (typeof ALLOWED_ENTERPRISES)[number]
+import { ALLOWED_ENTERPRISES, AllowedEnterprise } from './parceiro.service'
 
 type CreateBannerInput = {
   nome: unknown
@@ -29,7 +27,7 @@ export function validateBannerInput(input: CreateBannerInput): CreateBannerPaylo
   }
 
   if (!ALLOWED_ENTERPRISES.includes(empresa as AllowedEnterprise)) {
-    throw new AppError('Empresa invalida. Use Chocosul ou Astoria.', 400)
+    throw new AppError('Empresa invalida. Use Chocosul ou Mastter.', 400)
   }
 
   return {
@@ -95,7 +93,7 @@ export function validateUpdateBannerInput(input: UpdateBannerInput): UpdateBanne
     const empresa = input.empresa.trim()
     if (empresa) {
       if (!ALLOWED_ENTERPRISES.includes(empresa as AllowedEnterprise)) {
-        throw new AppError('Empresa invalida. Use Chocosul ou Astoria.', 400)
+        throw new AppError('Empresa invalida. Use Chocosul ou Mastter.', 400)
       }
       payload.empresa = empresa as AllowedEnterprise
     }
@@ -117,12 +115,12 @@ export function validateUpdateBannerInput(input: UpdateBannerInput): UpdateBanne
 }
 
 export async function listBanners(): Promise<BannerListItem[]> {
-  const rows = await db('banner').select('id', 'nome').where({ empresa: 'Astoria' }).orderBy('id', 'desc')
+  const rows = await db('banner').select('id', 'nome').where({ empresa: 'Mastter' }).orderBy('id', 'desc')
   return rows.map((row: any) => ({ id: Number(row.id), nome: String(row.nome || '') }))
 }
 
 export async function getBannerById(id: number): Promise<BannerDetails> {
-  const row = await db('banner').where({ id, empresa: 'Astoria' }).first()
+  const row = await db('banner').where({ id, empresa: 'Mastter' }).first()
   if (!row) {
     throw new AppError('Banner nao encontrado.', 404)
   }
@@ -140,14 +138,14 @@ export async function updateBanner(payload: UpdateBannerPayload): Promise<void> 
   if (payload.empresa !== undefined) updateData.empresa = payload.empresa
   if (payload.imagem !== undefined) updateData.imagem = payload.imagem
 
-  const updated = await db('banner').where({ id: payload.id, empresa: 'Astoria' }).update(updateData)
+  const updated = await db('banner').where({ id: payload.id, empresa: 'Mastter' }).update(updateData)
   if (!updated) {
     throw new AppError('Banner nao encontrado.', 404)
   }
 }
 
 export async function deleteBanner(id: number): Promise<void> {
-  const deleted = await db('banner').where({ id, empresa: 'Astoria' }).del()
+  const deleted = await db('banner').where({ id, empresa: 'Mastter' }).del()
   if (!deleted) {
     throw new AppError('Banner nao encontrado.', 404)
   }

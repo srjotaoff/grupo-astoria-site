@@ -1,4 +1,4 @@
-// When served under a sub-path (e.g. grupoastoria.com.br/admin/), prefix all
+// When served under a sub-path (e.g. mastter.com.br/admin/), prefix all
 // fetch and navigation paths so requests are not routed to the wrong app.
 var BASE = window.location.pathname.startsWith('/admin') ? '/admin' : ''
 
@@ -15,7 +15,7 @@ async function redirectIfAlreadyAuthenticated() {
   try {
     var res = await fetch(BASE + '/auth/me', { credentials: 'include' })
     if (res.ok) {
-      window.location.replace(BASE + '/cartaz-rotativo')
+      window.location.replace(BASE + '/opcoes-menu')
     }
   } catch (_e) {
     // keep login page when server is unavailable
@@ -49,7 +49,8 @@ if (acessarBtn) {
         return
       }
 
-      window.location.replace(BASE + '/cartaz-rotativo')
+      // Send admin to the menu hub first, where they can choose the section to manage.
+      window.location.replace(BASE + '/opcoes-menu')
     } catch (_e) {
       showError('Sem conexão com o servidor.')
     } finally {
