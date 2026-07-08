@@ -36,7 +36,7 @@ function createMarcaCard(parceiro) {
   card.innerHTML =
     '<div class="main_tudo_caixas_caixa_img" title="Clique para alterar imagem">' +
       (imgUrl
-        ? '<img class="img-preview" src="' + escHtml(imgUrl) + '" alt="marca" onerror="this.remove()">'
+        ? '<img class="img-preview" src="' + escHtml(imgUrl) + '" alt="empresa" onerror="this.remove()">'
         : '') +
       '<p>' + (imgUrl ? '' : '+') + '</p>' +
       '<div class="img-overlay">Trocar imagem</div>' +
@@ -47,19 +47,19 @@ function createMarcaCard(parceiro) {
       '<span class="upload-filename">Nenhum arquivo selecionado</span>' +
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
-      '<label>Nome da marca</label>' +
-      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="nome" value="' + escHtml(parceiro && parceiro.nome) + '" placeholder="Nome da marca">' +
+      '<label>Nome da empresa</label>' +
+      '<input class="main_tudo_caixas_caixa_texto" type="text" data-field="nome" value="' + escHtml(parceiro && parceiro.nome) + '" placeholder="Nome da empresa">' +
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
-      '<label>Descrição da marca</label>' +
+      '<label>Descrição da empresa</label>' +
       '<textarea class="main_tudo_caixas_caixa_texto" data-field="descricao" placeholder="Descrição..." maxlength="1000">' + escHtml(parceiro && parceiro.descricao) + '</textarea>' +
     '</div>' +
     '<div class="main_tudo_caixas_caixa_conjunto">' +
-      '<label>URL do site da marca</label>' +
+      '<label>URL do site da empresa</label>' +
       '<input class="main_tudo_caixas_caixa_texto" type="url" data-field="url" value="' + escHtml(parceiro && parceiro.url) + '" placeholder="https://...">' +
     '</div>' +
     '<div class="card-actions">' +
-      '<button class="btn-salvar">' + (parceiro && parceiro.id ? 'Salvar' : 'Criar marca') + '</button>' +
+      '<button class="btn-salvar">' + (parceiro && parceiro.id ? 'Salvar' : 'Criar empresa') + '</button>' +
       '<img class="main_tudo_caixas_caixa_lixeira" src="images/icones/lixeira.svg" alt="Excluir">' +
     '</div>' +
     '<p class="card-status"></p>'
@@ -121,7 +121,7 @@ async function saveCard(card) {
   if (hasNewImage) fd.append('imagem', fileInput.files[0])
 
   if (isNew && !hasNewImage) {
-    setStatus(statusEl, 'Selecione uma imagem para criar a marca.', true)
+    setStatus(statusEl, 'Selecione uma imagem para criar a empresa.', true)
     return
   }
 
@@ -135,7 +135,7 @@ async function saveCard(card) {
     if (res.status === 401 || res.status === 403) { window.location.replace(BASE + '/'); return }
     var data   = await res.json().catch(function () { return {} })
     if (!res.ok) { setStatus(statusEl, (data && data.message) || 'Erro ao salvar.', true); return }
-    setStatus(statusEl, isNew ? 'Marca criada!' : 'Salvo com sucesso!', false)
+    setStatus(statusEl, isNew ? 'Empresa criada!' : 'Salvo com sucesso!', false)
     if (isNew) loadMarcas()
   } catch (_e) {
     setStatus(statusEl, 'Sem conexão com o servidor.', true)
@@ -148,7 +148,7 @@ async function saveCard(card) {
 async function deleteCard(card) {
   var id = card.dataset.id ? Number(card.dataset.id) : null
   if (!id) { card.remove(); return }
-  if (!window.confirm('Deseja excluir esta marca?')) return
+  if (!window.confirm('Deseja excluir esta empresa?')) return
 
   var statusEl = card.querySelector('.card-status')
   setStatus(statusEl, 'Excluindo...', false)

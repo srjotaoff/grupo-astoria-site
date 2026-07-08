@@ -18,24 +18,6 @@ import {
   validateBannerInput,
   validateUpdateBannerInput,
 } from '../services/banner.service'
-import {
-  createOpcao,
-  deleteOpcao,
-  getOpcaoById,
-  listOpcoes,
-  updateOpcao,
-  validateOpcaoInput,
-  validateUpdateOpcaoInput,
-} from '../services/opcoes.service'
-import {
-  createSolicitacao,
-  deleteSolicitacao,
-  getSolicitacaoById,
-  listSolicitacoes,
-  updateSolicitacao,
-  validateSolicitacaoInput,
-  validateUpdateSolicitacaoInput,
-} from '../services/solicitacao.service'
 import { AppError } from '../../../../packages/core/errors/AppError'
 
 // ── Shared MIME helper ────────────────────────────────────────────────────────
@@ -158,70 +140,4 @@ export async function getBannerImageHandler(req: Request, res: Response) {
   res.setHeader('Content-Type', detectMimeType(buf))
   res.setHeader('Cache-Control', 'private, max-age=60')
   return res.send(buf)
-}
-
-// ── Opcoes handlers ───────────────────────────────────────────────────────────
-
-export async function createOpcaoHandler(req: Request, res: Response) {
-  const payload = validateOpcaoInput({ nome: req.body?.nome, url: req.body?.url, ativo: req.body?.ativo })
-  const opcao = await createOpcao(payload)
-  return res.status(201).json({ ok: true, id: opcao.id })
-}
-
-export async function listOpcoesHandler(_req: Request, res: Response) {
-  const opcoes = await listOpcoes()
-  return res.status(200).json({ ok: true, opcoes })
-}
-
-export async function getOpcaoHandler(req: Request, res: Response) {
-  const id = Number(req.params.id)
-  if (!Number.isInteger(id) || id <= 0) throw new AppError('ID de opcao invalido.', 400)
-  const opcao = await getOpcaoById(id)
-  return res.status(200).json({ ok: true, opcao })
-}
-
-export async function updateOpcaoHandler(req: Request, res: Response) {
-  const payload = validateUpdateOpcaoInput({ id: req.params.id, nome: req.body?.nome, url: req.body?.url, ativo: req.body?.ativo })
-  await updateOpcao(payload)
-  return res.status(200).json({ ok: true })
-}
-
-export async function deleteOpcaoHandler(req: Request, res: Response) {
-  const id = Number(req.params.id)
-  if (!Number.isInteger(id) || id <= 0) throw new AppError('ID de opcao invalido.', 400)
-  await deleteOpcao(id)
-  return res.status(200).json({ ok: true })
-}
-
-// ── Solicitacao handlers ──────────────────────────────────────────────────────
-
-export async function createSolicitacaoHandler(req: Request, res: Response) {
-  const payload = validateSolicitacaoInput(req.body)
-  const solicitacao = await createSolicitacao(payload)
-  return res.status(201).json({ ok: true, id: solicitacao.id })
-}
-
-export async function listSolicitacoesHandler(_req: Request, res: Response) {
-  const solicitacoes = await listSolicitacoes()
-  return res.status(200).json({ ok: true, solicitacoes })
-}
-
-export async function getSolicitacaoHandler(req: Request, res: Response) {
-  const id = Number(req.params.id)
-  if (!Number.isInteger(id) || id <= 0) throw new AppError('ID de solicitação invalido.', 400)
-  const solicitacao = await getSolicitacaoById(id)
-  return res.status(200).json({ ok: true, solicitacao })
-}
-
-export async function updateSolicitacaoHandler(req: Request, res: Response) {
-  const payload = validateUpdateSolicitacaoInput({ id: req.params.id, ...req.body })
-  await updateSolicitacao(payload)
-  return res.status(200).json({ ok: true })
-}
-
-export async function deleteSolicitacaoHandler(req: Request, res: Response) {
-  const id = Number(req.params.id)
-  if (!Number.isInteger(id) || id <= 0) throw new AppError('ID de solicitação invalido.', 400)
-  await deleteSolicitacao(id)
-  return res.status(200).json({ ok: true })
 }

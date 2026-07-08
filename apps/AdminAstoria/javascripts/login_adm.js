@@ -15,7 +15,7 @@ async function redirectIfAlreadyAuthenticated() {
   try {
     var res = await fetch(BASE + '/auth/me', { credentials: 'include' })
     if (res.ok) {
-      window.location.replace(BASE + '/opcoes-menu')
+      window.location.replace(BASE + '/cartaz-rotativo')
     }
   } catch (_e) {
     // keep login page when server is unavailable
@@ -49,8 +49,7 @@ if (acessarBtn) {
         return
       }
 
-      // Send admin to the menu hub first, where they can choose the section to manage.
-      window.location.replace(BASE + '/opcoes-menu')
+      window.location.replace(BASE + '/cartaz-rotativo')
     } catch (_e) {
       showError('Sem conexão com o servidor.')
     } finally {
