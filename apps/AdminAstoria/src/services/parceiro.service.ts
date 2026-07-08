@@ -1,7 +1,7 @@
 import { db } from '../../../../packages/core/database/knex'
 import { AppError } from '../../../../packages/core/errors/AppError'
 
-export const ALLOWED_ENTERPRISES = ['Chocosul', 'Mastter'] as const
+export const ALLOWED_ENTERPRISES = ['Chocosul', 'Astoria'] as const
 export type AllowedEnterprise = (typeof ALLOWED_ENTERPRISES)[number]
 
 type CreateParceiroInput = {
@@ -56,7 +56,7 @@ export function validateParceiroInput(input: CreateParceiroInput): CreateParceir
   }
 
   if (!ALLOWED_ENTERPRISES.includes(empresa as AllowedEnterprise)) {
-    throw new AppError('Empresa invalida. Use Chocosul ou Mastter.', 400)
+    throw new AppError('Empresa invalida. Use Chocosul ou Astoria.', 400)
   }
 
   return {
@@ -145,7 +145,7 @@ export function validateUpdateEmpresaInput(input: UpdateEmpresaInput): UpdateEmp
     const empresa = input.empresa.trim()
     if (empresa) {
       if (!ALLOWED_ENTERPRISES.includes(empresa as AllowedEnterprise)) {
-        throw new AppError('Empresa invalida. Use Chocosul ou Mastter.', 400)
+        throw new AppError('Empresa invalida. Use Chocosul ou Astoria.', 400)
       }
       payload.empresa = empresa as AllowedEnterprise
     }
@@ -191,7 +191,7 @@ export function validateUpdateEmpresaInput(input: UpdateEmpresaInput): UpdateEmp
 }
 
 export async function listEmpresas(): Promise<EmpresaListItem[]> {
-  const rows = await db('parceiros').select('id', 'nome', 'descricao', 'empresa', 'url').where({ empresa: 'Mastter' }).orderBy('id', 'desc')
+  const rows = await db('parceiros').select('id', 'nome', 'descricao', 'empresa', 'url').where({ empresa: 'Astoria' }).orderBy('id', 'desc')
   return rows.map((row: any) => ({
     id: Number(row.id),
     nome: String(row.nome || ''),
@@ -202,7 +202,7 @@ export async function listEmpresas(): Promise<EmpresaListItem[]> {
 }
 
 export async function getEmpresaById(id: number): Promise<EmpresaDetails> {
-  const row = await db('parceiros').where({ id, empresa: 'Mastter' }).first()
+  const row = await db('parceiros').where({ id, empresa: 'Astoria' }).first()
   if (!row) {
     throw new AppError('Empresa nao encontrada.', 404)
   }
@@ -224,14 +224,14 @@ export async function updateEmpresa(payload: UpdateEmpresaPayload): Promise<void
   if (payload.url !== undefined) updateData.url = payload.url
   if (payload.imagem !== undefined) updateData.imagem = payload.imagem
 
-  const updated = await db('parceiros').where({ id: payload.id, empresa: 'Mastter' }).update(updateData)
+  const updated = await db('parceiros').where({ id: payload.id, empresa: 'Astoria' }).update(updateData)
   if (!updated) {
     throw new AppError('Empresa nao encontrada.', 404)
   }
 }
 
 export async function deleteEmpresa(id: number): Promise<void> {
-  const deleted = await db('parceiros').where({ id, empresa: 'Mastter' }).del()
+  const deleted = await db('parceiros').where({ id, empresa: 'Astoria' }).del()
   if (!deleted) {
     throw new AppError('Empresa nao encontrada.', 404)
   }

@@ -59,6 +59,14 @@ async function carregarRelatorio() {
             return;
         }
 
+        // Sem a chave %%cpf%%, o link não é um relatório embutível (ex.: Drive,
+        // WhatsApp) e páginas assim recusam ser exibidas em iframe. Nesse caso,
+        // só redireciona para o link em vez de tentar incorporá-lo.
+        if (opcao.url.indexOf('%%cpf%%') === -1) {
+            window.location.href = opcao.url;
+            return;
+        }
+
         embedIframe(montarUrl(opcao.url, cpf));
     } catch (_e) {
         // silencioso
