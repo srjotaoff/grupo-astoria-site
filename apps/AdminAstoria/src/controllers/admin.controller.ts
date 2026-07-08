@@ -61,7 +61,7 @@ export async function createEmpresaHandler(req: Request, res: Response) {
   const payload = validateParceiroInput({
     nome: req.body?.nome,
     descricao: req.body?.descricao,
-    empresa: 'Mastter',
+    empresa: 'Astoria',
     url: req.body?.url,
     imagemBuffer: imagemFile?.buffer
   })
@@ -91,7 +91,7 @@ export async function updateEmpresaHandler(req: Request, res: Response) {
     url: req.body?.url,
     imagemBuffer: imagemFile?.buffer
   })
-  payload.empresa = 'Mastter'
+  payload.empresa = 'Astoria'
   await updateEmpresa(payload)
   return res.status(200).json({ ok: true })
 }
@@ -106,7 +106,7 @@ export async function deleteEmpresaHandler(req: Request, res: Response) {
 export async function getEmpresaImageHandler(req: Request, res: Response) {
   const id = Number(req.params.id)
   if (!Number.isInteger(id) || id <= 0) throw new AppError('ID de empresa invalido.', 400)
-  const row = await db('parceiros').select('imagem').where({ id, empresa: 'Mastter' }).first()
+  const row = await db('parceiros').select('imagem').where({ id, empresa: 'Astoria' }).first()
   if (!row?.imagem) throw new AppError('Imagem nao encontrada.', 404)
   const buf = Buffer.isBuffer(row.imagem) ? row.imagem : Buffer.from(row.imagem)
   res.setHeader('Content-Type', detectMimeType(buf))
@@ -118,7 +118,7 @@ export async function getEmpresaImageHandler(req: Request, res: Response) {
 
 export async function createBannerHandler(req: Request, res: Response) {
   const imagemFile = req.file
-  const payload = validateBannerInput({ nome: req.body?.nome, empresa: 'Mastter', imagemBuffer: imagemFile?.buffer })
+  const payload = validateBannerInput({ nome: req.body?.nome, empresa: 'Astoria', imagemBuffer: imagemFile?.buffer })
   const banner = await createBanner(payload)
   return res.status(201).json({ ok: true, id: banner.id })
 }
@@ -137,7 +137,7 @@ export async function getBannerHandler(req: Request, res: Response) {
 
 export async function updateBannerHandler(req: Request, res: Response) {
   const imagemFile = req.file
-  const payload = validateUpdateBannerInput({ id: req.params.id, nome: req.body?.nome, empresa: 'Mastter', imagemBuffer: imagemFile?.buffer })
+  const payload = validateUpdateBannerInput({ id: req.params.id, nome: req.body?.nome, empresa: 'Astoria', imagemBuffer: imagemFile?.buffer })
   await updateBanner(payload)
   return res.status(200).json({ ok: true })
 }
@@ -152,7 +152,7 @@ export async function deleteBannerHandler(req: Request, res: Response) {
 export async function getBannerImageHandler(req: Request, res: Response) {
   const id = Number(req.params.id)
   if (!Number.isInteger(id) || id <= 0) throw new AppError('ID de banner invalido.', 400)
-  const row = await db('banner').select('imagem').where({ id, empresa: 'Mastter' }).first()
+  const row = await db('banner').select('imagem').where({ id, empresa: 'Astoria' }).first()
   if (!row?.imagem) throw new AppError('Imagem nao encontrada.', 404)
   const buf = Buffer.isBuffer(row.imagem) ? row.imagem : Buffer.from(row.imagem)
   res.setHeader('Content-Type', detectMimeType(buf))

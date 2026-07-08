@@ -30,10 +30,18 @@ function slugify(str) {
     .replace(/^_+|_+$/g, '');
 }
 
+function resetTextoOpcoes() {
+  document.querySelectorAll("input[name='main_painel_formulario_opcoes_lista']").forEach(function (i) {
+    var texto = i.parentElement && i.parentElement.querySelector('.main_painel_formulario_opcoes_lista_opcao_texto');
+    if (texto) texto.textContent = i.dataset.descricao || '';
+  });
+}
+
 function desmarcarTodasOpcoes() {
   document.querySelectorAll("input[name='main_painel_formulario_opcoes_lista']").forEach(function (i) {
     i.checked = false;
   });
+  resetTextoOpcoes();
 }
 
 // ================== UI: SETORES + LISTAS ==================
@@ -86,14 +94,30 @@ function criarListasOpcoesPorSetor(solicitacoes) {
       var label = document.createElement('label');
       label.className = 'main_painel_formulario_opcoes_lista_opcao';
 
+      var slaHoras = (item.sla && item.sla > 0) ? item.sla : 2;
+
       var input = document.createElement('input');
       input.type = 'radio';
       input.name = 'main_painel_formulario_opcoes_lista';
       input.value = String(item.id);
       input.checked = false;
+      input.dataset.descricao = item.descricao;
+      input.dataset.sla = slaHoras;
+
+      var texto = document.createElement('span');
+      texto.className = 'main_painel_formulario_opcoes_lista_opcao_texto';
+      texto.textContent = item.descricao;
+
+      input.addEventListener('change', function () {
+        resetTextoOpcoes();
+        if (input.checked) {
+          texto.textContent = item.descricao + ' - ' + slaHoras + 'h';
+        }
+      });
 
       label.appendChild(input);
-      label.appendChild(document.createTextNode(' ' + item.descricao));
+      label.appendChild(document.createTextNode(' '));
+      label.appendChild(texto);
 
       div.appendChild(label);
     });
@@ -145,20 +169,31 @@ async function bitrixNotifyUser(userId, titulo, taskId) {
   }
 }
 
-async function uploadFileToBitrix(file) {
-  var formData = new FormData();
-  formData.append('file', file);
-  formData.append('data', JSON.stringify({ NAME: file.name }));
+function lerArquivoComoBase64(file) {
+  return new Promise(function (resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var resultado = String(reader.result || '');
+      resolve(resultado.split(',')[1] || '');
+    };
+    reader.onerror = function () { reject(reader.error); };
+    reader.readAsDataURL(file);
+  });
+}
 
-  var resp = await fetch(WEBHOOK_BASE + 'disk.folder.uploadfile?id=0', {
+async function anexarArquivoNaTarefa(taskId, file) {
+  var conteudo = await lerArquivoComoBase64(file);
+  var resp = await fetch(WEBHOOK_BASE + 'task.item.addfile', {
     method: 'POST',
-    body: formData
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      taskId: taskId,
+      fileData: { NAME: file.name, CONTENT: conteudo }
+    })
   });
   var data = await resp.json();
-  if (data && data.result && data.result.ID) {
-    return Number(data.result.ID);
-  }
-  return null;
+  if (data.error) console.warn('Falha ao anexar arquivo à tarefa', data);
+  return data;
 }
 
 // ================== SALVAR SOLICITAÇÃO ==================
@@ -213,15 +248,6 @@ async function salvar_solicitacao() {
       }
     };
 
-    // Anexo: faz upload para o Bitrix Disk e vincula à tarefa
-    var inputFile = document.getElementById('main_painel_formulario_botoes_anexo_input');
-    if (inputFile && inputFile.files && inputFile.files.length > 0) {
-      var fileId = await uploadFileToBitrix(inputFile.files[0]);
-      if (fileId) {
-        parametros_api.fields.UF_TASK_WEBDAV_FILES = ['n' + fileId];
-      }
-    }
-
     var resp = await fetch(WEBHOOK_BASE + 'tasks.task.add', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -231,6 +257,13 @@ async function salvar_solicitacao() {
 
     if (data.result) {
       var taskId = getTaskIdFromResult(data);
+
+      // Anexo: envia o arquivo diretamente para a tarefa já criada
+      var inputFile = document.getElementById('main_painel_formulario_botoes_anexo_input');
+      if (inputFile && inputFile.files && inputFile.files.length > 0 && taskId) {
+        await anexarArquivoNaTarefa(taskId, inputFile.files[0]);
+      }
+
       await bitrixNotifyUser(id_responsavel, registro.descricao, taskId);
       window.location.href = 'solicitacao_sucesso.html';
     } else {
