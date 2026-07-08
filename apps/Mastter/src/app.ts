@@ -327,7 +327,8 @@ app.post('/api/portal-vendedor/solicitacoes/enviar', uploadAnexoSuporte.single('
     const prazoTarefa = new Date(Date.now() + tempoHoras * 60 * 60 * 1000).toISOString()
 
     const descricaoBitrix =
-      `Nome do solicitante: ${nomeUsuario} - ${telefoneUsuario}\n` +
+      `Nome do solicitante: ${nomeUsuario}\n` +
+      `Telefone: ${telefoneUsuario}\n` +
       `CPF: ${cpfUsuario}\n\n` +
       `Detalhes do solicitante:\n${descricaoUsuario}`
 
