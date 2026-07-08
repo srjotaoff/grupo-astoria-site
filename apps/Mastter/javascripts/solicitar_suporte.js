@@ -13,9 +13,6 @@ var cpf_usuario = '';
   } catch (_e) {}
 })();
 
-// ================== CONFIG BITRIX ==================
-var WEBHOOK_BASE = 'https://chocosul.bitrix24.com.br/rest/270/mwze5xa0wbsh91l1/';
-
 // ================== DADOS CARREGADOS DO BANCO ==================
 var solicitacoesCarregadas = [];
 
@@ -138,65 +135,9 @@ function mostrar_opcoes_lista(setor) {
   }
 }
 
-// ================== BITRIX: HELPERS ==================
-function getTaskIdFromResult(data) {
-  return (
-    (data && data.result && data.result.task && (data.result.task.id || data.result.task.ID)) ||
-    (data && data.result && data.result.taskId) ||
-    (data && data.result) ||
-    null
-  );
-}
-
-function taskLinkForUser(userId, taskId) {
-  return 'https://chocosul.bitrix24.com.br/company/personal/user/' + userId + '/tasks/task/view/' + taskId + '/';
-}
-
-async function bitrixNotifyUser(userId, titulo, taskId) {
-  try {
-    var resp = await fetch(WEBHOOK_BASE + 'im.notify.personal.add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        USER_ID: userId,
-        MESSAGE: 'Nova tarefa: ' + titulo + '\n' + taskLinkForUser(userId, taskId)
-      })
-    });
-    var j = await resp.json();
-    if (j.error) console.warn('Falha ao notificar', userId, j);
-  } catch (e) {
-    console.warn('Erro na notificação IM para', userId, e);
-  }
-}
-
-function lerArquivoComoBase64(file) {
-  return new Promise(function (resolve, reject) {
-    var reader = new FileReader();
-    reader.onload = function () {
-      var resultado = String(reader.result || '');
-      resolve(resultado.split(',')[1] || '');
-    };
-    reader.onerror = function () { reject(reader.error); };
-    reader.readAsDataURL(file);
-  });
-}
-
-async function anexarArquivoNaTarefa(taskId, file) {
-  var conteudo = await lerArquivoComoBase64(file);
-  var resp = await fetch(WEBHOOK_BASE + 'task.item.addfile', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      taskId: taskId,
-      fileData: { NAME: file.name, CONTENT: conteudo }
-    })
-  });
-  var data = await resp.json();
-  if (data.error) console.warn('Falha ao anexar arquivo à tarefa', data);
-  return data;
-}
-
 // ================== SALVAR SOLICITAÇÃO ==================
+// A criação da tarefa no Bitrix acontece inteiramente no servidor: o navegador
+// só envia os dados do formulário para o backend, nunca fala com o Bitrix direto.
 async function salvar_solicitacao() {
   var opcaoSelecionada = document.querySelector('input[name="main_painel_formulario_opcoes_lista"]:checked');
   var botaoSalvar = document.getElementById('main_painel_formulario_botoes_salvar');
@@ -230,45 +171,27 @@ async function salvar_solicitacao() {
   botaoSalvar.disabled = true;
 
   try {
-    var id_responsavel = (registro.id_responsavel && registro.id_responsavel > 0) ? registro.id_responsavel : 270;
-    var tempoHoras = (registro.sla && registro.sla > 0) ? registro.sla : 2;
-    var prazo_tarefa = new Date(Date.now() + tempoHoras * 60 * 60 * 1000).toISOString();
+    var formData = new FormData();
+    formData.append('solicitacaoId', String(solicitacaoId));
+    formData.append('descricaoUsuario', descricaoUsuario);
+    formData.append('nomeUsuario', nome_usuario);
+    formData.append('cpfUsuario', cpf_usuario);
 
-    var descricaoBitrix =
-      'Nome do solicitante: ' + nome_usuario + '\n' +
-      'CPF: ' + cpf_usuario + '\n\n' +
-      'Detalhes do solicitante:\n' + descricaoUsuario;
+    var inputFile = document.getElementById('main_painel_formulario_botoes_anexo_input');
+    if (inputFile && inputFile.files && inputFile.files.length > 0) {
+      formData.append('arquivo', inputFile.files[0]);
+    }
 
-    var parametros_api = {
-      fields: {
-        TITLE: registro.descricao,
-        DESCRIPTION: descricaoBitrix,
-        RESPONSIBLE_ID: id_responsavel,
-        DEADLINE: prazo_tarefa
-      }
-    };
-
-    var resp = await fetch(WEBHOOK_BASE + 'tasks.task.add', {
+    var resp = await fetch('/api/portal-vendedor/solicitacoes/enviar', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(parametros_api)
+      body: formData
     });
-    var data = await resp.json();
+    var data = await resp.json().catch(function () { return {}; });
 
-    if (data.result) {
-      var taskId = getTaskIdFromResult(data);
-
-      // Anexo: envia o arquivo diretamente para a tarefa já criada
-      var inputFile = document.getElementById('main_painel_formulario_botoes_anexo_input');
-      if (inputFile && inputFile.files && inputFile.files.length > 0 && taskId) {
-        await anexarArquivoNaTarefa(taskId, inputFile.files[0]);
-      }
-
-      await bitrixNotifyUser(id_responsavel, registro.descricao, taskId);
+    if (resp.ok && data.ok) {
       window.location.href = 'solicitacao_sucesso.html';
     } else {
-      mostrarAlerta('Erro ao criar a tarefa.');
-      console.error('Bitrix erro:', data);
+      mostrarAlerta((data && data.message) || 'Erro ao criar a tarefa.');
       botaoSalvar.disabled = false;
     }
   } catch (error) {

@@ -1,12 +1,64 @@
 import express from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
+import multer from 'multer'
 import path from 'path'
 import { db } from '../../../packages/core/database/knex'
 import { AppError } from '../../../packages/core/errors/AppError'
 
 const app = express()
 const ENTERPRISE = 'Chocosul'
+
+// ── Bitrix (suporte) ──────────────────────────────────────────────────────────
+// O token do webhook fica só no servidor: nunca deve ser enviado ao navegador.
+const BITRIX_WEBHOOK_BASE = process.env.BITRIX_WEBHOOK_BASE || ''
+const BITRIX_RESPONSAVEL_PADRAO = Number(process.env.BITRIX_RESPONSAVEL_PADRAO) || 270
+
+const uploadAnexoSuporte = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 20 * 1024 * 1024 },
+})
+
+function getBitrixTaskId(data: any): number | null {
+  const id =
+    (data?.result?.task && (data.result.task.id ?? data.result.task.ID)) ??
+    data?.result?.taskId ??
+    data?.result ??
+    null
+  return id ? Number(id) : null
+}
+
+async function bitrixNotifyUser(userId: number, titulo: string, taskId: number | null): Promise<void> {
+  try {
+    const link = `https://chocosul.bitrix24.com.br/company/personal/user/${userId}/tasks/task/view/${taskId}/`
+    const resp = await fetch(BITRIX_WEBHOOK_BASE + 'im.notify.personal.add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ USER_ID: userId, MESSAGE: `Nova tarefa: ${titulo}\n${link}` }),
+    })
+    const data = await resp.json()
+    if (data.error) console.warn('Falha ao notificar responsável no Bitrix', userId, data)
+  } catch (error) {
+    console.warn('Erro na notificação IM para', userId, error)
+  }
+}
+
+async function bitrixAnexarArquivo(taskId: number, file: Express.Multer.File): Promise<void> {
+  try {
+    const resp = await fetch(BITRIX_WEBHOOK_BASE + 'task.item.addfile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        taskId,
+        fileData: { NAME: file.originalname, CONTENT: file.buffer.toString('base64') },
+      }),
+    })
+    const data = await resp.json()
+    if (data.error) console.warn('Falha ao anexar arquivo à tarefa no Bitrix', data)
+  } catch (error) {
+    console.warn('Erro ao anexar arquivo à tarefa no Bitrix', error)
+  }
+}
 const ORACLE_VENDEDOR_QUERY = `
 SELECT * FROM (
 SELECT
@@ -237,6 +289,74 @@ app.get('/api/portal-vendedor/solicitacoes', async (_req, res, next) => {
       sla: row.sla != null ? Number(row.sla) : null,
     }))
     return res.status(200).json({ ok: true, solicitacoes })
+  } catch (error) {
+    return next(error)
+  }
+})
+
+// Cria a tarefa de suporte no Bitrix. Toda a integração (token do webhook,
+// criação da tarefa, anexo e notificação) acontece aqui no servidor — o
+// navegador do vendedor nunca tem acesso ao token do webhook.
+app.post('/api/portal-vendedor/solicitacoes/enviar', uploadAnexoSuporte.single('arquivo'), async (req, res, next) => {
+  try {
+    if (!BITRIX_WEBHOOK_BASE) {
+      throw new AppError('Integração com Bitrix não configurada.', 500)
+    }
+
+    const solicitacaoId = Number(req.body?.solicitacaoId)
+    const descricaoUsuario = String(req.body?.descricaoUsuario || '').trim()
+    const nomeUsuario = String(req.body?.nomeUsuario || '').trim()
+    const cpfUsuario = String(req.body?.cpfUsuario || '').replace(/\D/g, '')
+
+    if (!Number.isInteger(solicitacaoId) || solicitacaoId <= 0) {
+      throw new AppError('Solicitação inválida.', 400)
+    }
+    if (!descricaoUsuario) {
+      throw new AppError('Informe detalhes sobre a solicitação.', 400)
+    }
+
+    const registro = await db('solicitacao').where({ id: solicitacaoId }).first()
+    if (!registro) {
+      throw new AppError('Solicitação não encontrada.', 404)
+    }
+
+    const idResponsavel = registro.id_responsavel > 0 ? Number(registro.id_responsavel) : BITRIX_RESPONSAVEL_PADRAO
+    const tempoHoras = registro.sla > 0 ? Number(registro.sla) : 2
+    const prazoTarefa = new Date(Date.now() + tempoHoras * 60 * 60 * 1000).toISOString()
+
+    const descricaoBitrix =
+      `Nome do solicitante: ${nomeUsuario}\n` +
+      `CPF: ${cpfUsuario}\n\n` +
+      `Detalhes do solicitante:\n${descricaoUsuario}`
+
+    const bitrixResp = await fetch(BITRIX_WEBHOOK_BASE + 'tasks.task.add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fields: {
+          TITLE: String(registro.descricao || ''),
+          DESCRIPTION: descricaoBitrix,
+          RESPONSIBLE_ID: idResponsavel,
+          DEADLINE: prazoTarefa,
+        },
+      }),
+    })
+    const bitrixData = await bitrixResp.json()
+
+    if (!bitrixData.result) {
+      console.error('Bitrix erro:', bitrixData)
+      throw new AppError('Erro ao criar a tarefa no Bitrix.', 502)
+    }
+
+    const taskId = getBitrixTaskId(bitrixData)
+
+    if (req.file && taskId) {
+      await bitrixAnexarArquivo(taskId, req.file)
+    }
+
+    await bitrixNotifyUser(idResponsavel, String(registro.descricao || ''), taskId)
+
+    return res.status(201).json({ ok: true })
   } catch (error) {
     return next(error)
   }
