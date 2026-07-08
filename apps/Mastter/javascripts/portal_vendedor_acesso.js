@@ -51,6 +51,7 @@ botaoAcesso.addEventListener('click', async (e) => {
             tipo_usuario: usuario.tipo_usuario,
             nome_usuario: usuario.nome_usuario,
             cpf_usuario: usuario.cpf_usuario,
+            linha_usuario: usuario.linha_usuario,
         }));
 
         window.location.href = 'portal_vendedor_menu.html';

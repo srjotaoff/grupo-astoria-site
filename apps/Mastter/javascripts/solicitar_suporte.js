@@ -2,6 +2,7 @@
 var STORAGE_KEY = 'portal_vendedor_usuario';
 var nome_usuario = '';
 var cpf_usuario = '';
+var linha_usuario = '';
 
 (function carregarUsuario() {
   try {
@@ -10,6 +11,7 @@ var cpf_usuario = '';
     var u = JSON.parse(raw);
     nome_usuario = u.nome_usuario || '';
     cpf_usuario = u.cpf_usuario || '';
+    linha_usuario = u.linha_usuario || '';
   } catch (_e) {}
 })();
 
@@ -176,6 +178,7 @@ async function salvar_solicitacao() {
     formData.append('descricaoUsuario', descricaoUsuario);
     formData.append('nomeUsuario', nome_usuario);
     formData.append('cpfUsuario', cpf_usuario);
+    formData.append('telefoneUsuario', linha_usuario);
 
     var inputFile = document.getElementById('main_painel_formulario_botoes_anexo_input');
     if (inputFile && inputFile.files && inputFile.files.length > 0) {

@@ -308,6 +308,7 @@ app.post('/api/portal-vendedor/solicitacoes/enviar', uploadAnexoSuporte.single('
     const descricaoUsuario = String(req.body?.descricaoUsuario || '').trim()
     const nomeUsuario = String(req.body?.nomeUsuario || '').trim()
     const cpfUsuario = String(req.body?.cpfUsuario || '').replace(/\D/g, '')
+    const telefoneUsuario = String(req.body?.telefoneUsuario || '').trim()
 
     if (!Number.isInteger(solicitacaoId) || solicitacaoId <= 0) {
       throw new AppError('Solicitação inválida.', 400)
@@ -326,7 +327,7 @@ app.post('/api/portal-vendedor/solicitacoes/enviar', uploadAnexoSuporte.single('
     const prazoTarefa = new Date(Date.now() + tempoHoras * 60 * 60 * 1000).toISOString()
 
     const descricaoBitrix =
-      `Nome do solicitante: ${nomeUsuario}\n` +
+      `Nome do solicitante: ${nomeUsuario} - ${telefoneUsuario}\n` +
       `CPF: ${cpfUsuario}\n\n` +
       `Detalhes do solicitante:\n${descricaoUsuario}`
 
