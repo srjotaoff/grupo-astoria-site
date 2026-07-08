@@ -373,7 +373,7 @@ main{
     top: 0;
     position: relative;
     width: 100svw;
-    height: 70svh;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
