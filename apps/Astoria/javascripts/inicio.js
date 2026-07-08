@@ -183,6 +183,62 @@ window.addEventListener('load', async () => {
     }
 });
 
+async function fetchEmpresas() {
+    const response = await fetch('/api/parceiros?detalhes=1', {
+        credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+        throw new Error('Falha ao carregar empresas.');
+    }
+
+    const data = await response.json();
+    return Array.isArray(data?.parceiros) ? data.parceiros : [];
+}
+
+function renderEmpresasTerceiro(container, empresas) {
+    if (!container || !empresas.length) return;
+
+    container.innerHTML = '';
+
+    empresas.forEach((empresa) => {
+        const caixa = document.createElement('div');
+        caixa.className = 'main_terceiro_elementos_caixas';
+
+        const image = document.createElement('img');
+        image.src = `/api/parceiros/${empresa.id}/imagem`;
+        image.alt = normalizeText(empresa?.nome) || 'Empresa do Grupo Astoria';
+
+        const textos = document.createElement('div');
+        textos.className = 'main_terceiro_elementos_caixas_textos';
+
+        const titulo = document.createElement('p');
+        titulo.className = 'main_terceiro_elementos_caixas_titulo';
+        titulo.textContent = normalizeText(empresa?.nome);
+
+        const informacao = document.createElement('p');
+        informacao.className = 'main_terceiro_elementos_caixas_texto_informacao';
+        informacao.textContent = normalizeText(empresa?.descricao);
+
+        textos.appendChild(titulo);
+        textos.appendChild(informacao);
+        caixa.appendChild(image);
+        caixa.appendChild(textos);
+        container.appendChild(caixa);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.querySelector('#main_terceiro_elementos_caixas_slide');
+
+    try {
+        const empresas = await fetchEmpresas();
+        renderEmpresasTerceiro(container, empresas);
+    } catch (error) {
+        console.error('Nao foi possivel carregar as empresas do grupo.', error);
+    }
+});
+
 window.addEventListener('load', () => {
     const scrollers = document.querySelectorAll('#main_segundo_slide');
 
