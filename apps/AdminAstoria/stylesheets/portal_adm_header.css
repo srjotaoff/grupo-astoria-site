@@ -67,6 +67,7 @@ body{
 
 #header button:hover:not(.botao-ativo) {
     background-color: var(--cor_primaria);
+    color: white;
 }
 
 .botao-ativo {
