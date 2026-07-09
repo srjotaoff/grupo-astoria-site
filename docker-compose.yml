@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       APP_NAME: admin
       PORT_ADMIN: 3001
       CHOKIDAR_USEPOLLING: "true"
@@ -33,7 +33,7 @@ services:
     env_file:
       - .env
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       APP_NAME: chocosul
       PORT_CHOCOSUL: 3002
       CHOKIDAR_USEPOLLING: "true"
@@ -58,7 +58,7 @@ services:
     env_file:
       - .env
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       APP_NAME: mastter
       PORT_MASTTER: 3003
       CHOKIDAR_USEPOLLING: "true"
@@ -83,7 +83,7 @@ services:
     env_file:
       - .env
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       APP_NAME: admin-mastter
       PORT_ADMIN_MASTTER: 3004
       CHOKIDAR_USEPOLLING: "true"
@@ -108,7 +108,7 @@ services:
     env_file:
       - .env
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       APP_NAME: astoria
       PORT_ASTORIA: 3005
       CHOKIDAR_USEPOLLING: "true"
@@ -133,7 +133,7 @@ services:
     env_file:
       - .env
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       APP_NAME: admin-astoria
       PORT_ADMIN_ASTORIA: 3006
       CHOKIDAR_USEPOLLING: "true"

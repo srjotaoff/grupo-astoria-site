@@ -7,7 +7,7 @@ RUN npm ci
 
 COPY . .
 
-ENV NODE_ENV=development
+ENV NODE_ENV=production
 ENV CHOKIDAR_USEPOLLING=true
 ENV WATCHPACK_POLLING=true
 
