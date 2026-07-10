@@ -393,16 +393,12 @@ app.get('/portifolio', (_req, res) => {
   res.sendFile(path.resolve(__dirname, '../portifolio.html'))
 })
 
-app.get('/trabalhe', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '../trabalhe.html'))
-})
-
 app.get('/portal-vendedor', (_req, res) => {
   res.sendFile(path.resolve(__dirname, '../portal_vendedor_acesso.html'))
 })
 
-app.get('/portal-cliente', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '../cliente.html'))
+app.get('/portal-vendedor-menu', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../portal_vendedor_menu.html'))
 })
 
 

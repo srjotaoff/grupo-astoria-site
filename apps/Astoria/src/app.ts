@@ -263,24 +263,20 @@ app.get('/', (_req, res) => {
   res.sendFile(path.resolve(__dirname, '../index.html'))
 })
 
-app.get('/sobre', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '../sobre_nos.html'))
+app.get('/index', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../index.html'))
 })
 
-app.get('/portifolio', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '../portifolio.html'))
+app.get('/empresa', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../empresa.html'))
 })
 
-app.get('/trabalhe', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '../trabalhe.html'))
+app.get('/historia', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../historia.html'))
 })
 
-app.get('/portal-vendedor', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '../portal_vendedor_acesso.html'))
-})
-
-app.get('/portal-cliente', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '../cliente.html'))
+app.get('/cultura', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../cultura.html'))
 })
 
 
