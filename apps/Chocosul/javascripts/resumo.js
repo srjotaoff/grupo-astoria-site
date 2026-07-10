@@ -12,7 +12,7 @@ function getCpf() {
     return '';
 }
 
-// Lê o id da opção (relatório) a partir da query string: resumo.html?id=123
+// Lê o id da opção (relatório) a partir da query string: /resumo?id=123
 function getOpcaoId() {
     const id = Number(new URLSearchParams(window.location.search).get('id'));
     return Number.isInteger(id) && id > 0 ? id : null;
@@ -38,13 +38,13 @@ function embedIframe(src) {
 async function carregarRelatorio() {
     const cpf = getCpf();
     if (!cpf) {
-        window.location.href = 'portal_vendedor_acesso.html';
+        window.location.href = '/portal-vendedor';
         return;
     }
 
     const id = getOpcaoId();
     if (!id) {
-        window.location.href = 'portal_vendedor_menu.html';
+        window.location.href = '/portal-vendedor-menu';
         return;
     }
 
@@ -55,7 +55,7 @@ async function carregarRelatorio() {
         const opcao = opcoes.find(function (o) { return o.id === id; });
 
         if (!opcao || !opcao.url) {
-            window.location.href = 'portal_vendedor_menu.html';
+            window.location.href = '/portal-vendedor-menu';
             return;
         }
 

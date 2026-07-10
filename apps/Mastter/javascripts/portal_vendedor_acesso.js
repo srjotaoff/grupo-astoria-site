@@ -54,7 +54,7 @@ botaoAcesso.addEventListener('click', async (e) => {
             linha_usuario: usuario.linha_usuario,
         }));
 
-        window.location.href = 'portal_vendedor_menu.html';
+        window.location.href = '/portal-vendedor-menu';
     } catch (erro) {
         console.error('Erro ao acessar o portal:', erro);
         mostrarMensagem('Erro ao acessar. Tente novamente em instantes.');

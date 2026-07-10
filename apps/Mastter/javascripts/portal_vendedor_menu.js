@@ -35,7 +35,7 @@ function renderOpcoes(opcoes) {
     opcoes.forEach(function (opcao) {
         // Roteia para a página genérica de relatório; a substituição do CPF
         // placeholder pelo CPF do usuário logado acontece no resumo.js.
-        container.appendChild(criarBotao(opcao.nome, 'resumo.html?id=' + encodeURIComponent(opcao.id)));
+        container.appendChild(criarBotao(opcao.nome, '/resumo?id=' + encodeURIComponent(opcao.id)));
     });
 
     container.appendChild(criarBotao('SOLICITAR SUPORTE', '/solicitar-suporte'));
@@ -44,7 +44,7 @@ function renderOpcoes(opcoes) {
 async function carregarOpcoes() {
     const usuario = getUsuario();
     if (!usuario || !usuario.cpf_usuario) {
-        window.location.href = 'portal_vendedor_acesso.html';
+        window.location.href = '/portal-vendedor';
         return;
     }
 
