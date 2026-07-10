@@ -192,7 +192,7 @@ async function salvar_solicitacao() {
     var data = await resp.json().catch(function () { return {}; });
 
     if (resp.ok && data.ok) {
-      window.location.href = 'solicitacao_sucesso.html';
+      window.location.href = '/solicitacao-sucesso';
     } else {
       mostrarAlerta((data && data.message) || 'Erro ao criar a tarefa.');
       botaoSalvar.disabled = false;

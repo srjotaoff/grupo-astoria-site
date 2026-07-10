@@ -38,7 +38,7 @@ function renderOpcoes(opcoes) {
         container.appendChild(criarBotao(opcao.nome, 'resumo.html?id=' + encodeURIComponent(opcao.id)));
     });
 
-    container.appendChild(criarBotao('SOLICITAR SUPORTE', 'solicitar_suporte.html'));
+    container.appendChild(criarBotao('SOLICITAR SUPORTE', '/solicitar-suporte'));
 }
 
 async function carregarOpcoes() {

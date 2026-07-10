@@ -400,6 +400,14 @@ app.get('/portal-vendedor-menu', (_req, res) => {
   res.sendFile(path.resolve(__dirname, '../portal_vendedor_menu.html'))
 })
 
+app.get('/solicitar-suporte', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../solicitar_suporte.html'))
+})
+
+app.get('/solicitacao-sucesso', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '../solicitacao_sucesso.html'))
+})
+
 
 // Header injection endpoint
 app.get('/header', (_req, res) => {
